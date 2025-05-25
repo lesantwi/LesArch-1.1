@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LesArch - 3D Model Viewer</title>
+  <link rel="stylesheet" href="main.css">
+  <style>
+    /* Fullscreen style for the 3D viewer canvas */
+    body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; }
+    #viewer { width: 100%; height: 100%; }
+  </style>
+</head>
+<body>
+  <!-- Header (optional—kept minimal for focus) -->
+  <header>
+    <div class="logo">
+      <img src="images/lesarch-logo.png" alt="LesArch Logo">
+    </div>
+    <nav>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="map.html">Map</a></li>
+        <li><a href="viewer.html" class="active">3D Model</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- Three.js Canvas -->
+  <canvas id="viewer"></canvas>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-links">
+      <a href="https://instagram.com/lesarch" target="_blank">Instagram</a>
+      <a href="mailto:contact@lesarch.com">Email Us</a>
+    </div>
+    <p>&copy; 2025 LesArch. All rights reserved.</p>
+  </footer>
+
+  <!-- Three.js and GLTFLoader -->
+  <script src="https://unpkg.com/three@0.150.0/build/three.min.js"></script>
+  <script src="https://unpkg.com/three@0.150.0/examples/js/loaders/GLTFLoader.js"></script>
+  <script>
+    // Basic Three.js scene setup:
+    const scene    = new THREE.Scene();
+    const camera   = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
+    const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('viewer'), antialias: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    camera.position.set(0, 1, 3);
+
+    // Lighting
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
+    scene.add(ambientLight);
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+    directionalLight.position.set(5, 10, 7.5);
+    scene.add(directionalLight);
+
+    // Load GLB model
+    const loader = new THREE.GLTFLoader();
+    loader.load('models/your-model.glb', (gltf) => {
+      scene.add(gltf.scene);
+    }, undefined, (error) => {
+      console.error('An error occurred', error);
+    });
+
+    // Animation loop
+    function animate() {
+      requestAnimationFrame(animate);
+      scene.rotation.y += 0.005;
+      renderer.render(scene, camera);
+    }
+    animate();
+
+    // Handle window resize
+    window.addEventListener('resize', () => {
+      const width  = window.innerWidth;
+      const height = window.innerHeight;
+      renderer.setSize(width, height);
+      camera.aspect = width / height;
+      camera.updateProjectionMatrix();
+    });
+  </script>
+  <script src="main.js"></script>
+</body>
+</html>
