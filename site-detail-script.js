@@ -41,7 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Load GLTF Model (Le Pont du Gard) ---
     const loader = new GLTFLoader();
     // !!! IMPORTANT: Update this path and filename to your actual model file !!!
-    const modelPath = './models/le_pont_du_gard.gltf'; 
+    const modelPath = './models/le_pont_du_gard.glb'; // Use .glb for better performance and compatibility
 
     loader.load(
         modelPath,
