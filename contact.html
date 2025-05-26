@@ -1,58 +1,125 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>LesArch - Contact & Submissions</title>
-  <link rel="stylesheet" href="main.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LesArch - Contact & Submit</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="assets/lesarch_logo.png" type="image/png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-  <!-- Header -->
-  <header>
-    <div class="logo">
-      <img src="images/lesarch-logo.png" alt="LesArch Logo">
-    </div>
-    <nav>
-      <ul>
-        <li><a href="index.html">Home</a></li>
-        <li><a href="map.html">Map</a></li>
-        <li><a href="viewer.html">3D Model</a></li>
-        <li><a href="contact.html" class="active">Contact</a></li>
-      </ul>
-    </nav>
-  </header>
+    <header class="main-header">
+        <div class="container header-content">
+            <a href="index.html" class="logo">
+                <img src="assets/lesarch_logo.png" alt="LesArch Logo">
+                LesArch
+            </a>
+            <nav class="navbar">
+                <ul class="nav-links">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="map.html">Explore Map</a></li>
+                    <li><a href="about.html">About Us</a></li>
+                    <li><a href="contact.html">Contact & Submit</a></li>
+                </ul>
+                <div class="hamburger">
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                </div>
+            </nav>
+        </div>
+    </header>
 
-  <!-- Main Content -->
-  <main>
-    <section id="contact-form">
-      <h2>Contact LesArch</h2>
-      <form action="#" method="post" enctype="multipart/form-data">
-        <label for="name">Your Name:</label>
-        <input type="text" id="name" name="name" required>
+    <main class="content-min-height">
+        <section class="page-hero contact-hero">
+            <div class="container text-center">
+                <h1>Get in Touch & Contribute</h1>
+                <p>We'd love to hear from you! Send us your inquiries, suggestions, or even 3D models.</p>
+            </div>
+        </section>
 
-        <label for="email">Your Email:</label>
-        <input type="email" id="email" name="email" required>
+        <section class="contact-forms section-padding">
+            <div class="container form-layout">
+                <div class="contact-form-section">
+                    <h2>Contact Our Team</h2>
+                    <form action="#" method="POST" class="contact-form">
+                        <div class="form-group">
+                            <label for="name">Your Name</label>
+                            <input type="text" id="name" name="name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Your Email</label>
+                            <input type="email" id="email" name="email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="subject">Subject</label>
+                            <input type="text" id="subject" name="subject">
+                        </div>
+                        <div class="form-group">
+                            <label for="message">Message</label>
+                            <textarea id="message" name="message" rows="6" required></textarea>
+                        </div>
+                        <button type="submit" class="btn primary-btn">Send Message</button>
+                    </form>
+                </div>
 
-        <label for="message">Your Message / Suggestion:</label>
-        <textarea id="message" name="message" required></textarea>
+                <div class="submit-model-section">
+                    <h2>Submit a 3D Model</h2>
+                    <p>Have you created a 3D model of an archaeological site that you'd like to share with LesArch? We welcome contributions that align with our mission of accuracy and detail.</p>
+                    <form action="#" method="POST" enctype="multipart/form-data" class="model-submit-form">
+                        <div class="form-group">
+                            <label for="model-name">Model Name/Site</label>
+                            <input type="text" id="model-name" name="model-name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="your-email">Your Email (for communication)</label>
+                            <input type="email" id="your-email" name="your-email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="model-file">Upload Model File (.gltf, .glb, .obj, .fbx encouraged)</label>
+                            <input type="file" id="model-file" name="model-file" accept=".gltf,.glb,.obj,.fbx" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="model-description">Brief Description (context, sources, accuracy notes)</label>
+                            <textarea id="model-description" name="model-description" rows="4"></textarea>
+                        </div>
+                        <button type="submit" class="btn primary-btn">Submit Model</button>
+                    </form>
+                    <p class="note">**Note:** All submissions will be reviewed for historical accuracy and quality.</p>
+                </div>
+            </div>
+        </section>
+    </main>
 
-        <label for="model-upload">Submit a 3D Model (optional):</label>
-        <input type="file" id="model-upload" name="model-upload" accept=".glb,.gltf">
+    <footer class="main-footer">
+        <div class="container footer-content">
+            <div class="footer-section about-lesarch">
+                <h3>About LesArch</h3>
+                <p>Bringing history to life through immersive 3D archaeological reconstructions and in-depth research.</p>
+            </div>
+            <div class="footer-section quick-links">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="map.html">Explore Sites</a></li>
+                    <li><a href="about.html">Our Story</a></li>
+                    <li><a href="contact.html">Contact Us</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                </ul>
+            </div>
+            <div class="footer-section social-media">
+                <h3>Connect With Us</h3>
+                <div class="social-icons">
+                    <a href="https://www.instagram.com/your_lesarch_instagram" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="mailto:contact@lesarch.com" aria-label="Email"><i class="fas fa-envelope"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 LesArch. All rights reserved.</p>
+        </div>
+    </footer>
 
-        <button type="submit">Send Message</button>
-      </form>
-    </section>
-  </main>
-
-  <!-- Footer -->
-  <footer>
-    <div class="footer-links">
-      <a href="https://instagram.com/lesarch" target="_blank">Instagram</a>
-      <a href="mailto:contact@lesarch.com">Email Us</a>
-    </div>
-    <p>&copy; 2025 LesArch. All rights reserved.</p>
-  </footer>
-
-  <script src="main.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>

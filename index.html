@@ -1,81 +1,127 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>LesArch: Mapping the Past, Digitally</title>
-  <link rel="stylesheet" href="main.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LesArch - Rebuilding the Past in 3D</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="assets/lesarch_logo.png" type="image/png"> <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-  <!-- Header -->
-  <header>
-    <div class="logo">
-      <img src="images/lesarch-logo.png" alt="LesArch Logo">
-    </div>
-    <nav>
-      <ul>
-        <li><a href="index.html" class="active">Home</a></li>
-        <li><a href="map.html">Map</a></li>
-        <li><a href="viewer.html">3D Model</a></li>
-        <li><a href="contact.html">Contact</a></li>
-      </ul>
-    </nav>
-  </header>
-
-  <!-- Main content -->
-  <main>
-    <!-- Video ad section -->
-    <section id="video-ad">
-      <video autoplay muted loop>
-        <source src="media/lesarch-ad.mp4" type="video/mp4">
-        Your browser does not support the video tag.
-      </video>
-      <div class="video-overlay">
-        <h1>Discover the Lost Worlds</h1>
-        <p>Mapping archaeological sites with cutting-edge 3D models.</p>
-      </div>
-    </section>
-
-    <!-- Featured Projects Carousel -->
-    <section id="projects">
-      <h2>Our Accomplishments</h2>
-      <div class="carousel">
-        <div class="slide">
-          <img src="images/project1.jpg" alt="Project 1">
-          <p>Ancient Ruins - 2023</p>
+    <header class="main-header">
+        <div class="container header-content">
+            <a href="index.html" class="logo">
+                <img src="assets/lesarch_logo.png" alt="LesArch Logo">
+                LesArch
+            </a>
+            <nav class="navbar">
+                <ul class="nav-links">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="map.html">Explore Map</a></li>
+                    <li><a href="about.html">About Us</a></li>
+                    <li><a href="contact.html">Contact & Submit</a></li>
+                </ul>
+                <div class="hamburger">
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                </div>
+            </nav>
         </div>
-        <div class="slide">
-          <img src="images/project2.jpg" alt="Project 2">
-          <p>Historical Cityscape - 2022</p>
+    </header>
+
+    <main>
+        <section class="hero-section">
+            <video autoplay muted loop class="hero-video">
+                <source src="assets/homepage_video.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+            <div class="hero-overlay">
+                <div class="container hero-content">
+                    <h1>Unearth History, Rebuild the Past in 3D</h1>
+                    <p>LesArch brings archaeological wonders to life through immersive 3D models and detailed research. Explore ancient civilizations like never before.</p>
+                    <a href="map.html" class="btn primary-btn">Start Your Exploration</a>
+                </div>
+            </div>
+        </section>
+
+        <section class="animated-map-section section-padding">
+            <div class="container">
+                <h2>Dive into Our Digital World Map</h2>
+                <div class="map-illustration-container">
+                    <img src="assets/map_archaeologist.png" alt="Archaeologist pointing at map" class="archaeologist-img">
+                    <div class="clickable-map-area">
+                        <img src="assets/world_map_placeholder.png" alt="Animated World Map" class="animated-map-img">
+                        <p class="map-call-to-action">Click the map to explore sites!</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="projects-section section-padding bg-light">
+            <div class="container">
+                <h2>Our Journey So Far & What's Next</h2>
+                <div class="project-slider-container">
+                    <div class="project-slider">
+                        <div class="project-slide">
+                            <img src="assets/project_thumb_pont_du_gard.jpg" alt="Le Pont du Gard Project">
+                            <h3>Le Pont du Gard: Rebuilt</h3>
+                            <p>Our inaugural project, meticulously reconstructed to its Roman glory. Explore its aqueduct design and history.</p>
+                        </div>
+                        <div class="project-slide">
+                            <img src="assets/project_thumb_upcoming1.jpg" alt="Upcoming Project">
+                            <h3>Upcoming: Ancient Petra</h3>
+                            <p>Get ready to explore the majestic Treasury and ancient city of Petra in stunning detail, coming soon!</p>
+                        </div>
+                        <img src="assets/project_thumb_accomplished1.jpg" alt="Accomplished Project">
+                        <h3>Accomplished: Roman Baths</h3>
+                        <p>A detailed reconstruction of the Roman Baths, showcasing daily life and engineering marvels.</p>
+                        </div>
+                    <button class="prev-btn">&lt;</button>
+                    <button class="next-btn">&gt;</button>
+                </div>
+            </div>
+        </section>
+
+        <section class="fact-section section-padding">
+            <div class="container text-center">
+                <h2>Did You Know?</h2>
+                <p>The Great Pyramid of Giza was originally covered in highly polished white limestone, making it gleam brightly under the desert sun!</p>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="main-footer">
+        <div class="container footer-content">
+            <div class="footer-section about-lesarch">
+                <h3>About LesArch</h3>
+                <p>Bringing history to life through immersive 3D archaeological reconstructions and in-depth research.</p>
+            </div>
+            <div class="footer-section quick-links">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="map.html">Explore Sites</a></li>
+                    <li><a href="about.html">Our Story</a></li>
+                    <li><a href="contact.html">Contact Us</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                </ul>
+            </div>
+            <div class="footer-section social-media">
+                <h3>Connect With Us</h3>
+                <div class="social-icons">
+                    <a href="https://www.instagram.com/your_lesarch_instagram" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="mailto:contact@lesarch.com" aria-label="Email"><i class="fas fa-envelope"></i></a>
+                    <a href="https://twitter.com/your_lesarch_twitter" target="_blank" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                    <a href="https://www.linkedin.com/company/your_lesarch_linkedin" target="_blank" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+                </div>
+            </div>
         </div>
-        <div class="slide">
-          <img src="images/project3.jpg" alt="Project 3">
-          <p>Lost Temple - 2021</p>
+        <div class="footer-bottom">
+            <p>&copy; 2025 LesArch. All rights reserved.</p>
         </div>
-      </div>
-    </section>
+    </footer>
 
-    <!-- Animated Map preview -->
-    <section id="map-preview">
-      <h2>Explore Our Digital Map</h2>
-      <div class="map-animation">
-        <img src="images/animated-map.png" alt="Animated Digital Map" id="animMap">
-        <img src="images/archaeologist.png" alt="Archaeologist" class="arch">
-      </div>
-      <p>Click the map to start your journey through time!</p>
-    </section>
-  </main>
-
-  <!-- Footer -->
-  <footer>
-    <div class="footer-links">
-      <a href="https://instagram.com/lesarch" target="_blank">Instagram</a>
-      <a href="mailto:contact@lesarch.com">Email Us</a>
-      <!-- Additional social links can be added here -->
-    </div>
-    <p>&copy; 2025 LesArch. All rights reserved.</p>
-  </footer>
-
-  <script src="main.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>

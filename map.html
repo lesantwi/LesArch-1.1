@@ -1,92 +1,90 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>LesArch - Digital Map Explorer</title>
-  <link rel="stylesheet" href="main.css">
-  <!-- Leaflet CSS -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-</head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LesArch - Explore Global Sites</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="assets/lesarch_logo.png" type="image/png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    </head>
 <body>
-  <!-- Header -->
-  <header>
-    <div class="logo">
-      <img src="images/lesarch-logo.png" alt="LesArch Logo">
-    </div>
-    <nav>
-      <ul>
-        <li><a href="index.html">Home</a></li>
-        <li><a href="map.html" class="active">Map</a></li>
-        <li><a href="viewer.html">3D Model</a></li>
-        <li><a href="contact.html">Contact</a></li>
-      </ul>
-    </nav>
-  </header>
-
-  <!-- Main Content -->
-  <main>
-    <section id="map-container">
-      <div id="map"></div>
-    </section>
-  </main>
-
-  <!-- Footer -->
-  <footer>
-    <div class="footer-links">
-      <a href="https://instagram.com/lesarch" target="_blank">Instagram</a>
-      <a href="mailto:contact@lesarch.com">Email Us</a>
-    </div>
-    <p>&copy; 2025 LesArch. All rights reserved.</p>
-  </footer>
-
-  <!-- Leaflet JS -->
-  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-  <script>
-    // Initialize the map with center coordinates and zoom level (adjust as needed)
-    const map = L.map('map').setView([34.0522, -118.2437], 5);
-
-    // Add base map layer from OpenStreetMap
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; OpenStreetMap contributors'
-    }).addTo(map);
-
-    // Example site data for markers
-    const sites = [
-      {
-        name: "Site A",
-        coords: [34.0522, -118.2437],
-        image: "images/siteA.jpg",
-        intro: "An ancient site with rich history.",
-        detailLink: "details-siteA.html"
-      },
-      {
-        name: "Site B",
-        coords: [36.1699, -115.1398],
-        image: "images/siteB.jpg",
-        intro: "Ruins that speak of untold mysteries.",
-        detailLink: "details-siteB.html"
-      }
-    ];
-
-    // Add markers with popup cards on hover
-    sites.forEach(site => {
-      const marker = L.marker(site.coords).addTo(map);
-      marker.bindPopup(`
-        <div class="popup-card">
-          <img src="${site.image}" alt="${site.name}" />
-          <p>${site.intro}</p>
-          <a href="${site.detailLink}">Learn More</a>
+    <header class="main-header">
+        <div class="container header-content">
+            <a href="index.html" class="logo">
+                <img src="assets/lesarch_logo.png" alt="LesArch Logo">
+                LesArch
+            </a>
+            <nav class="navbar">
+                <ul class="nav-links">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="map.html">Explore Map</a></li>
+                    <li><a href="about.html">About Us</a></li>
+                    <li><a href="contact.html">Contact & Submit</a></li>
+                </ul>
+                <div class="hamburger">
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                </div>
+            </nav>
         </div>
-      `);
-      marker.on('mouseover', function () {
-        marker.openPopup();
-      });
-      marker.on('mouseout', function () {
-        marker.closePopup();
-      });
-    });
-  </script>
-  <script src="main.js"></script>
-</body>
+    </header>
+
+    <main class="content-min-height">
+        <section class="page-hero map-hero">
+            <div class="container text-center">
+                <h1>Global Archaeological Wonders</h1>
+                <p>Discover ancient sites across continents. Hover over a location to learn more!</p>
+            </div>
+        </section>
+
+        <section class="interactive-map-section section-padding">
+            <div class="container">
+                <div id="global-map-container">
+                    <p>Loading interactive map...</p>
+                    <img src="assets/world_map_placeholder.png" alt="Placeholder Map" style="width:100%; max-width:800px; height:auto; display:block; margin: 20px auto;">
+                </div>
+                <div id="map-site-popup" class="map-popup-card">
+                    <img src="" alt="Site Image" class="popup-image">
+                    <div class="popup-content">
+                        <h3 class="popup-title"></h3>
+                        <p class="popup-text"></p>
+                        <a href="#" class="btn secondary-btn popup-link">View Details</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="main-footer">
+        <div class="container footer-content">
+            <div class="footer-section about-lesarch">
+                <h3>About LesArch</h3>
+                <p>Bringing history to life through immersive 3D archaeological reconstructions and in-depth research.</p>
+            </div>
+            <div class="footer-section quick-links">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="map.html">Explore Sites</a></li>
+                    <li><a href="about.html">Our Story</a></li>
+                    <li><a href="contact.html">Contact Us</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                </ul>
+            </div>
+            <div class="footer-section social-media">
+                <h3>Connect With Us</h3>
+                <div class="social-icons">
+                    <a href="https://www.instagram.com/your_lesarch_instagram" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="mailto:contact@lesarch.com" aria-label="Email"><i class="fas fa-envelope"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 LesArch. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+    </body>
 </html>
