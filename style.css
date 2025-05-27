@@ -243,7 +243,7 @@ ul {
 .map-hero { background-image: url('https://via.placeholder.com/1920x500/34495e/ffffff?text=Explore+Map+Hero'); }
 .contact-hero { background-image: url('https://via.placeholder.com/1920x500/2980b9/ffffff?text=Contact+Us+Hero'); }
 .about-hero { background-image: url('https://via.placeholder.com/1920x500/16a085/ffffff?text=About+Us+Hero'); }
-.site-hero { background-image: url('assets/site_hero_pont_du_gard.jpg'); } /* Specific hero for Pont du Gard - changed from .detail-hero */
+.site-hero { background-image: url('assets/site_hero_pont_du_gard.jpg'); } /* Specific hero for Pont du Gard */
 
 
 /* --- Animated Map Section (Homepage) --- */
@@ -706,7 +706,7 @@ ul {
     margin: 0 5px;
 }
 
-/* --- Site Detail Page Specifics (Corrected & Updated) --- */
+/* --- Site Detail Page Specifics (Corrected & Updated for Image/Link) --- */
 .site-details {
     /* Inherits section-padding for top/bottom padding */
 }
@@ -714,23 +714,23 @@ ul {
 .details-grid {
     display: grid;
     grid-template-columns: 1fr; /* Default to single column on small screens */
-    gap: 40px; /* Space between the info and model sections */
+    gap: 40px; /* Space between the info and image/link sections */
     align-items: start; /* Align items to the top */
 }
 
 @media (min-width: 992px) {
     .details-grid {
-        grid-template-columns: 2fr 1fr; /* 3D viewer wider than info on larger screens */
+        grid-template-columns: 2fr 1fr; /* Info wider than image/link on larger screens */
     }
     .site-info {
-        order: 2; /* Puts site-info (text) on the right */
+        order: 1; /* Puts site-info (text) on the left */
     }
-    .site-model-container {
-        order: 1; /* Puts site-model-container (3D viewer) on the left */
+    .site-image-and-model-link {
+        order: 2; /* Puts image/link on the right */
     }
 }
 
-.site-info, .site-model-container {
+.site-info, .site-image-and-model-link { /* Now applies to both sections */
     background-color: #fbfbfb;
     padding: 25px;
     border-radius: 8px;
@@ -748,52 +748,28 @@ ul {
     margin-left: 20px;
 }
 
-/* Specific styling for the 3D model container */
-.site-model-container {
-    display: flex; /* Use flex to center spinner */
-    justify-content: center;
-    align-items: center;
-    min-height: 500px; /* Give it a minimum height to avoid collapse */
-    position: relative; /* For spinner positioning */
-    overflow: hidden; /* Ensure content doesn't spill out */
+/* New styles for the image and button on site-detail.html */
+.site-image-and-model-link {
+    text-align: center; /* Center the image and button */
 }
 
-/* Ensure the actual Three.js canvas has a defined height */
-#three-model-container {
-    width: 100%;
-    height: 100%; /* Take full height of its parent (.site-model-container) */
-    display: flex; /* To center the spinner */
-    justify-content: center;
-    align-items: center;
-}
-
-/* Spinner Styles (if you have them, make sure they are defined) */
-.spinner {
-    border: 8px solid #f3f3f3; /* Light grey */
-    border-top: 8px solid #3498db; /* Blue */
-    border-radius: 50%;
-    width: 60px;
-    height: 60px;
-    animation: spin 2s linear infinite;
-    position: absolute; /* Center over the container */
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 2; /* Above the canvas if it loads instantly */
-}
-
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
-
-/* No direct image for site-info in current HTML, but keeping for future if needed */
-.site-info-image {
-    width: 100%;
+.site-thumbnail-image {
+    max-width: 100%;
     height: auto;
     border-radius: 8px;
-    margin-top: 20px;
+    margin-bottom: 15px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.image-caption {
+    font-style: italic;
+    font-size: 0.9em;
+    color: #666;
+    margin-bottom: 25px;
+}
+
+.view-model-btn {
+    margin-top: 15px; /* Space above the button */
 }
 
 /* --- Utility & Responsiveness --- */
