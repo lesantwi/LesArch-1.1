@@ -7,7 +7,11 @@
     <link rel="stylesheet" href="style.css">
     <link rel="icon" href="assets/lesarch_logo.png" type="image/png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    </head>
+
+    <!-- Three.js & GLTFLoader CDN -->
+    <script src="https://unpkg.com/three@0.150.0/build/three.min.js"></script>
+    <script src="https://unpkg.com/three@0.150.0/examples/js/loaders/GLTFLoader.js"></script>
+</head>
 <body>
     <header class="main-header">
         <div class="container header-content">
@@ -44,14 +48,16 @@
                 <div class="details-grid">
                     <div class="site-info">
                         <h2>Historical Significance</h2>
-                        <p>The Pont du Gard is an ancient Roman aqueduct bridge built in the 1st century AD to carry water over 50 km (31 mi) to the Roman colony of Nemausus (Nîmes). It is the highest of all Roman aqueduct bridges and is a UNESCO World Heritage Site. Its construction demonstrates exceptional Roman engineering skills and an understanding of hydraulics, allowing a consistent flow of water with a very slight gradient.</p>
+                        <p>The Pont du Gard is an ancient Roman aqueduct bridge built in the 1st century AD...</p>
 
                         <h2>Architecture & Construction</h2>
-                        <p>The aqueduct is constructed entirely without mortar, with its stones, some weighing up to 6 tons, precisely cut to fit together. It has three tiers of arches, with the top tier supporting the water channel. The bridge is a testament to the power and ingenuity of the Roman Empire, showcasing their ability to execute massive public works that served essential needs while also standing as enduring monuments.</p>
+                        <p>The aqueduct is constructed entirely without mortar, with its stones precisely cut...</p>
 
                         <h2>3D Model</h2>
-                        <p>Explore an interactive 3D model of Le Pont du Gard below. Use your mouse to rotate, zoom, and pan around this incredible piece of ancient engineering.</p>
+                        <p>Explore an interactive 3D model below. Use your mouse to rotate, zoom, and pan around.</p>
                     </div>
+                    
+                    <!-- 3D Model Container -->
                     <div class="site-model-container">
                         <div id="three-model-container">
                             <div id="loading-spinner" class="spinner"></div>
@@ -66,7 +72,7 @@
         <div class="container footer-content">
             <div class="footer-section about-lesarch">
                 <h3>About LesArch</h3>
-                <p>Bringing history to life through immersive 3D archaeological reconstructions and in-depth research.</p>
+                <p>Bringing history to life through immersive 3D reconstructions and research.</p>
             </div>
             <div class="footer-section quick-links">
                 <h3>Quick Links</h3>
@@ -74,14 +80,13 @@
                     <li><a href="map.html">Explore Sites</a></li>
                     <li><a href="about.html">Our Story</a></li>
                     <li><a href="contact.html">Contact Us</a></li>
-                    <li><a href="#">Privacy Policy</a></li>
                 </ul>
             </div>
             <div class="footer-section social-media">
                 <h3>Connect With Us</h3>
                 <div class="social-icons">
-                    <a href="https://www.instagram.com/your_lesarch_instagram" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-                    <a href="mailto:contact@lesarch.com" aria-label="Email"><i class="fas fa-envelope"></i></a>
+                    <a href="https://www.instagram.com/your_lesarch_instagram" target="_blank"><i class="fab fa-instagram"></i></a>
+                    <a href="mailto:contact@lesarch.com"><i class="fas fa-envelope"></i></a>
                 </div>
             </div>
         </div>
@@ -90,7 +95,10 @@
         </div>
     </footer>
 
+    <!-- Main JavaScript -->
     <script src="script.js"></script>
-    <script type="module" src="site-detail-script.js"></script>
+
+    <!-- Three.js Model Loader -->
+    <script src="site-detail-script.js"></script>
 </body>
 </html>
