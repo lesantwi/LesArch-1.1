@@ -243,7 +243,7 @@ ul {
 .map-hero { background-image: url('https://via.placeholder.com/1920x500/34495e/ffffff?text=Explore+Map+Hero'); }
 .contact-hero { background-image: url('https://via.placeholder.com/1920x500/2980b9/ffffff?text=Contact+Us+Hero'); }
 .about-hero { background-image: url('https://via.placeholder.com/1920x500/16a085/ffffff?text=About+Us+Hero'); }
-.detail-hero { background-image: url('assets/site_hero_pont_du_gard.jpg'); } /* Specific hero for Pont du Gard */
+.site-hero { background-image: url('assets/site_hero_pont_du_gard.jpg'); } /* Specific hero for Pont du Gard - changed from .detail-hero */
 
 
 /* --- Animated Map Section (Homepage) --- */
@@ -461,59 +461,91 @@ ul {
     /* Background set in HTML */
 }
 
-#global-map-container {
-    min-height: 500px; /* Placeholder height for the map */
-    background-color: #e0e0e0;
-    border-radius: 8px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 1.5em;
-    color: #7f8c8d;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-}
-
-/* Map Pop-up Card (Conceptual for JS implementation) */
-.map-popup-card {
-    display: none; /* Will be shown by JS on hover/click */
-    position: absolute; /* Positioned relative to map container */
-    background-color: white;
-    border-radius: 8px;
-    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
-    width: 280px;
-    overflow: hidden;
-    z-index: 50;
-    opacity: 0;
-    transform: translateY(10px);
-    transition: opacity 0.3s ease, transform 0.3s ease;
-}
-
-.map-popup-card.active {
-    display: block;
-    opacity: 1;
-    transform: translateY(0);
-}
-
-.map-popup-card .popup-image {
+#map {
+    height: 600px; /* You can adjust this height */
     width: 100%;
-    height: 150px;
-    object-fit: cover;
+    background-color: #e0e0e0; /* Fallback background */
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    margin-bottom: 30px;
+    z-index: 1; /* Ensure map is below popups */
 }
 
-.map-popup-card .popup-content {
+.map-intro {
+    text-align: center;
+    font-style: italic;
+    color: #666;
+    margin-bottom: 20px;
+}
+
+.site-card-popup {
+    position: absolute;
+    bottom: 20px; /* Distance from the bottom of the map container */
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: white;
     padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    z-index: 1000; /* Ensure popup is above the map */
+    display: none; /* Hidden by default */
+    width: 300px; /* Max width for the card */
+    max-width: 90%; /* Responsive width */
+    text-align: center;
+    box-sizing: border-box; /* Include padding in width calculation */
 }
 
-.map-popup-card .popup-title {
+.site-card-popup img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 4px;
+    margin-bottom: 10px;
+    object-fit: cover; /* Ensures image covers area without distortion */
+}
+
+.site-card-popup h3 {
     margin-top: 0;
+    color: #333;
     font-size: 1.3em;
-    color: #2c3e50;
+    margin-bottom: 8px;
 }
 
-.map-popup-card .popup-text {
+.site-card-popup p {
     font-size: 0.9em;
-    color: #555;
+    color: #666;
     margin-bottom: 15px;
+    line-height: 1.4;
+}
+
+.site-card-popup .btn-primary {
+    display: inline-block;
+    padding: 8px 15px;
+    background-color: #007bff; /* Example blue */
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.site-card-popup .btn-primary:hover {
+    background-color: #0056b3;
+}
+
+.site-card-popup .close-btn {
+    position: absolute;
+    top: 5px;
+    right: 10px;
+    background: none;
+    border: none;
+    font-size: 1.8em;
+    cursor: pointer;
+    color: #888;
+    line-height: 1;
+    padding: 0;
+}
+
+.site-card-popup .close-btn:hover {
+    color: #333;
 }
 
 /* --- Contact & Submission Page Specifics --- */
@@ -628,6 +660,11 @@ ul {
     color: #2c3e50;
 }
 
+.vision-item p {
+    font-size: 1em; /* Ensure paragraph font size is defined */
+    color: #555;
+}
+
 .team-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -669,50 +706,41 @@ ul {
     margin: 0 5px;
 }
 
-/* --- Site Detail Page Specifics --- */
-.site-detail-main {
-    min-height: calc(100vh - 120px); /* Adjust based on header/footer height */
+/* --- Site Detail Page Specifics (Corrected & Updated) --- */
+.site-details {
+    /* Inherits section-padding for top/bottom padding */
 }
 
-.site-content {
-    background-color: white;
-}
-
-.site-layout {
+.details-grid {
     display: grid;
-    grid-template-columns: 1fr;
-    gap: 40px;
+    grid-template-columns: 1fr; /* Default to single column on small screens */
+    gap: 40px; /* Space between the info and model sections */
+    align-items: start; /* Align items to the top */
 }
 
 @media (min-width: 992px) {
-    .site-layout {
-        grid-template-columns: 2fr 1fr; /* 3D viewer wider than info */
+    .details-grid {
+        grid-template-columns: 2fr 1fr; /* 3D viewer wider than info on larger screens */
     }
     .site-info {
-        order: 2; /* Put info on right on larger screens */
+        order: 2; /* Puts site-info (text) on the right */
     }
-    .site-3d-viewer {
-        order: 1; /* Put 3D viewer on left on larger screens */
+    .site-model-container {
+        order: 1; /* Puts site-model-container (3D viewer) on the left */
     }
 }
 
-.site-3d-viewer, .site-info {
+.site-info, .site-model-container {
     background-color: #fbfbfb;
     padding: 25px;
     border-radius: 8px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
 }
 
-.viewer-instructions {
-    font-size: 0.9em;
-    color: #7f8c8d;
-    text-align: center;
-    margin-top: 15px;
-}
-
 .site-info h2 {
     margin-top: 0;
     font-size: 1.8em;
+    color: #2c3e50; /* Ensure heading color is consistent */
 }
 
 .site-info ul {
@@ -720,6 +748,46 @@ ul {
     margin-left: 20px;
 }
 
+/* Specific styling for the 3D model container */
+.site-model-container {
+    display: flex; /* Use flex to center spinner */
+    justify-content: center;
+    align-items: center;
+    min-height: 500px; /* Give it a minimum height to avoid collapse */
+    position: relative; /* For spinner positioning */
+    overflow: hidden; /* Ensure content doesn't spill out */
+}
+
+/* Ensure the actual Three.js canvas has a defined height */
+#three-model-container {
+    width: 100%;
+    height: 100%; /* Take full height of its parent (.site-model-container) */
+    display: flex; /* To center the spinner */
+    justify-content: center;
+    align-items: center;
+}
+
+/* Spinner Styles (if you have them, make sure they are defined) */
+.spinner {
+    border: 8px solid #f3f3f3; /* Light grey */
+    border-top: 8px solid #3498db; /* Blue */
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    animation: spin 2s linear infinite;
+    position: absolute; /* Center over the container */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2; /* Above the canvas if it loads instantly */
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* No direct image for site-info in current HTML, but keeping for future if needed */
 .site-info-image {
     width: 100%;
     height: auto;
@@ -727,7 +795,6 @@ ul {
     margin-top: 20px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
-
 
 /* --- Utility & Responsiveness --- */
 .content-min-height {
@@ -807,91 +874,4 @@ ul {
         display: inline-block; /* For horizontal links in mobile footer */
         margin: 0 10px;
     }
-}
-/* Map Specific Styles */
-#map {
-    height: 600px; /* You can adjust this height */
-    width: 100%;
-    background-color: #e0e0e0; /* Fallback background */
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    margin-bottom: 30px;
-    z-index: 1; /* Ensure map is below popups */
-}
-
-.map-intro {
-    text-align: center;
-    font-style: italic;
-    color: #666;
-    margin-bottom: 20px;
-}
-
-.site-card-popup {
-    position: absolute;
-    bottom: 20px; /* Distance from the bottom of the map container */
-    left: 50%;
-    transform: translateX(-50%);
-    background-color: white;
-    padding: 15px;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-    z-index: 1000; /* Ensure popup is above the map */
-    display: none; /* Hidden by default */
-    width: 300px; /* Max width for the card */
-    max-width: 90%; /* Responsive width */
-    text-align: center;
-    box-sizing: border-box; /* Include padding in width calculation */
-}
-
-.site-card-popup img {
-    max-width: 100%;
-    height: auto;
-    border-radius: 4px;
-    margin-bottom: 10px;
-    object-fit: cover; /* Ensures image covers area without distortion */
-}
-
-.site-card-popup h3 {
-    margin-top: 0;
-    color: #333;
-    font-size: 1.3em;
-    margin-bottom: 8px;
-}
-
-.site-card-popup p {
-    font-size: 0.9em;
-    color: #666;
-    margin-bottom: 15px;
-    line-height: 1.4;
-}
-
-.site-card-popup .btn-primary {
-    display: inline-block;
-    padding: 8px 15px;
-    background-color: #007bff; /* Example blue */
-    color: white;
-    text-decoration: none;
-    border-radius: 5px;
-    transition: background-color 0.3s ease;
-}
-
-.site-card-popup .btn-primary:hover {
-    background-color: #0056b3;
-}
-
-.site-card-popup .close-btn {
-    position: absolute;
-    top: 5px;
-    right: 10px;
-    background: none;
-    border: none;
-    font-size: 1.8em;
-    cursor: pointer;
-    color: #888;
-    line-height: 1;
-    padding: 0;
-}
-
-.site-card-popup .close-btn:hover {
-    color: #333;
 }
