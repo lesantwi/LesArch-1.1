@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LesArch - Rebuilding the Past in 3D</title>
+    <title>LesArch - Discover Ancient Worlds in 3D</title>
     <link rel="stylesheet" href="style.css">
-    <link rel="icon" href="assets/lesarch_logo.png" type="image/png"> <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="icon" href="assets/lesarch_logo.png" type="image/png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
     <header class="main-header">
@@ -16,7 +17,7 @@
             </a>
             <nav class="navbar">
                 <ul class="nav-links">
-                    <li><a href="index.html">Home</a></li>
+                    <li><a href="index.html" class="active">Home</a></li>
                     <li><a href="map.html">Explore Map</a></li>
                     <li><a href="about.html">About Us</a></li>
                     <li><a href="contact.html">Contact & Submit</a></li>
@@ -30,55 +31,62 @@
         </div>
     </header>
 
-    <main>
+    <main class="content-min-height">
         <section class="hero-section">
-    <video autoplay muted loop class="hero-video">
-        <source src="assets/bg_video.mp4" type="video/mp4">
-        Your browser does not support the video tag.
-    </video>
-    <div class="hero-overlay">
-        <div class="container text-center hero-content">
-            <h1>Discover Ancient Worlds in 3D</h1>
-            <p>Immersive explorations of archaeological sites</p>
-            <a href="map.html" class="btn primary-btn">Explore Sites</a>
-        </div>
-    </div>
-</section>
-
-        <section class="animated-map-section section-padding">
-            <div class="container">
-                <h2>Dive into Our Digital World Map</h2>
-                <div class="map-illustration-container">
-                    <img src="assets/map_archaeologist.png" alt="Archaeologist pointing at map" class="archaeologist-img">
-                    <div class="clickable-map-area">
-                        <img src="assets/world_map_placeholder.jpeg" alt="Animated World Map" class="animated-map-img">
-                        <p class="map-call-to-action">Click the map to explore sites!</p>
-                    </div>
+            <video autoplay muted loop class="hero-video">
+                <source src="assets/homepage_video.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+            <div class="hero-overlay">
+                <div class="container text-center hero-content">
+                    <h1>Discover Ancient Worlds in 3D</h1>
+                    <p>Immersive explorations of archaeological sites</p>
+                    <a href="map.html" class="btn primary-btn">Explore Sites</a>
                 </div>
             </div>
         </section>
 
-        <section class="projects-section section-padding bg-light">
+        <section class="animated-map-section section-padding bg-light">
             <div class="container">
-                <h2>Our Journey So Far & What's Next</h2>
+                <h2 class="text-center">Interactive Exploration</h2>
+                <p class="text-center">Dive into our archaeological map to uncover historical wonders across the globe. Each point tells a story.</p>
+                <div class="map-illustration-container">
+                    <img src="assets/archaeologist.png" alt="Archaeologist illustration" class="archaeologist-img">
+                    <a href="map.html" class="clickable-map-area">
+                        <img src="assets/world_map_illustration.jpg" alt="Animated World Map" class="animated-map-img">
+                        <span class="map-call-to-action">Click to Explore Map</span>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <section class="projects-section section-padding">
+            <div class="container">
+                <h2 class="text-center">Featured Projects</h2>
+                <p class="text-center">Showcasing our latest 3D reconstructions and research highlights.</p>
                 <div class="project-slider-container">
                     <div class="project-slider">
                         <div class="project-slide">
-                            <img src="assets/project_thumb_point_du_gard.jpeg" alt="Le Pont du Gard Project">
-                            <h3>Le Pont du Gard: Rebuilt</h3>
-                            <p>Our inaugural project, meticulously reconstructed to its Roman glory. Explore its aqueduct design and history.</p>
+                            <img src="assets/project_pont_du_gard.jpg" alt="Pont du Gard">
+                            <h3>Pont du Gard</h3>
+                            <p>An intricate 3D model of the Roman aqueduct bridge, showcasing its architectural brilliance.</p>
+                            <a href="site-detail.html" class="btn secondary-btn">View Details</a>
                         </div>
                         <div class="project-slide">
-                            <img src="assets/project_thumb_upcoming1.jpeg" alt="Upcoming Project">
-                            <h3>Upcoming: Ancient Petra</h3>
-                            <p>Get ready to explore the majestic Treasury and ancient city of Petra in stunning detail, coming soon!</p>
+                            <img src="assets/project_petra.jpg" alt="Petra Treasury">
+                            <h3>Petra: Al-Khazneh</h3>
+                            <p>Step back in time to the ancient city of Petra with our detailed reconstruction of The Treasury.</p>
+                            <a href="#" class="btn secondary-btn">View Details</a>
                         </div>
-                        <img src="assets/project_thumb_accomplished1.jpg" alt="Accomplished Project">
-                        <h3>Accomplished: Roman Baths</h3>
-                        <p>A detailed reconstruction of the Roman Baths, showcasing daily life and engineering marvels.</p>
+                        <div class="project-slide">
+                            <img src="assets/project_pyramid.jpg" alt="Great Pyramid">
+                            <h3>Great Pyramid of Giza</h3>
+                            <p>An interactive model allowing you to explore the exterior and theorized interior of this ancient wonder.</p>
+                            <a href="#" class="btn secondary-btn">View Details</a>
                         </div>
-                    <button class="prev-btn">&lt;</button>
-                    <button class="next-btn">&gt;</button>
+                    </div>
+                    <button class="prev-btn"><i class="fas fa-chevron-left"></i></button>
+                    <button class="next-btn"><i class="fas fa-chevron-right"></i></button>
                 </div>
             </div>
         </section>
@@ -86,10 +94,9 @@
         <section class="fact-section section-padding">
             <div class="container text-center">
                 <h2>Did You Know?</h2>
-                <p>The Great Pyramid of Giza was originally covered in highly polished white limestone, making it gleam brightly under the desert sun!</p>
+                <p>The Pont du Gard, part of a 50 km (31 mi) aqueduct, supplied fresh water to the Roman city of Nîmes. Built in the 1st century AD, it stands 48.8 meters (160 ft) high and is a masterpiece of ancient engineering.</p>
             </div>
         </section>
-
     </main>
 
     <footer class="main-footer">
@@ -112,13 +119,11 @@
                 <div class="social-icons">
                     <a href="https://www.instagram.com/your_lesarch_instagram" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
                     <a href="mailto:contact@lesarch.com" aria-label="Email"><i class="fas fa-envelope"></i></a>
-                    <a href="https://twitter.com/your_lesarch_twitter" target="_blank" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
-                    <a href="https://www.linkedin.com/company/your_lesarch_linkedin" target="_blank" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
                 </div>
             </div>
         </div>
         <div class="footer-bottom">
-            <p>&copy; 2025 LesArch. All rights reserved.</p>
+            <p>&copy; 2024 LesArch. All rights reserved.</p>
         </div>
     </footer>
 
