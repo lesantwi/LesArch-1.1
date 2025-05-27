@@ -163,9 +163,9 @@ ul {
 .hero-section {
     position: relative;
     height: 70vh; /* Adjust height as needed */
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    display: flex; /* Flexbox for aligning hero-overlay */
+    align-items: center; /* Center vertically */
+    justify-content: center; /* Center horizontally */
     color: white;
     text-align: center;
     overflow: hidden;
@@ -185,12 +185,24 @@ ul {
     filter: brightness(0.6); /* Darken video for text readability */
 }
 
-/* NOTE: .hero-overlay CSS block has been removed from here as it's for homepage only */
-/* And should not interfere with page-hero on sub-pages. */
+/* Re-added: hero-overlay for homepage text and background */
+.hero-overlay {
+    position: absolute; /* Positions it over the video */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4); /* Additional darkening for text readability */
+    z-index: 2; /* Above the video, below content */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 
 .hero-content {
-    z-index: 3;
+    z-index: 3; /* Ensure text is above the overlay */
     max-width: 800px;
+    position: relative; /* Ensure it stays in flow within hero-overlay */
 }
 
 .hero-content h1 {
@@ -218,7 +230,6 @@ ul {
     background-position: center;
     position: relative;
     box-shadow: inset 0 0 0 2000px rgba(0, 0, 0, 0.4); /* Dark overlay */
-    /* Content is centered automatically by display:flex on the section itself */
 }
 
 .page-hero h1 {
@@ -697,7 +708,7 @@ ul {
     margin: 0 5px;
 }
 
-/* --- Site Detail Page Specifics (Corrected & Updated for Image/Link) --- */
+/* --- Site Detail Page Specifics (Image/Link) --- */
 .site-details {
     /* Inherits section-padding for top/bottom padding */
 }
@@ -739,7 +750,6 @@ ul {
     margin-left: 20px;
 }
 
-/* New styles for the image and button on site-detail.html */
 .site-image-and-model-link {
     text-align: center; /* Center the image and button */
 }
@@ -761,6 +771,72 @@ ul {
 
 .view-model-btn {
     margin-top: 15px; /* Space above the button */
+}
+
+/* --- 3D Model Viewer Page Specifics --- */
+.model-viewer-page-main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    min-height: calc(100vh - 180px); /* Adjust height to fit header/footer */
+    background-color: #f0f0f0; /* Lighter background for the viewer page */
+}
+
+.model-viewer-container {
+    width: 100%;
+    max-width: 1000px; /* Max width for the viewer */
+    height: 600px; /* Fixed height for the viewer */
+    background-color: #e0e0e0;
+    border-radius: 10px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    position: relative;
+    overflow: hidden; /* Important to contain the canvas */
+}
+
+#three-model-container {
+    width: 100%;
+    height: 100%;
+    display: flex; /* For centering the spinner */
+    justify-content: center;
+    align-items: center;
+    background-color: #333; /* Darker background for the canvas itself */
+}
+
+/* Spinner Styles */
+.spinner {
+    border: 8px solid #f3f3f3; /* Light grey */
+    border-top: 8px solid #3498db; /* Blue */
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    animation: spin 2s linear infinite;
+    position: absolute; /* Center over the container */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2; /* Above the canvas if it loads instantly */
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.model-viewer-info {
+    text-align: center;
+    margin-top: 20px;
+    max-width: 800px;
+    color: #555;
+}
+.model-viewer-info h2 {
+    font-size: 1.8em;
+    margin-bottom: 10px;
+}
+.model-viewer-info p {
+    font-size: 1.1em;
+    margin-bottom: 20px;
 }
 
 /* --- Utility & Responsiveness --- */
@@ -840,5 +916,10 @@ ul {
     .footer-section ul li {
         display: inline-block; /* For horizontal links in mobile footer */
         margin: 0 10px;
+    }
+
+    /* Adjust model viewer on small screens */
+    .model-viewer-container {
+        height: 400px; /* Shorter height on mobile */
     }
 }
