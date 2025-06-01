@@ -3,11 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LesArch - Explore Global Sites</title>
+    <title>Explore Sites - Interactive Map | LesArch</title>
     <link rel="stylesheet" href="style.css">
     <link rel="icon" href="assets/lesarch_logo.png" type="image/png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 </head>
 <body>
     <header class="main-header">
@@ -19,7 +20,7 @@
             <nav class="navbar">
                 <ul class="nav-links">
                     <li><a href="index.html">Home</a></li>
-                    <li><a href="map.html">Explore Map</a></li>
+                    <li><a href="map.html" class="active">Explore Map</a></li>
                     <li><a href="about.html">About Us</a></li>
                     <li><a href="contact.html">Contact & Submit</a></li>
                 </ul>
@@ -34,23 +35,22 @@
 
     <main class="content-min-height">
         <section class="page-hero map-hero">
-            <div class="container text-center">
-                <h1>Global Archaeological Wonders</h1>
-                <p>Discover ancient sites across continents. Click on a marker to learn more!</p>
+            <div class="container">
+                <h1>Explore Our Archaeological Sites</h1>
+                <p>Click on a site marker to learn more and see its 3D model!</p>
             </div>
         </section>
 
-        <section class="interactive-map-section section-padding">
+        <section class="section-padding">
             <div class="container">
+                <p class="map-intro">Our interactive map brings ancient history to your fingertips. Discover major archaeological sites and their 3D reconstructions around the world.</p>
                 <div id="map"></div>
                 <div id="site-card-popup" class="site-card-popup">
-                    <img id="popup-image" src="" alt="Site Image" class="popup-image">
-                    <div class="popup-content">
-                        <h3 id="popup-title" class="popup-title"></h3>
-                        <p id="popup-description" class="popup-text"></p>
-                        <a id="popup-link" href="#" class="btn primary-btn popup-link">View Details</a>
-                    </div>
-                    <button id="close-popup-btn" class="close-btn">&times;</button>
+                    <button class="close-btn" id="close-site-card">&times;</button>
+                    <img id="popup-image" src="" alt="Site Image">
+                    <h3 id="popup-title"></h3>
+                    <p id="popup-description"></p>
+                    <a id="popup-link" href="#" class="btn primary-btn">View Details</a>
                 </div>
             </div>
         </section>

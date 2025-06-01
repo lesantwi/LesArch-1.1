@@ -245,8 +245,7 @@ ul {
 .map-hero { background-image: url('https://via.placeholder.com/1920x500/34495e/ffffff?text=Explore+Map+Hero'); }
 .contact-hero { background-image: url('https://via.placeholder.com/1920x500/2980b9/ffffff?text=Contact+Us+Hero'); }
 .about-hero { background-image: url('https://via.placeholder.com/1920x500/16a085/ffffff?text=About+Us+Hero'); }
-.site-hero { background-image: url('assets/site_hero_pont_du_gard.jpg'); } /* Specific hero for Pont du Gard */
-
+.site-hero { background-image: url('assets/site_hero_pont_du_gard.jpeg'); } /* Corrected Specific hero for Pont du Gard */
 
 /* --- Animated Map Section (Homepage) --- */
 .animated-map-section {
