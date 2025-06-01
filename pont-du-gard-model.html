@@ -39,13 +39,26 @@
                     <p>Explore the magnificent Roman aqueduct in a fully interactive 3D environment.</p>
                 </div>
                 <div class="model-viewer-container">
-                    <div id="three-model-container">
-                        <div class="spinner" id="loading-spinner"></div>
-                    </div>
+                    <model-viewer
+                        src="models/le_pont_du_gard.glb"
+                        alt="3D model of Pont du Gard"
+                        ar
+                        shadow-intensity="1"
+                        camera-controls
+                        auto-rotate
+                        alt="A 3D model of the ancient Roman aqueduct, Pont du Gard."
+                        loading="eager"
+                        exposure="0.8"
+                        shadow-softness="0.5"
+                        bounds="tight"
+                        min-field-of-view="10deg"
+                        max-field-of-view="75deg"
+                        environment-image="neutral"
+                    ></model-viewer>
                 </div>
                 <div class="model-viewer-controls text-center" style="margin-top: 20px;">
-                    <p>Use your mouse to rotate, zoom, and pan the model.</p>
-                    </div>
+                    <p>Use your mouse to rotate, zoom, and pan the model. On AR-enabled devices, tap the AR button to view in your environment.</p>
+                </div>
             </div>
         </section>
     </main>
@@ -78,11 +91,7 @@
         </div>
     </footer>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.165.0/three.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.165.0/examples/jsm/loaders/GLTFLoader.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.165.0/examples/jsm/controls/OrbitControls.js"></script>
-
     <script src="script.js"></script>
-    <script src="pont-du-gard-model-script.js"></script>
+    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
 </body>
 </html>

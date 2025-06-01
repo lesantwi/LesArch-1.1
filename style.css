@@ -242,10 +242,13 @@ ul {
     color: #e0e0e0;
 }
 
-.map-hero { background-image: url('https://via.placeholder.com/1920x500/34495e/ffffff?text=Explore+Map+Hero'); }
-.contact-hero { background-image: url('https://via.placeholder.com/1920x500/2980b9/ffffff?text=Contact+Us+Hero'); }
-.about-hero { background-image: url('https://via.placeholder.com/1920x500/16a085/ffffff?text=About+Us+Hero'); }
+/* CORRECTED HERO IMAGE PATHS based on your assets folder */
+/* These should be updated in your HTML too if they point to placeholders */
+.map-hero { background-image: url('assets/world_map_placeholder.jpeg'); } /* Based on assets.jpg */
+.contact-hero { background-image: url('assets/project1.jpeg'); } /* Assuming this is a placeholder you want for contact */
+.about-hero { background-image: url('assets/project_thumb_accomplished1.jpg'); } /* Assuming this is a placeholder you want for about */
 .site-hero { background-image: url('assets/site_hero_pont_du_gard.jpeg'); } /* Corrected Specific hero for Pont du Gard */
+
 
 /* --- Animated Map Section (Homepage) --- */
 .animated-map-section {
@@ -260,6 +263,7 @@ ul {
     width: 100%;
 }
 
+/* Corrected image path for archaeologist (based on assets.jpg: map_archaeologist.png) */
 .archaeologist-img {
     position: absolute;
     bottom: 0;
@@ -283,6 +287,7 @@ ul {
     transform: translateY(-5px);
 }
 
+/* Corrected image path for map (based on assets.jpg: world_map_placeholder.jpeg) */
 .animated-map-img {
     width: 100%;
     height: auto;
@@ -783,27 +788,31 @@ ul {
     background-color: #f0f0f0; /* Lighter background for the viewer page */
 }
 
+/* UPDATED: Styles for the model-viewer container and the <model-viewer> element itself */
 .model-viewer-container {
     width: 100%;
     max-width: 1000px; /* Max width for the viewer */
     height: 600px; /* Fixed height for the viewer */
-    background-color: #e0e0e0;
+    background-color: #e0e0e0; /* Fallback background for the container */
     border-radius: 10px;
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-    position: relative;
-    overflow: hidden; /* Important to contain the canvas */
+    position: relative; /* For potential future absolute children */
+    overflow: hidden; /* Important to contain the model */
 }
 
-#three-model-container {
+/* Style the <model-viewer> custom element to fill its container */
+model-viewer {
     width: 100%;
     height: 100%;
-    display: flex; /* For centering the spinner */
-    justify-content: center;
-    align-items: center;
-    background-color: #333; /* Darker background for the canvas itself */
+    /* These properties customize the model-viewer's internal UI, NOT general CSS */
+    --progress-bar-color: #e74c3c; /* Match your primary button color */
+    --poster-color: #f0f0f0; /* Background color before model loads */
 }
 
-/* Spinner Styles */
+/* REMOVED: #three-model-container as it's no longer used for Three.js */
+/* If you want to keep the spinner, it should be placed *inside* model-viewer-container
+   and its display managed by JS, but model-viewer has its own loading indicator. */
+/* Spinner Styles (kept for other potential uses, but not for model-viewer loading anymore) */
 .spinner {
     border: 8px solid #f3f3f3; /* Light grey */
     border-top: 8px solid #3498db; /* Blue */
@@ -816,6 +825,8 @@ ul {
     left: 50%;
     transform: translate(-50%, -50%);
     z-index: 2; /* Above the canvas if it loads instantly */
+    /* By default, Model Viewer has its own spinner. You can hide this one if not used elsewhere. */
+    display: none; /* Hide this spinner by default */
 }
 
 @keyframes spin {
