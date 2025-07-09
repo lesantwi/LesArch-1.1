@@ -59,10 +59,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const contactMessageDiv = document.getElementById('contactMessage');
 
     if (contactForm && contactMessageDiv) {
-        contactForm.addEventListener('submit', function(event) {
+        contactForm.addEventListener('submit', async function(event) {
             event.preventDefault(); // Prevent default form submission
 
-            // Simple validation
+            // Client-side validation
             const name = document.getElementById('contact-name').value.trim();
             const email = document.getElementById('contact-email').value.trim();
             const message = document.getElementById('contact-message').value.trim();
@@ -77,9 +77,32 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-            // Simulate successful submission
-            displayMessage(contactMessageDiv, 'Thank you for your message! We will get back to you soon.', 'success');
-            contactForm.reset(); // Clear the form
+            const formData = new FormData(contactForm);
+
+            try {
+                const response = await fetch(contactForm.action, {
+                    method: contactForm.method,
+                    body: formData,
+                    headers: {
+                        'Accept': 'application/json' // Important for Formspree to return JSON, not redirect
+                    }
+                });
+
+                if (response.ok) {
+                    displayMessage(contactMessageDiv, 'Thank you for your message! We will get back to you soon.', 'success');
+                    contactForm.reset(); // Clear the form
+                } else {
+                    const data = await response.json();
+                    if (data.errors) {
+                        displayMessage(contactMessageDiv, 'Submission failed: ' + data.errors.map(e => e.message).join(', '), 'error');
+                    } else {
+                        displayMessage(contactMessageDiv, 'An unexpected error occurred during submission.', 'error');
+                    }
+                }
+            } catch (error) {
+                console.error('Network or submission error:', error);
+                displayMessage(contactMessageDiv, 'There was a problem connecting to the server. Please try again.', 'error');
+            }
         });
     }
 
@@ -88,14 +111,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const modelMessageDiv = document.getElementById('modelMessage');
 
     if (modelSubmitForm && modelMessageDiv) {
-        modelSubmitForm.addEventListener('submit', function(event) {
+        modelSubmitForm.addEventListener('submit', async function(event) {
             event.preventDefault(); // Prevent default form submission
 
-            // Simple validation
+            // Client-side validation
             const modelName = document.getElementById('model-name').value.trim();
             const yourName = document.getElementById('your-name').value.trim();
             const yourEmail = document.getElementById('your-email').value.trim();
-            const modelFile = document.getElementById('model-file').files[0]; // Get the file object
+            const modelFile = document.getElementById('model-file').files[0];
 
             if (!modelName || !yourName || !yourEmail) {
                 displayMessage(modelMessageDiv, 'Please fill in all required fields.', 'error');
@@ -107,14 +130,55 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-            if (!modelFile) {
-                displayMessage(modelMessageDiv, 'Please upload a model file.', 'error');
-                return;
+            // Optional client-side file size/type validation
+            // Formspree free tier has a 25MB file upload limit per file.
+            const MAX_FILE_SIZE_MB = 25; // Formspree free tier limit
+            if (modelFile) {
+                if (modelFile.size > MAX_FILE_SIZE_MB * 1024 * 1024) {
+                    displayMessage(modelMessageDiv, `File size exceeds ${MAX_FILE_SIZE_MB}MB limit. Please provide a link in the description for larger files.`, 'error');
+                    return;
+                }
+                const allowedTypes = ['model/gltf-binary', 'model/gltf+json', 'application/octet-stream', 'application/x-fbx', 'application/x-obj']; // Common GLB/GLTF/OBJ/FBX mimetypes
+                if (!allowedTypes.includes(modelFile.type) && !modelFile.name.endsWith('.glb') && !modelFile.name.endsWith('.gltf') && !modelFile.name.endsWith('.obj') && !modelFile.name.endsWith('.fbx')) {
+                     displayMessage(modelMessageDiv, 'Unsupported file type. Please upload a .glb, .gltf, .obj, or .fbx file.', 'error');
+                     return;
+                }
+            } else {
+                // If no file is uploaded, ensure description is not empty if it's the only way to provide model
+                const modelDescription = document.getElementById('model-description').value.trim();
+                if (!modelDescription) {
+                    displayMessage(modelMessageDiv, 'Please upload a model file or provide a link/description for the model.', 'error');
+                    return;
+                }
             }
 
-            // Simulate successful submission
-            displayMessage(modelMessageDiv, 'Thank you for your submission! We will review your model.', 'success');
-            modelSubmitForm.reset(); // Clear the form
+
+            const formData = new FormData(modelSubmitForm);
+
+            try {
+                const response = await fetch(modelSubmitForm.action, {
+                    method: modelSubmitForm.method,
+                    body: formData,
+                    headers: {
+                        'Accept': 'application/json' // Important for Formspree to return JSON, not redirect
+                    }
+                });
+
+                if (response.ok) {
+                    displayMessage(modelMessageDiv, 'Thank you for your submission! We will review your model.', 'success');
+                    modelSubmitForm.reset(); // Clear the form
+                } else {
+                    const data = await response.json();
+                    if (data.errors) {
+                        displayMessage(modelMessageDiv, 'Submission failed: ' + data.errors.map(e => e.message).join(', '), 'error');
+                    } else {
+                        displayMessage(modelMessageDiv, 'An unexpected error occurred during submission.', 'error');
+                    }
+                }
+            } catch (error) {
+                console.error('Network or submission error:', error);
+                displayMessage(modelMessageDiv, 'There was a problem connecting to the server. Please try again.', 'error');
+            }
         });
     }
 
