@@ -243,11 +243,10 @@ ul {
 }
 
 /* CORRECTED HERO IMAGE PATHS based on your assets folder */
-/* These should be updated in your HTML too if they point to placeholders */
-.map-hero { background-image: url('assets/world_map_placeholder.jpeg'); } /* Based on assets.jpg */
-.contact-hero { background-image: url('assets/project1.jpeg'); } /* Assuming this is a placeholder you want for contact */
-.about-hero { background-image: url('assets/project_thumb_accomplished1.jpg'); } /* Assuming this is a placeholder you want for about */
-.site-hero { background-image: url('assets/site_hero_pont_du_gard.jpeg'); } /* Corrected Specific hero for Pont du Gard */
+.map-hero { background-image: url('assets/world_map_placeholder.jpeg'); }
+.contact-hero { background-image: url('assets/project1.jpeg'); } /* Using project1.jpeg as a placeholder */
+.about-hero { background-image: url('assets/project_thumb_accomplished1.jpg'); } /* Using project_thumb_accomplished1.jpg as a placeholder */
+.site-hero { background-image: url('assets/site_hero_pont_du_gard.jpeg'); }
 
 
 /* --- Animated Map Section (Homepage) --- */
@@ -263,7 +262,6 @@ ul {
     width: 100%;
 }
 
-/* Corrected image path for archaeologist (based on assets.jpg: map_archaeologist.png) */
 .archaeologist-img {
     position: absolute;
     bottom: 0;
@@ -287,7 +285,6 @@ ul {
     transform: translateY(-5px);
 }
 
-/* Corrected image path for map (based on assets.jpg: world_map_placeholder.jpeg) */
 .animated-map-img {
     width: 100%;
     height: auto;
@@ -810,8 +807,6 @@ model-viewer {
 }
 
 /* REMOVED: #three-model-container as it's no longer used for Three.js */
-/* If you want to keep the spinner, it should be placed *inside* model-viewer-container
-   and its display managed by JS, but model-viewer has its own loading indicator. */
 /* Spinner Styles (kept for other potential uses, but not for model-viewer loading anymore) */
 .spinner {
     border: 8px solid #f3f3f3; /* Light grey */
@@ -825,8 +820,7 @@ model-viewer {
     left: 50%;
     transform: translate(-50%, -50%);
     z-index: 2; /* Above the canvas if it loads instantly */
-    /* By default, Model Viewer has its own spinner. You can hide this one if not used elsewhere. */
-    display: none; /* Hide this spinner by default */
+    display: none; /* Hide this spinner by default as model-viewer has its own */
 }
 
 @keyframes spin {

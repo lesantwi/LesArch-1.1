@@ -1,70 +1,67 @@
 document.addEventListener('DOMContentLoaded', () => {
     // --- Navbar Toggle for Mobile ---
     const hamburger = document.querySelector('.hamburger');
-    const navLinks = document.querySelector('.nav-links');
+    const navbar = document.querySelector('.navbar');
 
-    if (hamburger && navLinks) {
+    if (hamburger && navbar) {
         hamburger.addEventListener('click', () => {
-            navLinks.classList.toggle('active');
-            hamburger.classList.toggle('active'); // Optional: Add styling for animated hamburger
+            navbar.classList.toggle('active');
         });
+    } else {
+        console.warn('Hamburger or Navbar not found. Mobile navigation might not work.');
     }
 
-    // --- Homepage Project Slider ---
+    // --- Project Slider Functionality ---
     const projectSlider = document.querySelector('.project-slider');
     const prevBtn = document.querySelector('.prev-btn');
     const nextBtn = document.querySelector('.next-btn');
 
     if (projectSlider && prevBtn && nextBtn) {
-        let slideIndex = 0;
+        let currentIndex = 0;
         const slides = document.querySelectorAll('.project-slide');
         const totalSlides = slides.length;
 
-        const showSlide = (index) => {
-            if (index >= totalSlides) {
-                slideIndex = 0;
-            } else if (index < 0) {
-                slideIndex = totalSlides - 1;
-            } else {
-                slideIndex = index;
-            }
-            projectSlider.style.transform = `translateX(-${slideIndex * 100}%)`;
-        };
+        function updateSlider() {
+            // Calculate the offset to move the slider
+            // Each slide takes 100% width, so transform by -currentIndex * 100%
+            projectSlider.style.transform = `translateX(${-currentIndex * 100}%)`;
+        }
 
         prevBtn.addEventListener('click', () => {
-            showSlide(slideIndex - 1);
+            currentIndex = (currentIndex > 0) ? currentIndex - 1 : totalSlides - 1;
+            updateSlider();
         });
 
         nextBtn.addEventListener('click', () => {
-            showSlide(slideIndex + 1);
+            currentIndex = (currentIndex < totalSlides - 1) ? currentIndex + 1 : 0;
+            updateSlider();
         });
 
-        // Optional: Auto-play slider
+        // Optional: Auto-slide
         // setInterval(() => {
-        //     showSlide(slideIndex + 1);
+        //     currentIndex = (currentIndex < totalSlides - 1) ? currentIndex + 1 : 0;
+        //     updateSlider();
         // }, 5000); // Change slide every 5 seconds
 
-        showSlide(0); // Initialize slider
+    } else {
+        console.warn('Project slider elements not found. Slider functionality might be missing.');
     }
 
-    // --- Homepage Animated Map Click ---
-    const clickableMapArea = document.querySelector('.clickable-map-area');
-    if (clickableMapArea) {
-        clickableMapArea.addEventListener('click', () => {
-            window.location.href = 'map.html'; // Redirect to the map page
-        });
-    }
+    // --- Active Navbar Link Highlighting ---
+    const navLinks = document.querySelectorAll('.nav-links a');
+    const currentPath = window.location.pathname;
 
-    // --- Active Navbar Link Styling (Optional) ---
-    const currentPath = window.location.pathname.split('/').pop(); // Get current page filename
-    const navLinksList = document.querySelectorAll('.nav-links a');
+    navLinks.forEach(link => {
+        // Remove leading slash from path for comparison consistency
+        const linkHref = link.getAttribute('href').replace(/^\//, '');
+        const currentPathClean = currentPath.replace(/^\//, '');
 
-    navLinksList.forEach(link => {
-        const linkPath = link.getAttribute('href');
-        if (linkPath === currentPath || (currentPath === '' && linkPath === 'index.html')) {
+        // Check if the link's href matches the current page's path
+        // Special handling for index.html as it might be just "" or "/"
+        if (linkHref === currentPathClean || (linkHref === 'index.html' && (currentPathClean === '' || currentPathClean === 'index.html'))) {
             link.classList.add('active');
         } else {
-            link.classList.remove('active'); // Ensure other links are not active
+            link.classList.remove('active');
         }
     });
 });
