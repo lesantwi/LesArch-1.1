@@ -464,6 +464,43 @@ ul {
     /* Background set in HTML */
 }
 
+/* NEW: Styles for the map search container */
+.map-search-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 30px;
+    padding: 10px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.map-search-container input[type="text"] {
+    flex-grow: 1;
+    padding: 10px 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1em;
+    outline: none;
+    transition: border-color 0.3s ease;
+}
+
+.map-search-container input[type="text"]:focus {
+    border-color: #3498db;
+}
+
+.map-search-container .secondary-btn {
+    padding: 10px 15px;
+    font-size: 0.9em;
+    white-space: nowrap; /* Prevent button text from wrapping */
+}
+
+
 #map {
     height: 600px; /* You can adjust this height */
     width: 100%;
@@ -785,7 +822,6 @@ ul {
     background-color: #f0f0f0; /* Lighter background for the viewer page */
 }
 
-/* UPDATED: Styles for the model-viewer container and the <model-viewer> element itself */
 .model-viewer-container {
     width: 100%;
     max-width: 1000px; /* Max width for the viewer */
@@ -806,7 +842,6 @@ model-viewer {
     --poster-color: #f0f0f0; /* Background color before model loads */
 }
 
-/* REMOVED: #three-model-container as it's no longer used for Three.js */
 /* Spinner Styles (kept for other potential uses, but not for model-viewer loading anymore) */
 .spinner {
     border: 8px solid #f3f3f3; /* Light grey */

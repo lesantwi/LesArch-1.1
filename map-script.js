@@ -1,109 +1,122 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // 1. Initialize the Map
-    // Ensure the 'map' div has a defined height in your CSS for it to be visible
-    const map = L.map('map').setView([45.0, 3.0], 5); // Centered roughly on France, zoom level 5
+    // --- Map Initialization ---
+    const map = L.map('map').setView([20, 0], 2); // Centered globally, zoom level 2
 
-    // 2. Add a Tile Layer (OpenStreetMap)
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(map);
 
-    // 3. Define Site Data
+    // --- Site Data (All Sites) ---
+    // This array will hold all your archaeological site data
     const archaeologicalSites = [
         {
-            name: "Le Pont du Gard",
-            lat: 43.9478,
-            lng: 4.5358,
-            imageUrl: "assets/project_thumb_pont_du_gard.jpg", // Use the actual path to your image
-            description: "An ancient Roman aqueduct bridge that crosses the Gardon River in southern France.",
-            link: "site-detail.html" // Link to the detail page
+            id: 'pont-du-gard',
+            name: 'Pont du Gard',
+            coords: [43.9478, 4.5357],
+            image: 'assets/project_thumb_pont_du_gard.jpeg',
+            description: 'A magnificent ancient Roman aqueduct bridge in southern France.',
+            link: 'site-detail.html' // Link to its detail page
         },
         {
-            name: "New Upcoming Site", // Placeholder for another site
-            lat: 40.7128, // Example coordinates (New York City)
-            lng: -74.0060,
-            imageUrl: "assets/project_thumb_upcoming1.jpeg",
-            description: "Exciting new discoveries are underway at this promising location.",
-            link: "#" // No specific detail page yet
+            id: 'petra',
+            name: 'Petra: Al-Khazneh',
+            coords: [30.3285, 35.4444],
+            image: 'assets/project_thumb_upcoming1.jpeg', // Using a placeholder image
+            description: 'The iconic Treasury of the ancient Nabataean city of Petra, Jordan.',
+            link: '#' // Placeholder link
         },
         {
-            name: "Accomplished Site", // Placeholder for another site
-            lat: 51.5074, // Example coordinates (London)
-            lng: -0.1278,
-            imageUrl: "assets/project_thumb_accomplished1.jpeg",
-            description: "A recently completed excavation revealing significant historical insights.",
-            link: "#" // No specific detail page yet
+            id: 'giza-pyramid',
+            name: 'Great Pyramid of Giza',
+            coords: [29.9792, 31.1342],
+            image: 'assets/project1.jpeg', // Using a placeholder image
+            description: 'The oldest and largest of the three pyramids in the Giza Necropolis.',
+            link: '#' // Placeholder link
+        },
+        {
+            id: 'colosseum',
+            name: 'Roman Colosseum',
+            coords: [41.8902, 12.4922],
+            image: 'https://via.placeholder.com/150x100/555555/ffffff?text=Colosseum', // Placeholder if no local image
+            description: 'An elliptical amphitheatre in the centre of the city of Rome, Italy.',
+            link: '#' // Placeholder link
+        },
+        {
+            id: 'machu-picchu',
+            name: 'Machu Picchu',
+            coords: [-13.1631, -72.5450],
+            image: 'https://via.placeholder.com/150x100/555555/ffffff?text=Machu+Picchu', // Placeholder if no local image
+            description: 'An ancient Inca citadel located in the Andes Mountains of Peru.',
+            link: '#' // Placeholder link
         }
+        // Add more sites here following the same structure
     ];
 
-    // 4. Add Markers and Popups
+    let currentMarkers = []; // To keep track of markers currently on the map
+
+    // Function to add all markers to the map
+    function addMarkers(sitesToDisplay) {
+        // Clear existing markers first
+        currentMarkers.forEach(marker => map.removeLayer(marker));
+        currentMarkers = [];
+
+        sitesToDisplay.forEach(site => {
+            const marker = L.marker(site.coords).addTo(map);
+            marker.siteData = site; // Attach site data to the marker object
+
+            // Add click listener to show custom popup
+            marker.on('click', function() {
+                showSiteCard(this.siteData);
+            });
+            currentMarkers.push(marker);
+        });
+    }
+
+    // Initial load: Add all sites to the map
+    addMarkers(archaeologicalSites);
+
+    // --- Custom Site Card Popup ---
     const siteCardPopup = document.getElementById('site-card-popup');
+    const closeSiteCardBtn = document.getElementById('close-site-card');
     const popupImage = document.getElementById('popup-image');
     const popupTitle = document.getElementById('popup-title');
     const popupDescription = document.getElementById('popup-description');
     const popupLink = document.getElementById('popup-link');
-    const closePopupButton = document.getElementById('close-popup-btn');
 
-    archaeologicalSites.forEach(site => {
-        const marker = L.marker([site.lat, site.lng]).addTo(map);
+    function showSiteCard(site) {
+        popupImage.src = site.image;
+        popupTitle.textContent = site.name;
+        popupDescription.textContent = site.description;
+        popupLink.href = site.link; // Set the link for the "View Details" button
+        siteCardPopup.style.display = 'block'; // Show the popup
+    }
 
-        marker.on('click', () => {
-            popupImage.src = site.imageUrl;
-            popupTitle.textContent = site.name;
-            popupDescription.textContent = site.description;
-            popupLink.href = site.link;
-            siteCardPopup.style.display = 'block'; // Show the custom popup
-        });
+    closeSiteCardBtn.addEventListener('click', () => {
+        siteCardPopup.style.display = 'none'; // Hide the popup
     });
 
-    closePopupButton.addEventListener('click', () => {
-        siteCardPopup.style.display = 'none'; // Hide the custom popup
+    // --- Search Functionality ---
+    const searchInput = document.getElementById('site-search-input');
+    const clearSearchBtn = document.getElementById('clear-search-btn');
+
+    function filterMarkers() {
+        const searchTerm = searchInput.value.toLowerCase();
+        const filteredSites = archaeologicalSites.filter(site =>
+            site.name.toLowerCase().includes(searchTerm) ||
+            site.description.toLowerCase().includes(searchTerm)
+        );
+        addMarkers(filteredSites); // Re-add only the filtered markers
+        siteCardPopup.style.display = 'none'; // Hide popup on new search
+    }
+
+    searchInput.addEventListener('input', filterMarkers); // Live search as user types
+
+    clearSearchBtn.addEventListener('click', () => {
+        searchInput.value = ''; // Clear input
+        addMarkers(archaeologicalSites); // Show all markers again
+        siteCardPopup.style.display = 'none'; // Hide popup
     });
 
-    // 5. Adjust map height (make sure it's defined in style.css!)
-    // Add this to your style.css if you haven't already:
-    // #map {
-    //     height: 600px; /* Or any desired height */
-    //     width: 100%;
-    //     z-index: 1; /* Ensure map is below popups */
-    // }
-    // .site-card-popup {
-    //     position: absolute;
-    //     bottom: 20px; /* Adjust as needed */
-    //     left: 50%;
-    //     transform: translateX(-50%);
-    //     background-color: white;
-    //     padding: 15px;
-    //     border-radius: 8px;
-    //     box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-    //     z-index: 1000; /* Ensure popup is above map */
-    //     display: none; /* Hidden by default */
-    //     width: 300px; /* Or preferred width */
-    //     text-align: center;
-    // }
-    // .site-card-popup img {
-    //     max-width: 100%;
-    //     height: auto;
-    //     border-radius: 4px;
-    //     margin-bottom: 10px;
-    // }
-    // .site-card-popup h3 {
-    //     margin-top: 0;
-    //     color: #333;
-    // }
-    // .site-card-popup p {
-    //     font-size: 0.9em;
-    //     color: #666;
-    //     margin-bottom: 15px;
-    // }
-    // .site-card-popup .close-btn {
-    //     position: absolute;
-    //     top: 10px;
-    //     right: 10px;
-    //     background: none;
-    //     border: none;
-    //     font-size: 1.5em;
-    //     cursor: pointer;
-    //     color: #888;
-    // }
+    // Optional: Center map on Pont du Gard initially if it's a key site
+    // map.setView(archaeologicalSites[0].coords, 10); // Zoom level 10 for closer view
 });

@@ -8,6 +8,7 @@
     <link rel="icon" href="assets/lesarch_logo.png" type="image/png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
+    <!-- Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 </head>
 <body>
@@ -44,7 +45,15 @@
         <section class="section-padding">
             <div class="container">
                 <p class="map-intro">Our interactive map brings ancient history to your fingertips. Discover major archaeological sites and their 3D reconstructions around the world.</p>
+
+                <!-- NEW: Search Bar HTML -->
+                <div class="map-search-container">
+                    <input type="text" id="site-search-input" placeholder="Search for a site (e.g., Pont du Gard)...">
+                    <button id="clear-search-btn" class="secondary-btn"><i class="fas fa-times"></i> Clear</button>
+                </div>
+
                 <div id="map"></div>
+                <!-- Site Card Pop-up Template -->
                 <div id="site-card-popup" class="site-card-popup">
                     <button class="close-btn" id="close-site-card">&times;</button>
                     <img id="popup-image" src="" alt="Site Image">
@@ -74,7 +83,7 @@
             <div class="footer-section social-media">
                 <h3>Connect With Us</h3>
                 <div class="social-icons">
-                    <a href="https://www.instagram.com/lesarch1.1?igsh=YXRtN3h5YmE5bXFk&utm_source=qr" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="https://www.instagram.com/lesarch_official" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
                     <a href="mailto:lesarch2.0@gmail.com" aria-label="Email"><i class="fas fa-envelope"></i></a>
                 </div>
             </div>
@@ -85,7 +94,9 @@
     </footer>
 
     <script src="script.js"></script>
+    <!-- Leaflet JS -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <!-- Map-specific JavaScript -->
     <script src="map-script.js"></script>
 </body>
 </html>
