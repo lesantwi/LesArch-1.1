@@ -83,6 +83,25 @@ ul {
     transform: translateY(-2px);
 }
 
+.tertiary-btn { /* For repository links */
+    background-color: #5cb85c; /* Green for success/data */
+    color: white;
+    font-size: 0.9em;
+    padding: 8px 15px;
+}
+
+.tertiary-btn:hover {
+    background-color: #4cae4c;
+    transform: translateY(-2px);
+}
+
+.tertiary-btn.disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+
 /* --- Header --- */
 .main-header {
     background-color: #2c3e50;
@@ -266,6 +285,7 @@ ul {
 .contact-hero { background-image: url('assets/project1.jpeg'); } /* Using project1.jpeg as a placeholder */
 .about-hero { background-image: url('assets/project_thumb_accomplished1.jpg'); } /* Using project_thumb_accomplished1.jpg as a placeholder */
 .site-hero { background-image: url('assets/site_hero_pont_du_gard.jpeg'); }
+.projects-hero { background-image: url('assets/project_thumb_accomplished1.jpg'); } /* Placeholder for projects hero */
 
 
 /* --- Animated Map Section (Homepage) --- */
@@ -341,71 +361,32 @@ ul {
 }
 
 /* --- Projects Section (Homepage) --- */
+/* Now a simple section linking to projects.html */
 .projects-section {
     text-align: center;
+    padding: 60px 0;
+    background-color: #f9f9f9; /* Light background */
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
 }
 
-.project-slider-container {
-    position: relative;
-    max-width: 900px;
-    margin: 40px auto 0;
-    overflow: hidden;
-    border-radius: 10px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-}
-
-.project-slider {
-    display: flex;
-    transition: transform 0.5s ease-in-out;
-}
-
-.project-slide {
-    min-width: 100%; /* Each slide takes full width */
-    box-sizing: border-box;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 30px;
-    background-color: white;
-    text-align: center;
-}
-
-.project-slide img {
-    max-width: 100%;
-    height: 250px; /* Fixed height for consistency */
-    object-fit: cover;
-    border-radius: 8px;
+.projects-section h2 {
+    font-size: 2.5em;
     margin-bottom: 20px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
-.project-slider-container .prev-btn,
-.project-slider-container .next-btn {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    background-color: rgba(44, 62, 80, 0.7);
-    color: white;
-    border: none;
-    padding: 15px 10px;
-    font-size: 1.5em;
-    cursor: pointer;
-    border-radius: 5px;
-    transition: background-color 0.3s ease;
-    z-index: 10;
+.projects-section p {
+    font-size: 1.1em;
+    max-width: 800px;
+    margin: 0 auto 30px auto;
+    color: #555;
 }
 
-.project-slider-container .prev-btn:hover,
-.project-slider-container .next-btn:hover {
-    background-color: rgba(44, 62, 80, 0.9);
-}
-
-.project-slider-container .prev-btn {
-    left: 10px;
-}
-
-.project-slider-container .next-btn {
-    right: 10px;
+.project-overview-image {
+    max-width: 100%;
+    height: auto;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
 }
 
 /* --- Fact Section --- */
@@ -1023,6 +1004,98 @@ model-viewer {
     margin-bottom: 20px;
 }
 
+/* --- Projects List Section (projects.html) --- */
+.projects-list-section .intro-text {
+    font-style: italic;
+    color: #666;
+    margin-bottom: 40px;
+}
+
+.project-item-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 40px;
+}
+
+.project-item {
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    overflow: hidden; /* Ensures image corners are rounded */
+    display: flex;
+    flex-direction: column;
+}
+
+.project-item img {
+    width: 100%;
+    height: 220px; /* Fixed height for consistency */
+    object-fit: cover;
+    display: block;
+}
+
+.project-item .project-content {
+    padding: 25px;
+    flex-grow: 1; /* Allows content area to expand */
+    display: flex;
+    flex-direction: column;
+}
+
+.project-item h3 {
+    margin-top: 0;
+    font-size: 1.5em;
+    color: #2c3e50;
+    margin-bottom: 10px;
+}
+
+.project-item .status {
+    font-size: 0.9em;
+    font-weight: bold;
+    margin-bottom: 15px;
+    padding: 5px 10px;
+    border-radius: 5px;
+    display: inline-block; /* Make it fit content */
+}
+
+.project-item .status.completed {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.project-item .status.in-progress {
+    background-color: #fff3cd;
+    color: #856404;
+}
+
+.project-item .status.planned {
+    background-color: #d1ecf1;
+    color: #0c5460;
+}
+
+.project-item p {
+    font-size: 0.95em;
+    color: #555;
+    margin-bottom: 15px;
+    flex-grow: 1; /* Allows description to take available space */
+}
+
+.project-item p strong {
+    color: #2c3e50; /* Make bold text stand out more */
+}
+
+.project-item .project-links {
+    margin-top: 20px;
+    display: flex;
+    flex-wrap: wrap; /* Allow buttons to wrap */
+    gap: 10px; /* Space between buttons */
+    justify-content: center; /* Center buttons */
+}
+
+.project-item .project-links .btn {
+    padding: 10px 18px;
+    font-size: 0.9em;
+}
+
+
 /* --- Utility & Responsiveness --- */
 .content-min-height {
     min-height: calc(100vh - 120px); /* Ensures main content takes up sufficient height */
@@ -1079,14 +1152,17 @@ model-viewer {
         display: none; /* Hide on smaller screens if it overlaps too much */
     }
 
-    .project-slide {
-        padding: 20px;
+    /* Adjust project grid for smaller screens */
+    .project-item-grid {
+        grid-template-columns: 1fr; /* Single column on mobile */
     }
 
-    .project-slider-container .prev-btn,
-    .project-slider-container .next-btn {
-        padding: 10px 5px;
-        font-size: 1.2em;
+    .project-item .project-links .btn {
+        width: 100%; /* Full width buttons on mobile */
+        margin-bottom: 10px; /* Space between buttons */
+    }
+    .project-item .project-links .btn:last-child {
+        margin-bottom: 0;
     }
 
     .footer-content {
