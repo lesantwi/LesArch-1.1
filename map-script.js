@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
             id: 'asuka-dera',
             name: 'Asuka Dera Temple',
             coords: [34.468, 135.827], // Approximate coordinates for Asuka, Japan
-            image: 'https://www.japan.travel/content/dam/jnt/photos/02_nara/Nara_004/Nara_004_1.jpg', // New image URL
+            image: 'assets/asuka-dera-view.jpg', // Updated to local image
             description: 'Japan\'s first full-fledged Buddhist temple, a pivotal site for early Japanese Buddhism.',
             link: 'asuka-dera-detail.html' // Link to its detail page
         },
