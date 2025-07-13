@@ -65,6 +65,7 @@
                 <div class="submit-model-section">
                     <h2>Submit a 3D Model</h2>
                     <p>Do you have an archaeological 3D model you'd like to share with the world? We welcome submissions!</p>
+                    <p class="note-intro">For research-grade models, we highly recommend uploading your data to a dedicated archaeological repository (e.g., <a href="https://repo.dainst.org/" target="_blank">iDAI.repo</a>, <a href="https://zenodo.org/" target="_blank">Zenodo</a>) and then providing the shareable link below. This ensures long-term preservation and citability.</p>
                     <form id="modelSubmitForm" class="model-submit-form" action="https://formspree.io/f/xwpbdage" method="POST" enctype="multipart/form-data">
                         <div class="form-group">
                             <label for="model-name">Model Name</label>
@@ -80,10 +81,8 @@
                         </div>
                         <div class="form-group">
                             <label for="model-file">Upload Model File (.glb, .gltf, .obj, .fbx) - Optional</label>
-                            <!-- REMOVED 'required' attribute -->
                             <input type="file" id="model-file" name="modelFile" accept=".glb,.gltf,.obj,.fbx">
-                            <!-- UPDATED NOTE for clarity -->
-                            <p class="note">Max file size for direct upload: 25MB. For larger files or if you encounter issues, please upload your model to a service like Google Drive, Dropbox, or Sketchfab, and **paste the shareable link in the 'Model Description & Notes' field below.**</p>
+                            <p class="note">Max file size for direct upload: 25MB. For larger files or if you encounter issues, **please paste the shareable link from a repository (like iDAI.repo or Zenodo) or a file-sharing service (like Google Drive, Dropbox, WeTransfer) in the 'Model Description & Notes' field below.**</p>
                         </div>
                         <div class="form-group">
                             <label for="model-description">Model Description & Notes (include link here if applicable)</label>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LesArch - About Us</title>
+    <title>About Us | LesArch</title>
     <link rel="stylesheet" href="style.css">
     <link rel="icon" href="assets/lesarch_logo.png" type="image/png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -19,7 +19,7 @@
                 <ul class="nav-links">
                     <li><a href="index.html">Home</a></li>
                     <li><a href="map.html">Explore Map</a></li>
-                    <li><a href="about.html">About Us</a></li>
+                    <li><a href="about.html" class="active">About Us</a></li>
                     <li><a href="contact.html">Contact & Submit</a></li>
                 </ul>
                 <div class="hamburger">
@@ -31,63 +31,78 @@
         </div>
     </header>
 
-    <main class="content-min-height">
+    <main class="content-min-height about-content">
         <section class="page-hero about-hero">
-            <div class="container text-center">
-                <h1>Our Mission: Rebuilding the Past</h1>
-                <p>Learn about the vision and the dedicated team behind LesArch.</p>
+            <div class="container">
+                <h1>About LesArch</h1>
+                <p>Our mission to preserve and share history through technology.</p>
             </div>
         </section>
 
-        <section class="about-content section-padding">
+        <section class="about-section section-padding bg-white">
             <div class="container">
-                <div class="about-section">
-                    <h2>Our Story</h2>
-                    <p>LesArch was founded on a passion for history and a belief in the power of technology to make ancient worlds accessible. We started with a simple idea: what if we could not just read about archaeological sites, but walk through them as they once were? This led us on a journey to combine rigorous historical research with cutting-edge 3D modeling and web development.</p>
-                    <p>Our team comprises historians, archaeologists, 3D artists, and web developers, all working collaboratively to ensure that every reconstruction is both historically accurate and visually stunning. We believe that by digitally preserving and recreating these wonders, we can inspire a new generation to connect with our shared human heritage.</p>
-                </div>
+                <h2>Our Story</h2>
+                <p>LesArch began with a simple yet profound idea: to make the rich tapestry of human history more accessible and engaging than ever before. Born from a passion for archaeology and a belief in the power of digital innovation, our platform strives to bridge the gap between academic research and public curiosity. We aim to bring the wonders of ancient sites directly to your screen, fostering a deeper connection with our shared past.</p>
+                <p>Our journey involves meticulous research, cutting-edge 3D reconstruction techniques, and a commitment to accuracy. We collaborate with archaeologists, historians, and digital specialists to ensure that every site presented on LesArch is not only visually stunning but also historically sound.</p>
+            </div>
+        </section>
 
-                <div class="about-section">
-                    <h2>Our Vision</h2>
-                    <p>To become the leading digital archive and interactive exploration platform for archaeological sites worldwide. We aim to continuously expand our database, integrate new research, and leverage emerging technologies (like VR/AR) to offer unparalleled immersive experiences.</p>
-                    <div class="vision-points">
-                        <div class="vision-item">
-                            <h3><i class="fas fa-archway"></i> Preservation</h3>
-                            <p>Digitally safeguarding vulnerable historical sites against time, erosion, and human impact.</p>
-                        </div>
-                        <div class="vision-item">
-                            <h3><i class="fas fa-lightbulb"></i> Education</h3>
-                            <p>Providing detailed, accessible, and engaging educational resources for students and enthusiasts globally.</p>
-                        </div>
-                        <div class="vision-item">
-                            <h3><i class="fas fa-globe-americas"></i> Accessibility</h3>
-                            <p>Making world heritage available to everyone, regardless of geographical or physical limitations.</p>
-                        </div>
+        <section class="about-section section-padding bg-light">
+            <div class="container">
+                <h2>Our Vision</h2>
+                <p>We envision a future where archaeological heritage is universally accessible, understood, and appreciated. LesArch is built on three core pillars:</p>
+                <div class="vision-points">
+                    <div class="vision-item">
+                        <i class="fas fa-globe-americas"></i>
+                        <h3>Global Accessibility</h3>
+                        <p>Breaking down geographical barriers to allow anyone, anywhere, to explore archaeological sites and their contexts.</p>
+                    </div>
+                    <div class="vision-item">
+                        <i class="fas fa-cube"></i>
+                        <h3>Immersive Learning</h3>
+                        <p>Utilizing interactive 3D models and rich narratives to provide an engaging and educational experience beyond traditional methods.</p>
+                    </div>
+                    <div class="vision-item">
+                        <i class="fas fa-heart"></i>
+                        <h3>Preservation & Advocacy</h3>
+                        <p>Raising awareness about threatened archaeological sites and promoting their preservation through digital documentation and public engagement.</p>
                     </div>
                 </div>
+            </div>
+        </section>
 
-                <div class="about-section">
-                    <h2>Meet the Team</h2>
-                    <div class="team-grid">
-                        <div class="team-member">
-                            <img src="https://via.placeholder.com/150" alt="Team Member 1">
-                            <h3>John Doe</h3>
-                            <p>Founder & Lead Historian</p>
-                            <a href="#" class="social-icon"><i class="fab fa-linkedin"></i></a>
+        <!-- NEW SECTION: Our Commitment to Open Data & Research -->
+        <section class="about-section section-padding bg-white">
+            <div class="container">
+                <h2>Our Commitment to Open Data & Research</h2>
+                <p>LesArch is dedicated to fostering open science and supporting the archaeological research community. We believe that digital archaeological data, especially 3D models, should be findable, accessible, interoperable, and reusable (FAIR principles).</p>
+                <p>While LesArch provides an interactive visualization platform, we strongly encourage the deposition of underlying research data in established, long-term archaeological repositories. We recommend researchers contributing models to LesArch to also publish their data in platforms such as:</p>
+                <ul class="repo-list">
+                    <li><a href="https://repo.dainst.org/" target="_blank"><strong>iDAI.repo</strong></a> (German Archaeological Institute) - Ideal for archaeological research data.</li>
+                    <li><a href="https://zenodo.org/" target="_blank"><strong>Zenodo</strong></a> - A general-purpose open-access repository that provides DOIs for citable research outputs.</li>
+                    <li><a href="https://portal.ariadne-infrastructure.eu/" target="_blank"><strong>ARIADNE Infrastructure</strong></a> - The central portal for archaeological data in Europe, which often aggregates data from other repositories.</li>
+                </ul>
+                <p>By doing so, we ensure that the valuable data behind our visualizations is preserved, discoverable, and citable for future academic endeavors, contributing to the broader archaeological discourse and preservation efforts.</p>
+            </div>
+        </section>
+
+        <section class="about-section section-padding bg-light">
+            <div class="container">
+                <h2>Our Team</h2>
+                <p>LesArch is a collaborative effort driven by passionate individuals dedicated to archaeology and digital heritage.</p>
+                <div class="team-grid">
+                    <div class="team-member">
+                        <img src="assets/mdl pb.jpg" alt="Leslie Antwi">
+                        <h3>Leslie Antwi</h3>
+                        <p>Founder & Lead Developer</p>
+                        <p class="small-text">Digital and Computational Archaeology (M.A.)</p>
+                        <p class="small-text">University of Cologne</p>
+                        <div class="social-icons-small">
+                            <a href="https://www.instagram.com/lesarch1.1?igsh=YXRtN3h5YmE5bXFk&utm_source=qr" target="_blank" aria-label="Instagram"><i class="fab fa-instagram social-icon"></i></a>
+                            <a href="mailto:leslieantwi2@gmail.com" aria-label="Email"><i class="fas fa-envelope social-icon"></i></a>
                         </div>
-                        <div class="team-member">
-                            <img src="https://via.placeholder.com/150" alt="Team Member 2">
-                            <h3>Jane Smith</h3>
-                            <p>Lead 3D Artist</p>
-                            <a href="#" class="social-icon"><i class="fab fa-linkedin"></i></a>
-                        </div>
-                        <div class="team-member">
-                            <img src="https://via.placeholder.com/150" alt="Team Member 3">
-                            <h3>Robert Brown</h3>
-                            <p>Web Development Lead</p>
-                            <a href="#" class="social-icon"><i class="fab fa-linkedin"></i></a>
-                        </div>
-                        </div>
+                    </div>
+                    <!-- Add more team members as needed -->
                 </div>
             </div>
         </section>
