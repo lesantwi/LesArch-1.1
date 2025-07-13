@@ -84,13 +84,13 @@ document.addEventListener('DOMContentLoaded', () => {
                     method: contactForm.method,
                     body: formData,
                     headers: {
-                        'Accept': 'application/json' // Important for Formspree to return JSON, not redirect
+                        'Accept': 'application/json'
                     }
                 });
 
                 if (response.ok) {
                     displayMessage(contactMessageDiv, 'Thank you for your message! We will get back to you soon.', 'success');
-                    contactForm.reset(); // Clear the form
+                    contactForm.reset();
                 } else {
                     const data = await response.json();
                     if (data.errors) {
@@ -119,9 +119,11 @@ document.addEventListener('DOMContentLoaded', () => {
             const yourName = document.getElementById('your-name').value.trim();
             const yourEmail = document.getElementById('your-email').value.trim();
             const modelFile = document.getElementById('model-file').files[0];
+            const modelDescription = document.getElementById('model-description').value.trim(); // Get description value
 
+            // Check if required text fields are filled
             if (!modelName || !yourName || !yourEmail) {
-                displayMessage(modelMessageDiv, 'Please fill in all required fields.', 'error');
+                displayMessage(modelMessageDiv, 'Please fill in all required text fields (Model Name, Your Name, Your Email).', 'error');
                 return;
             }
 
@@ -130,28 +132,26 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-            // Optional client-side file size/type validation
-            // Formspree free tier has a 25MB file upload limit per file.
-            const MAX_FILE_SIZE_MB = 25; // Formspree free tier limit
+            // NEW VALIDATION LOGIC: Either file is uploaded OR description has content (ideally a link)
+            if (!modelFile && !modelDescription) {
+                displayMessage(modelMessageDiv, 'Please upload a model file OR provide a link/description in the notes field.', 'error');
+                return;
+            }
+
+            // Optional client-side file size/type validation (Formspree free tier has a 25MB file upload limit per file)
+            const MAX_FILE_SIZE_MB = 25;
             if (modelFile) {
                 if (modelFile.size > MAX_FILE_SIZE_MB * 1024 * 1024) {
-                    displayMessage(modelMessageDiv, `File size exceeds ${MAX_FILE_SIZE_MB}MB limit. Please provide a link in the description for larger files.`, 'error');
+                    displayMessage(modelMessageDiv, `File size exceeds ${MAX_FILE_SIZE_MB}MB limit for direct upload. Please provide a link in the description for larger files.`, 'error');
                     return;
                 }
-                const allowedTypes = ['model/gltf-binary', 'model/gltf+json', 'application/octet-stream', 'application/x-fbx', 'application/x-obj']; // Common GLB/GLTF/OBJ/FBX mimetypes
+                const allowedTypes = ['model/gltf-binary', 'model/gltf+json', 'application/octet-stream', 'application/x-fbx', 'application/x-obj'];
+                // Check by MIME type or file extension if MIME type is generic
                 if (!allowedTypes.includes(modelFile.type) && !modelFile.name.endsWith('.glb') && !modelFile.name.endsWith('.gltf') && !modelFile.name.endsWith('.obj') && !modelFile.name.endsWith('.fbx')) {
                      displayMessage(modelMessageDiv, 'Unsupported file type. Please upload a .glb, .gltf, .obj, or .fbx file.', 'error');
                      return;
                 }
-            } else {
-                // If no file is uploaded, ensure description is not empty if it's the only way to provide model
-                const modelDescription = document.getElementById('model-description').value.trim();
-                if (!modelDescription) {
-                    displayMessage(modelMessageDiv, 'Please upload a model file or provide a link/description for the model.', 'error');
-                    return;
-                }
             }
-
 
             const formData = new FormData(modelSubmitForm);
 
@@ -160,13 +160,13 @@ document.addEventListener('DOMContentLoaded', () => {
                     method: modelSubmitForm.method,
                     body: formData,
                     headers: {
-                        'Accept': 'application/json' // Important for Formspree to return JSON, not redirect
+                        'Accept': 'application/json'
                     }
                 });
 
                 if (response.ok) {
-                    displayMessage(modelMessageDiv, 'Thank you for your submission! We will review your model.', 'success');
-                    modelSubmitForm.reset(); // Clear the form
+                    displayMessage(modelMessageDiv, 'Thank you for your submission! We will review your model and any provided links.', 'success');
+                    modelSubmitForm.reset();
                 } else {
                     const data = await response.json();
                     if (data.errors) {
@@ -185,10 +185,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // Helper function to display messages
     function displayMessage(element, message, type) {
         element.textContent = message;
-        element.className = `form-message ${type}`; // Add type class (success/error)
-        element.style.display = 'block'; // Show the message
+        element.className = `form-message ${type}`;
+        element.style.display = 'block';
 
-        // Automatically hide message after 5 seconds
         setTimeout(() => {
             element.style.display = 'none';
             element.textContent = '';
@@ -220,9 +219,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Initial fact display
     updateFact();
-
-    // Change fact every 10 seconds
     setInterval(updateFact, 10000);
 });

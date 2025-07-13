@@ -14,11 +14,19 @@ document.addEventListener('DOMContentLoaded', () => {
             id: 'pont-du-gard',
             name: 'Pont du Gard',
             coords: [43.9478, 4.5357],
-            // CORRECTED: Using 'project_thumb_point_du_gard.jpeg' as requested
             image: 'assets/project_thumb_point_du_gard.jpeg', // Confirmed path
             description: 'A magnificent ancient Roman aqueduct bridge in southern France.',
             link: 'site-detail.html' // Link to its detail page
         },
+        {
+            id: 'asuka-dera',
+            name: 'Asuka Dera Temple',
+            coords: [34.468, 135.827], // Approximate coordinates for Asuka, Japan
+            image: 'https://www.japan.travel/content/dam/jnt/photos/02_nara/Nara_004/Nara_004_1.jpg', // New image URL
+            description: 'Japan\'s first full-fledged Buddhist temple, a pivotal site for early Japanese Buddhism.',
+            link: 'asuka-dera-detail.html' // Link to its detail page
+        },
+        // Larabanga Mosque entry removed for now
         {
             id: 'petra',
             name: 'Petra: Al-Khazneh',

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Asuka Dera Temple - 3D Model | LesArch</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="assets/lesarch_logo.png" type="image/png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Google Model Viewer Library -->
+    <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+    <script nomodule src="https://unpkg.com/@google/model-viewer/dist/model-viewer-legacy.js"></script>
+</head>
+<body>
+    <header class="main-header">
+        <div class="container header-content">
+            <a href="index.html" class="logo">
+                <img src="assets/lesarch_logo.png" alt="LesArch Logo">
+                LesArch
+            </a>
+            <nav class="navbar">
+                <ul class="nav-links">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="map.html" class="active">Explore Map</a></li>
+                    <li><a href="about.html">About Us</a></li>
+                    <li><a href="contact.html">Contact & Submit</a></li>
+                </ul>
+                <div class="hamburger">
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main class="content-min-height model-viewer-page-main">
+        <div class="model-viewer-info">
+            <h2>Asuka Dera Temple 3D Model</h2>
+            <p>Explore the reconstructed Asuka Dera Temple in 3D. Model coming soon!</p>
+        </div>
+        <div class="model-viewer-container">
+            <!-- Placeholder for the model-viewer. Replace 'model.glb' with your actual model path when ready. -->
+            <model-viewer src=""
+                          alt="3D model of Asuka Dera Temple"
+                          ar
+                          ar-modes="webxr scene-viewer quick-look"
+                          camera-controls
+                          shadow-intensity="1"
+                          exposure="1"
+                          shadow-softness="1"
+                          auto-rotate
+                          autoplay
+                          loading="lazy"
+                          disable-zoom
+                          interaction-prompt="none"
+                          poster="https://www.japan.travel/content/dam/jnt/photos/02_nara/Nara_004/Nara_004_1.jpg">
+                <div class="dim-overlay" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; color: white; font-size: 1.5em; text-align: center; border-radius: 10px;">
+                    3D Model Coming Soon!
+                </div>
+            </model-viewer>
+        </div>
+        <p class="model-viewer-note">Use your mouse to rotate and zoom. On compatible mobile devices, tap the AR icon to view in augmented reality.</p>
+    </main>
+
+    <footer class="main-footer">
+        <div class="container footer-content">
+            <div class="footer-section about-lesarch">
+                <h3>About LesArch</h3>
+                <p>Bringing history to life through immersive 3D archaeological reconstructions and in-depth research.</p>
+            </div>
+            <div class="footer-section quick-links">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="map.html">Explore Sites</a></li>
+                    <li><a href="about.html">Our Story</a></li>
+                    <li><a href="contact.html">Contact Us</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                </ul>
+            </div>
+            <div class="footer-section social-media">
+                <h3>Connect With Us</h3>
+                <div class="social-icons">
+                    <a href="https://www.instagram.com/lesarch1.1?igsh=YXRtN3h5YmE5bXFk&utm_source=qr" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="mailto:lesarch2.0@gmail.com" aria-label="Email"><i class="fas fa-envelope"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 LesArch. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

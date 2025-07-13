@@ -44,7 +44,6 @@
                 <div class="contact-form-section">
                     <h2>Contact Us</h2>
                     <p>Have a question, feedback, or just want to say hello? Fill out the form below.</p>
-                    <!-- Formspree Contact Form Action -->
                     <form id="contactForm" class="contact-form" action="https://formspree.io/f/movwoyor" method="POST">
                         <div class="form-group">
                             <label for="contact-name">Name</label>
@@ -66,7 +65,6 @@
                 <div class="submit-model-section">
                     <h2>Submit a 3D Model</h2>
                     <p>Do you have an archaeological 3D model you'd like to share with the world? We welcome submissions!</p>
-                    <!-- Formspree Model Submission Form Action -->
                     <form id="modelSubmitForm" class="model-submit-form" action="https://formspree.io/f/xwpbdage" method="POST" enctype="multipart/form-data">
                         <div class="form-group">
                             <label for="model-name">Model Name</label>
@@ -81,12 +79,14 @@
                             <input type="email" id="your-email" name="yourEmail" required>
                         </div>
                         <div class="form-group">
-                            <label for="model-file">Upload Model File (.glb, .gltf, .obj, .fbx)</label>
+                            <label for="model-file">Upload Model File (.glb, .gltf, .obj, .fbx) - Optional</label>
+                            <!-- REMOVED 'required' attribute -->
                             <input type="file" id="model-file" name="modelFile" accept=".glb,.gltf,.obj,.fbx">
-                            <p class="note">Max file size: 50MB. For larger files, please provide a link in the description.</p>
+                            <!-- UPDATED NOTE for clarity -->
+                            <p class="note">Max file size for direct upload: 25MB. For larger files or if you encounter issues, please upload your model to a service like Google Drive, Dropbox, or Sketchfab, and **paste the shareable link in the 'Model Description & Notes' field below.**</p>
                         </div>
                         <div class="form-group">
-                            <label for="model-description">Model Description & Notes</label>
+                            <label for="model-description">Model Description & Notes (include link here if applicable)</label>
                             <textarea id="model-description" name="modelDescription" rows="5"></textarea>
                         </div>
                         <button type="submit" class="btn secondary-btn">Submit Model</button>
