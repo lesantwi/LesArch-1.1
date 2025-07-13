@@ -218,6 +218,25 @@ ul {
     color: #e0e0e0;
 }
 
+/* NEW: Welcome Section Styles */
+.welcome-section {
+    background-color: #ffffff; /* White background for contrast */
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    margin-bottom: 40px; /* Space before next section */
+}
+.welcome-section h2 {
+    font-size: 2.5em;
+    margin-bottom: 20px;
+}
+.welcome-section p {
+    font-size: 1.1em;
+    line-height: 1.8;
+    max-width: 900px;
+    margin: 0 auto 15px auto;
+    color: #555;
+}
+
+
 /* --- Page Hero (Other Pages) --- */
 .page-hero {
     height: 35vh; /* Shorter hero for sub-pages */
@@ -833,6 +852,74 @@ ul {
 .view-model-btn {
     margin-top: 15px; /* Space above the button */
 }
+
+/* NEW: Model Creator Credit Styles */
+.model-credit {
+    margin-top: 30px; /* Space above the credit section */
+    padding-top: 20px;
+    border-top: 1px solid #eee; /* Subtle separator */
+    text-align: center;
+    font-size: 0.9em;
+    color: #666;
+}
+
+.model-credit h4 {
+    margin-top: 0;
+    margin-bottom: 5px;
+    color: #2c3e50;
+    font-size: 1.1em;
+}
+
+.model-credit p {
+    margin-bottom: 5px;
+    line-height: 1.4;
+}
+
+.model-credit p.profession {
+    font-style: italic;
+    font-size: 0.85em;
+    color: #777;
+}
+
+/* NEW: References Section Styles */
+.references-section {
+    background-color: #f9f9f9; /* Slightly different background for distinction */
+    border-top: 1px solid #eee;
+}
+
+.references-section h2 {
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 2em;
+    color: #2c3e50;
+}
+
+.references-list {
+    list-style: decimal; /* Numbered list */
+    padding-left: 25px; /* Indent for numbers */
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.references-list li {
+    margin-bottom: 15px;
+    font-size: 0.95em;
+    line-height: 1.6;
+    color: #555;
+}
+
+.references-list li a {
+    word-break: break-all; /* Ensures long URLs don't overflow */
+}
+
+.references-section .note {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 0.85em;
+    color: #7f8c8d;
+    font-style: italic;
+}
+
 
 /* --- 3D Model Viewer Page Specifics --- */
 .model-viewer-page-main {
