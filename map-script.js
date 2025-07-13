@@ -8,12 +8,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Site Data (All Sites) ---
     // This array will hold all your archaeological site data
+    // Ensure these image paths correctly point to files within your 'assets' folder
     const archaeologicalSites = [
         {
             id: 'pont-du-gard',
             name: 'Pont du Gard',
             coords: [43.9478, 4.5357],
-            image: 'assets/project_thumb_pont_du_gard.jpeg',
+            // CORRECTED: Using 'project_thumb_point_du_gard.jpeg' as requested
+            image: 'assets/project_thumb_point_du_gard.jpeg', // Confirmed path
             description: 'A magnificent ancient Roman aqueduct bridge in southern France.',
             link: 'site-detail.html' // Link to its detail page
         },
@@ -21,15 +23,15 @@ document.addEventListener('DOMContentLoaded', () => {
             id: 'petra',
             name: 'Petra: Al-Khazneh',
             coords: [30.3285, 35.4444],
-            image: 'assets/project_thumb_upcoming1.jpeg', // Using a placeholder image
+            image: 'assets/project_thumb_upcoming1.jpeg', // Confirm this file exists
             description: 'The iconic Treasury of the ancient Nabataean city of Petra, Jordan.',
-            link: '#' // Placeholder link
+            link: '#' // Placeholder link, will be updated when Petra detail page is ready
         },
         {
             id: 'giza-pyramid',
             name: 'Great Pyramid of Giza',
             coords: [29.9792, 31.1342],
-            image: 'assets/project1.jpeg', // Using a placeholder image
+            image: 'assets/project1.jpeg', // Confirm this file exists
             description: 'The oldest and largest of the three pyramids in the Giza Necropolis.',
             link: '#' // Placeholder link
         },
@@ -37,7 +39,7 @@ document.addEventListener('DOMContentLoaded', () => {
             id: 'colosseum',
             name: 'Roman Colosseum',
             coords: [41.8902, 12.4922],
-            image: 'https://via.placeholder.com/150x100/555555/ffffff?text=Colosseum', // Placeholder if no local image
+            image: 'assets/mdl pb.jpg', // Using your uploaded 'mdl pb.jpg' as a placeholder
             description: 'An elliptical amphitheatre in the centre of the city of Rome, Italy.',
             link: '#' // Placeholder link
         },
@@ -45,11 +47,11 @@ document.addEventListener('DOMContentLoaded', () => {
             id: 'machu-picchu',
             name: 'Machu Picchu',
             coords: [-13.1631, -72.5450],
-            image: 'https://via.placeholder.com/150x100/555555/ffffff?text=Machu+Picchu', // Placeholder if no local image
+            image: 'assets/project_thumb_upcoming1.jpeg', // Reusing another placeholder
             description: 'An ancient Inca citadel located in the Andes Mountains of Peru.',
             link: '#' // Placeholder link
         }
-        // Add more sites here following the same structure
+        // Add more sites here following the same structure, ensuring correct local image paths
     ];
 
     let currentMarkers = []; // To keep track of markers currently on the map
