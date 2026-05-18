@@ -679,25 +679,24 @@ p { margin: 0 0 1em; max-width: 68ch; }
   opacity: 1; transform: none;
 }
 
-/* Cursor (desktop) */
+/* Cursor (desktop) — system cursor stays visible, custom dot is a subtle accent */
 @media (hover: hover) and (pointer: fine) {
-  body { cursor: none; }
-  a, button, input, textarea, [role="button"] { cursor: none; }
   .lesarch-cursor {
     position: fixed;
-    width: 14px; height: 14px;
+    width: 10px; height: 10px;
     border: 1.5px solid var(--c-clay);
     border-radius: 50%;
     pointer-events: none;
     z-index: 9999;
-    transition: transform .12s var(--ease), background .2s var(--ease), width .25s var(--ease), height .25s var(--ease);
+    transition: transform .12s var(--ease), background .2s var(--ease), width .25s var(--ease), height .25s var(--ease), opacity .2s var(--ease);
     transform: translate(-50%, -50%);
-    mix-blend-mode: difference;
+    opacity: 0.55;
   }
   .lesarch-cursor.is-hover {
-    width: 38px; height: 38px;
-    background: rgba(184,90,58,0.25);
+    width: 30px; height: 30px;
+    background: rgba(184,90,58,0.18);
     border-color: var(--c-ochre);
+    opacity: 0.75;
   }
 }
 .lesarch-cursor { display: none; }

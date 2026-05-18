@@ -37,7 +37,72 @@ const placeSchema = {
   }),
 };
 
+// Additional ScholarlyArticle schema — only when a citable 3D model is published.
+// This makes the reconstruction discoverable by Google Scholar as a citable research output.
 const year = new Date().getFullYear();
+const pageUrl = new URL(`${base}/sites/${site.slug}`, Astro.site).toString();
+const scholarlyArticleSchema = site.modelAvailable && site.doi
+  ? {
+      '@context': 'https://schema.org',
+      '@type': 'ScholarlyArticle',
+      headline: `${site.name} — Digital 3D Reconstruction`,
+      name: `${site.name} — Digital 3D Reconstruction`,
+      abstract: site.shortDescription,
+      description: site.longDescription,
+      datePublished: `${year}-01-01`,
+      inLanguage: 'en',
+      isAccessibleForFree: true,
+      learningResourceType: '3D Model',
+      educationalLevel: 'Higher Education',
+      keywords: [
+        'archaeology',
+        'digital heritage',
+        site.country,
+        site.eraLabel,
+        site.type,
+        '3D reconstruction',
+        'open data',
+      ].join(', '),
+      author: {
+        '@type': 'Person',
+        name: 'Leslie Antwi',
+        email: 'leslieantwi2@gmail.com',
+        affiliation: {
+          '@type': 'CollegeOrUniversity',
+          name: 'University of Cologne',
+          department: 'Digital and Computational Archaeology (M.A.)',
+        },
+      },
+      publisher: {
+        '@type': 'Organization',
+        name: 'LesArch',
+        url: new URL(base + '/', Astro.site).toString(),
+      },
+      identifier: [
+        { '@type': 'PropertyValue', propertyID: 'DOI', value: site.doi },
+        { '@type': 'PropertyValue', propertyID: 'URL', value: pageUrl },
+      ],
+      url: pageUrl,
+      sameAs: `https://doi.org/${site.doi}`,
+      mainEntity: placeSchema,
+      citation: site.references?.map((r) => ({
+        '@type': 'CreativeWork',
+        name: r.label,
+        url: r.url,
+      })),
+      license: 'https://creativecommons.org/licenses/by/4.0/',
+      isPartOf: {
+        '@type': 'WebSite',
+        name: 'LesArch',
+        url: new URL(base + '/', Astro.site).toString(),
+      },
+    }
+  : null;
+
+const combinedSchema = scholarlyArticleSchema
+  ? { '@context': 'https://schema.org', '@graph': [placeSchema, scholarlyArticleSchema] }
+  : placeSchema;
+
 const apa = `Antwi, L. (${year}). ${site.name} — 3D reconstruction. LesArch. ${site.doi ? `https://doi.org/${site.doi}` : `https://lesantwi.github.io/LesArch-1.1/sites/${site.slug}`}`;
 const bibtex = `@misc{antwi_${site.slug.replace(/-/g, '_')}_${year},
   author       = {Antwi, Leslie},
@@ -55,7 +120,7 @@ const bibtex = `@misc{antwi_${site.slug.replace(/-/g, '_')}_${year},
   image={site.hero}
   locale={locale}
   pathWithoutBase={`/sites/${site.slug}`}
-  schema={placeSchema}
+  schema={combinedSchema}
 >
   <Fragment slot="head">
     <style>

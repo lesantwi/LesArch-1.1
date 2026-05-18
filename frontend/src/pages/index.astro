@@ -1,6 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import SiteCard from '../components/SiteCard.astro';
+import TrustStrip from '../components/TrustStrip.astro';
 import { SITES, DID_YOU_KNOW } from '../data/sites';
 import { t } from '../i18n/ui';
 
@@ -89,6 +90,8 @@ const plannedCount = SITES.filter((s) => s.status === 'planned').length;
       </div>
     </div>
   </section>
+
+  <TrustStrip />
 
   <section class="did-you-know">
     <div class="container did-you-know__inner">

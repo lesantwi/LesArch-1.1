@@ -1,0 +1,232 @@
+---
+/**
+ * "Aligned with" trust strip — seeded with real, defensible affiliations
+ * the project already has. Add a `quote` field to any entry to surface a pull-quote.
+ *
+ * To add a real institutional endorsement later, append to the `endorsements` array
+ * and (optionally) provide an image at /public/assets/endorsers/.
+ */
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+
+const partners = [
+  {
+    name: 'Zenodo',
+    role: 'DOI-minting open repository',
+    url: 'https://doi.org/10.5281/zenodo.15873327',
+    badge: 'DOI · 10.5281 / zenodo.15873327',
+  },
+  {
+    name: 'UNESCO World Heritage',
+    role: 'Pont du Gard · site #344',
+    url: 'https://whc.unesco.org/en/list/344/',
+    badge: 'WHC · 344',
+  },
+  {
+    name: 'iDAI.repo',
+    role: 'German Archaeological Institute',
+    url: 'https://repo.dainst.org/',
+    badge: 'FAIR data',
+  },
+  {
+    name: 'ARIADNE Infrastructure',
+    role: 'European archaeology portal',
+    url: 'https://portal.ariadne-infrastructure.eu/',
+    badge: 'EU infra',
+  },
+  {
+    name: 'University of Cologne',
+    role: 'Digital & Computational Archaeology (M.A.)',
+    url: 'https://archaeologie.uni-koeln.de/',
+    badge: 'Academic home',
+  },
+];
+
+const endorsements: { quote: string; author: string; role: string }[] = [
+  // Append real endorsements here, e.g.:
+  // { quote: "Used the Pont du Gard model in my undergraduate Roman architecture seminar.", author: "Dr. Jane Doe", role: "Asst. Professor, Classical Archaeology" }
+];
+---
+
+<section class="trust-strip" data-testid="trust-strip">
+  <div class="container">
+    <div class="trust-strip__head">
+      <span class="eyebrow">004 — Aligned with</span>
+      <h2>Built on open infrastructure.</h2>
+      <p class="lede" style="margin-top:.5rem">
+        LesArch is not a walled garden. Every reconstruction is deposited with a citable DOI,
+        cross-referenced with UNESCO records, and aligned with the FAIR data principles
+        adopted by Europe's leading archaeological infrastructures.
+      </p>
+    </div>
+
+    <ul class="trust-strip__partners" role="list">
+      {partners.map((p) => (
+        <li class="trust-partner reveal">
+          <a href={p.url} target="_blank" rel="noopener" data-testid={`partner-${p.name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`}>
+            <span class="trust-partner__name">{p.name}</span>
+            <span class="trust-partner__role">{p.role}</span>
+            <span class="trust-partner__badge">{p.badge}</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+
+    {endorsements.length > 0 && (
+      <div class="trust-strip__quotes">
+        {endorsements.map((q) => (
+          <blockquote class="reveal">
+            <p>“{q.quote}”</p>
+            <cite>
+              <strong>{q.author}</strong>
+              <span>{q.role}</span>
+            </cite>
+          </blockquote>
+        ))}
+      </div>
+    )}
+
+    <div class="trust-strip__cta">
+      <p>
+        Used a LesArch reconstruction in your research or teaching?
+        <a href={`${base}/contact`} data-testid="trust-strip-feature-cta">
+          Get featured here →
+        </a>
+      </p>
+    </div>
+  </div>
+</section>
+
+<style>
+  .trust-strip {
+    background: var(--bg-deep);
+    padding: clamp(4rem, 8vw, 7rem) 0;
+    position: relative;
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+  }
+  .trust-strip__head {
+    display: grid;
+    grid-template-columns: 1fr 1.5fr;
+    gap: 3rem;
+    align-items: end;
+    margin-bottom: 3.5rem;
+  }
+  .trust-strip__head h2 { font-size: var(--step-3); margin: 0; max-width: 14ch; }
+  .trust-strip__head .lede { font-size: var(--step-1); margin: 0; }
+
+  .trust-strip__partners {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 0;
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+  }
+  .trust-partner {
+    border-right: 1px solid var(--line);
+  }
+  .trust-partner:last-child { border-right: 0; }
+  @media (max-width: 800px) {
+    .trust-partner { border-right: 0; border-bottom: 1px solid var(--line); }
+    .trust-partner:last-child { border-bottom: 0; }
+    .trust-strip__head { grid-template-columns: 1fr; gap: 1rem; }
+  }
+  .trust-partner a {
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+    padding: 2rem 1.5rem;
+    text-decoration: none;
+    color: var(--ink);
+    transition: background .3s var(--ease), transform .3s var(--ease);
+    height: 100%;
+  }
+  .trust-partner a:hover {
+    background: var(--c-bone);
+    transform: translateY(-2px);
+  }
+  .trust-partner__name {
+    font-family: var(--font-display);
+    font-size: 1.35rem;
+    font-variation-settings: "opsz" 72, "SOFT" 50, "wght" 500;
+    letter-spacing: -.015em;
+    line-height: 1.15;
+  }
+  .trust-partner__role {
+    font-size: .82rem;
+    color: var(--ink-soft);
+    line-height: 1.4;
+    flex: 1;
+  }
+  .trust-partner__badge {
+    font-family: var(--font-mono);
+    font-size: .68rem;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--c-clay);
+    padding-top: .75rem;
+    border-top: 1px dashed var(--line);
+    margin-top: auto;
+  }
+
+  .trust-strip__quotes {
+    margin-top: 3.5rem;
+    display: grid;
+    gap: 2rem;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  }
+  .trust-strip__quotes blockquote {
+    margin: 0;
+    padding: 2rem;
+    background: var(--c-bone);
+    border-radius: var(--radius-lg);
+    border-left: 3px solid var(--c-clay);
+  }
+  .trust-strip__quotes blockquote p {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: var(--step-1);
+    font-variation-settings: "opsz" 72, "SOFT" 60, "wght" 400;
+    line-height: 1.4;
+    margin: 0 0 1rem;
+  }
+  .trust-strip__quotes cite {
+    font-style: normal;
+    display: flex;
+    flex-direction: column;
+    font-family: var(--font-mono);
+    font-size: .72rem;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+  }
+  .trust-strip__quotes cite strong { color: var(--ink); font-weight: 600; }
+  .trust-strip__quotes cite span { color: var(--ink-soft); margin-top: .15rem; }
+
+  .trust-strip__cta {
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px dashed var(--line);
+    text-align: center;
+  }
+  .trust-strip__cta p {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: var(--step-1);
+    color: var(--ink-soft);
+    margin: 0;
+    max-width: none;
+  }
+  .trust-strip__cta a {
+    color: var(--c-clay);
+    text-decoration: none;
+    margin-left: .5rem;
+    font-style: normal;
+    font-family: var(--font-body);
+    font-weight: 500;
+    border-bottom: 1px solid currentColor;
+    padding-bottom: 2px;
+  }
+  .trust-strip__cta a:hover { color: var(--c-clay-deep); }
+</style>
