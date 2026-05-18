@@ -7,3 +7,6 @@ credentials.json
 *.pem
 *.key
 .credentials
+lesarch-source/
+memory/
+test_reports/
