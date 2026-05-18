@@ -58,9 +58,6 @@ const bibtex = `@misc{antwi_${site.slug.replace(/-/g, '_')}_${year},
   schema={placeSchema}
 >
   <Fragment slot="head">
-    {modelUrl && (
-      <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js"></script>
-    )}
     <style>
       .site-hero {
         position: relative;
@@ -104,6 +101,20 @@ const bibtex = `@misc{antwi_${site.slug.replace(/-/g, '_')}_${year},
         position: relative;
       }
       model-viewer { width: 100%; height: 100%; --poster-color: transparent; }
+      .model-poster {
+        position: absolute; inset: 0;
+        width: 100%; height: 100%; object-fit: cover;
+        filter: brightness(0.55) saturate(0.9);
+      }
+      .model-poster-overlay {
+        position: absolute; inset: 0;
+        display: flex; flex-direction: column;
+        justify-content: space-between;
+        padding: 2rem;
+        background: linear-gradient(180deg, rgba(0,0,0,0.05) 0%, rgba(21,17,13,0.55) 100%);
+      }
+      .model-poster-info { max-width: 28ch; }
+      .model-poster-overlay .btn { align-self: flex-start; }
       .two-col {
         display: grid;
         grid-template-columns: 2fr 1fr;
@@ -148,25 +159,26 @@ const bibtex = `@misc{antwi_${site.slug.replace(/-/g, '_')}_${year},
   <section class="section">
     <div class="container">
       {modelUrl ? (
-        <div class="model-viewer-wrap" data-testid="model-viewer-wrap">
-          <model-viewer
-            src={modelUrl}
-            alt={`3D model of ${site.name}`}
-            camera-controls
-            touch-action="pan-y"
-            ar
-            ar-modes="webxr scene-viewer quick-look"
-            shadow-intensity="1"
-            exposure="0.95"
-            environment-image="neutral"
-            auto-rotate
-            auto-rotate-delay="2500"
-            data-testid="model-viewer"
-          >
-            <button slot="ar-button" class="btn btn--primary" style="position:absolute; bottom:1.5rem; right:1.5rem;">
-              {t(locale, 'site.viewAR')}
+        <div class="model-viewer-wrap" data-testid="model-viewer-wrap" data-model-src={modelUrl}>
+          <img
+            class="model-poster"
+            src={heroImg}
+            alt={`Preview of ${site.name} 3D model`}
+            loading="lazy"
+          />
+          <div class="model-poster-overlay">
+            <div class="model-poster-info">
+              <span class="eyebrow" style="color:var(--c-ochre)">3D reconstruction</span>
+              <h3 style="color:var(--c-bone); margin:.5rem 0 .25rem; font-size:var(--step-2)">{site.name}</h3>
+              <p style="color:rgba(250,245,233,0.7); font-family:var(--font-mono); font-size:.75rem; letter-spacing:.15em; text-transform:uppercase;">
+                Interactive · WebXR / AR-ready · ~50&nbsp;MB
+              </p>
+            </div>
+            <button class="btn btn--primary" id="load-model-btn" type="button" data-testid="load-model-btn">
+              Load 3D model
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
             </button>
-          </model-viewer>
+          </div>
         </div>
       ) : (
         <div style="padding:3rem; text-align:center; background:var(--bg-deep); border-radius:var(--radius-lg); border:1px dashed var(--line);">
@@ -254,7 +266,40 @@ const bibtex = `@misc{antwi_${site.slug.replace(/-/g, '_')}_${year},
     </div>
   </section>
 
-  <script define:vars={{ apa, bibtex, doi: site.doi, iiif: site.iiifManifest }}>
+  <script define:vars={{ apa, bibtex, doi: site.doi, iiif: site.iiifManifest, modelUrl }}>
+    // Lazy-load 3D model on click (saves bandwidth for visitors who don't engage)
+    const loadBtn = document.getElementById('load-model-btn');
+    const wrap = document.querySelector('.model-viewer-wrap');
+    loadBtn?.addEventListener('click', () => {
+      if (!wrap || !modelUrl) return;
+      // Inject the model-viewer web component script
+      const script = document.createElement('script');
+      script.type = 'module';
+      script.src = 'https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js';
+      document.head.appendChild(script);
+      // Swap the poster for the model-viewer element
+      wrap.innerHTML = `
+        <model-viewer
+          src="${modelUrl}"
+          alt="3D model"
+          camera-controls
+          touch-action="pan-y"
+          ar
+          ar-modes="webxr scene-viewer quick-look"
+          shadow-intensity="1"
+          exposure="0.95"
+          environment-image="neutral"
+          auto-rotate
+          auto-rotate-delay="2500"
+          data-testid="model-viewer"
+        >
+          <button slot="ar-button" class="btn btn--primary" style="position:absolute; bottom:1.5rem; right:1.5rem;">
+            View in your space (AR)
+          </button>
+        </model-viewer>
+      `;
+    });
+
     // Citation tabs
     const tabs = document.querySelectorAll('.citation__tabs button');
     const output = document.getElementById('cite-output');

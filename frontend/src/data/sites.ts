@@ -54,8 +54,8 @@ export const SITES: ArchSite[] = [
     type: 'Aqueduct Bridge',
     status: 'completed',
     coords: [43.9478, 4.5357],
-    thumbnail: 'assets/project_thumb_point_du_gard.jpeg',
-    hero: 'assets/site_hero_pont_du_gard.jpeg',
+    thumbnail: 'assets/project_thumb_point_du_gard.webp',
+    hero: 'assets/site_hero_pont_du_gard.webp',
     shortDescription:
       'A monumental Roman aqueduct bridge, part of a 50 km system that supplied water to ancient Nemausus (Nîmes).',
     longDescription:
@@ -105,7 +105,7 @@ export const SITES: ArchSite[] = [
     status: 'planned',
     coords: [9.2189, -1.8531],
     thumbnail: 'assets/larabanga.jpg',
-    hero: 'assets/larabanga-aerial.jpg',
+    hero: 'assets/larabanga-aerial.webp',
     shortDescription:
       "One of Ghana's oldest mosques and a striking example of the Sudano-Sahelian architectural tradition in West Africa.",
     longDescription:
@@ -126,8 +126,8 @@ export const SITES: ArchSite[] = [
     type: 'Rock-Cut Monument',
     status: 'planned',
     coords: [30.3285, 35.4444],
-    thumbnail: 'assets/project_thumb_upcoming1.jpeg',
-    hero: 'assets/project_thumb_upcoming1.jpeg',
+    thumbnail: 'assets/project_thumb_upcoming1.webp',
+    hero: 'assets/project_thumb_upcoming1.webp',
     shortDescription:
       'The iconic rock-cut facade of the Nabataean capital Petra — likely a royal mausoleum from the 1st century BCE/CE.',
     longDescription:
@@ -148,8 +148,8 @@ export const SITES: ArchSite[] = [
     type: 'Pyramid',
     status: 'planned',
     coords: [29.9792, 31.1342],
-    thumbnail: 'assets/Pyramid of Giza 1.webp',
-    hero: 'assets/Pyramid of Giza 1.webp',
+    thumbnail: 'assets/pyramid_of_giza.webp',
+    hero: 'assets/pyramid_of_giza.webp',
     shortDescription:
       "The oldest of the Seven Wonders of the Ancient World — Pharaoh Khufu's monumental tomb and one of humanity's greatest engineering feats.",
     longDescription:
@@ -192,8 +192,8 @@ export const SITES: ArchSite[] = [
     type: 'Citadel',
     status: 'planned',
     coords: [-13.1631, -72.545],
-    thumbnail: 'assets/site_South America.png',
-    hero: 'assets/site_South America.png',
+    thumbnail: 'assets/site_south_america.webp',
+    hero: 'assets/site_south_america.webp',
     shortDescription:
       'A 15th-century Inca citadel perched 2,430 m above sea level in the Andes — astronomical, agricultural and ceremonial.',
     longDescription:

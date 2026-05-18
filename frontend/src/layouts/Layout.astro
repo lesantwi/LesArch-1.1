@@ -16,7 +16,7 @@ export interface Props {
 const {
   title,
   description = 'LesArch — Mapping Archaeological Wonders. Interactive map, citable 3D reconstructions, and open research data for global heritage.',
-  image = 'assets/lesarch_logo.png',
+  image = 'assets/lesarch_logo.webp',
   locale = 'en',
   noindex = false,
   schema,
@@ -111,8 +111,8 @@ const navItems: { key: string; path: string }[] = [
     <meta name="twitter:image" content={ogImage} />
 
     {/* Icons */}
-    <link rel="icon" href={url('/assets/lesarch_logo.png')} type="image/png" />
-    <link rel="apple-touch-icon" href={url('/assets/lesarch_logo.png')} />
+    <link rel="icon" href={url('/assets/lesarch_logo.webp')} type="image/webp" />
+    <link rel="apple-touch-icon" href={url('/assets/lesarch_logo.webp')} />
 
     {/* Theme color */}
     <meta name="theme-color" content="#B85A3A" media="(prefers-color-scheme: light)" />
@@ -152,7 +152,7 @@ const navItems: { key: string; path: string }[] = [
     <header class="site-header">
       <div class="container site-header__inner">
         <a href={url('/')} class="brand" data-testid="brand-link">
-          <img src={url('/assets/lesarch_logo.png')} alt="" />
+          <img src={url('/assets/lesarch_logo.webp')} alt="" />
           <span>
             LesArch
             <small>Heritage in 3D</small>
