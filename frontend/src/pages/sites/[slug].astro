@@ -1,0 +1,296 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { SITES } from '../../data/sites';
+import { t } from '../../i18n/ui';
+
+export async function getStaticPaths() {
+  return SITES.map((site) => ({
+    params: { slug: site.slug },
+    props: { site },
+  }));
+}
+
+const { site } = Astro.props;
+const locale = 'en';
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const heroImg = `${base}/${site.hero.replace(/^\//, '')}`;
+const modelUrl = site.modelUrl ? `${base}/${site.modelUrl.replace(/^\//, '')}` : null;
+
+// schema.org structured data for the place
+const placeSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'LandmarksOrHistoricalBuildings',
+  name: site.name,
+  description: site.longDescription,
+  image: new URL(heroImg, Astro.site).toString(),
+  geo: {
+    '@type': 'GeoCoordinates',
+    latitude: site.coords[0],
+    longitude: site.coords[1],
+  },
+  address: {
+    '@type': 'PostalAddress',
+    addressCountry: site.country,
+  },
+  ...(site.doi && {
+    identifier: { '@type': 'PropertyValue', propertyID: 'DOI', value: site.doi },
+  }),
+};
+
+const year = new Date().getFullYear();
+const apa = `Antwi, L. (${year}). ${site.name} — 3D reconstruction. LesArch. ${site.doi ? `https://doi.org/${site.doi}` : `https://lesantwi.github.io/LesArch-1.1/sites/${site.slug}`}`;
+const bibtex = `@misc{antwi_${site.slug.replace(/-/g, '_')}_${year},
+  author       = {Antwi, Leslie},
+  title        = {${site.name} — 3D reconstruction},
+  year         = {${year}},
+  publisher    = {LesArch},
+  ${site.doi ? `doi          = {${site.doi}},` : ''}
+  url          = {https://lesantwi.github.io/LesArch-1.1/sites/${site.slug}}
+}`;
+---
+
+<Layout
+  title={`${site.name} — LesArch`}
+  description={site.shortDescription}
+  image={site.hero}
+  locale={locale}
+  pathWithoutBase={`/sites/${site.slug}`}
+  schema={placeSchema}
+>
+  <Fragment slot="head">
+    {modelUrl && (
+      <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js"></script>
+    )}
+    <style>
+      .site-hero {
+        position: relative;
+        min-height: 60vh;
+        display: flex;
+        align-items: flex-end;
+        color: var(--c-bone);
+        padding: 6rem 0 4rem;
+        overflow: hidden;
+      }
+      .site-hero img.bg {
+        position: absolute; inset: 0;
+        width: 100%; height: 100%; object-fit: cover;
+        filter: brightness(0.55) saturate(0.9);
+        z-index: 0;
+      }
+      .site-hero::before {
+        content: ''; position: absolute; inset: 0;
+        background: linear-gradient(180deg, transparent 0%, rgba(21,17,13,0.85) 100%);
+        z-index: 1;
+      }
+      .site-hero__inner { position: relative; z-index: 2; }
+      .site-hero h1 { color: var(--c-bone); font-size: var(--step-4); max-width: 18ch; }
+      .site-hero__meta {
+        display: flex; gap: 1.5rem; flex-wrap: wrap;
+        font-family: var(--font-mono);
+        font-size: .75rem; letter-spacing: .18em;
+        text-transform: uppercase; color: rgba(250,245,233,0.75);
+        margin-bottom: 1.5rem;
+      }
+      .site-hero__meta span::before {
+        content: '◆'; color: var(--c-ochre); margin-right: .5rem;
+      }
+      .model-viewer-wrap {
+        width: 100%;
+        aspect-ratio: 16/10;
+        background: var(--c-stone);
+        border-radius: var(--radius-lg);
+        overflow: hidden;
+        margin: 2rem 0;
+        position: relative;
+      }
+      model-viewer { width: 100%; height: 100%; --poster-color: transparent; }
+      .two-col {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 3rem;
+        align-items: start;
+      }
+      @media (max-width: 900px) { .two-col { grid-template-columns: 1fr; } }
+      .meta-card {
+        background: var(--c-bone);
+        border: 1px solid var(--line);
+        border-radius: var(--radius-lg);
+        padding: 1.75rem;
+        position: sticky;
+        top: 6rem;
+      }
+      .meta-card dt {
+        font-family: var(--font-mono);
+        font-size: .7rem; letter-spacing: .15em; text-transform: uppercase;
+        color: var(--ink-soft); margin-top: 1rem;
+      }
+      .meta-card dt:first-child { margin-top: 0; }
+      .meta-card dd { margin: .25rem 0 0; font-weight: 500; }
+      .iiif-viewer { width: 100%; height: 600px; background: #000; border-radius: var(--radius-lg); }
+    </style>
+  </Fragment>
+
+  <section class="site-hero">
+    <img class="bg" src={heroImg} alt="" />
+    <div class="container site-hero__inner">
+      <div class="site-hero__meta">
+        <span>{site.country}</span>
+        <span>{site.eraLabel}</span>
+        <span>{t(locale, `status.${site.status}` as any)}</span>
+      </div>
+      <h1>{site.name}</h1>
+      <p class="hero__lede" style="color:rgba(250,245,233,0.85)">
+        {site.shortDescription}
+      </p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      {modelUrl ? (
+        <div class="model-viewer-wrap" data-testid="model-viewer-wrap">
+          <model-viewer
+            src={modelUrl}
+            alt={`3D model of ${site.name}`}
+            camera-controls
+            touch-action="pan-y"
+            ar
+            ar-modes="webxr scene-viewer quick-look"
+            shadow-intensity="1"
+            exposure="0.95"
+            environment-image="neutral"
+            auto-rotate
+            auto-rotate-delay="2500"
+            data-testid="model-viewer"
+          >
+            <button slot="ar-button" class="btn btn--primary" style="position:absolute; bottom:1.5rem; right:1.5rem;">
+              {t(locale, 'site.viewAR')}
+            </button>
+          </model-viewer>
+        </div>
+      ) : (
+        <div style="padding:3rem; text-align:center; background:var(--bg-deep); border-radius:var(--radius-lg); border:1px dashed var(--line);">
+          <h3 style="margin:0; font-family:var(--font-mono); font-size:1rem; letter-spacing:.15em; text-transform:uppercase; color:var(--c-ash);">
+            3D Model — {t(locale, `status.${site.status}` as any)}
+          </h3>
+          <p style="margin-top:1rem; color:var(--ink-soft);">
+            This reconstruction is {site.status}. Check back soon, or
+            <a href={`${base}/contact`}>contribute</a> to the project.
+          </p>
+        </div>
+      )}
+
+      <div class="two-col" style="margin-top:3rem">
+        <div>
+          <span class="eyebrow">About this site</span>
+          <h2 style="font-size:var(--step-3)">{site.name}</h2>
+          <p>{site.longDescription}</p>
+
+          <h3 style="margin-top:2.5rem">Research relevance</h3>
+          <p>{site.researchRelevance}</p>
+
+          {modelUrl && (
+            <div class="citation" data-testid="citation-block">
+              <span class="eyebrow" style="margin-bottom:.75rem">{t(locale, 'site.cite')}</span>
+              <div class="citation__tabs" role="tablist">
+                <button role="tab" aria-selected="true" data-cite="apa" data-testid="cite-apa">APA</button>
+                <button role="tab" aria-selected="false" data-cite="bibtex" data-testid="cite-bibtex">BibTeX</button>
+                {site.doi && <button role="tab" aria-selected="false" data-cite="doi" data-testid="cite-doi">DOI</button>}
+              </div>
+              <pre id="cite-output" data-testid="cite-output">{apa}</pre>
+              <button class="btn btn--ghost copy-btn" id="cite-copy" data-testid="cite-copy">Copy citation</button>
+            </div>
+          )}
+
+          {site.iiifManifest && (
+            <div style="margin-top:3rem">
+              <span class="eyebrow">High-resolution imagery (IIIF)</span>
+              <h3>Deep-zoom photography</h3>
+              <div id="iiif-viewer" class="iiif-viewer"></div>
+            </div>
+          )}
+
+          {site.references && site.references.length > 0 && (
+            <div style="margin-top:3rem">
+              <span class="eyebrow">{t(locale, 'site.references')}</span>
+              <ul style="padding-left:1.2rem">
+                {site.references.map((r) => (
+                  <li><a href={r.url} target="_blank" rel="noopener">{r.label}</a></li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </div>
+
+        <aside>
+          <div class="meta-card">
+            <dl>
+              <dt>Status</dt>
+              <dd>{t(locale, `status.${site.status}` as any)}</dd>
+              <dt>Era</dt>
+              <dd>{site.eraLabel}</dd>
+              <dt>Country</dt>
+              <dd>{site.country}</dd>
+              <dt>Type</dt>
+              <dd>{site.type}</dd>
+              <dt>Coordinates</dt>
+              <dd style="font-family:var(--font-mono); font-size:.85rem;">
+                {site.coords[0].toFixed(4)}, {site.coords[1].toFixed(4)}
+              </dd>
+              {site.doi && (
+                <>
+                  <dt>DOI</dt>
+                  <dd><a href={`https://doi.org/${site.doi}`} target="_blank" rel="noopener">{site.doi}</a></dd>
+                </>
+              )}
+            </dl>
+            <div style="margin-top:1.5rem; padding-top:1.5rem; border-top:1px solid var(--line); display:flex; flex-direction:column; gap:.5rem;">
+              <a href={`${base}/map`} class="btn btn--ghost" data-testid="back-to-map">← Back to atlas</a>
+              <a href={`${base}/contact`} class="btn btn--lapis" data-testid="contribute-cta">Contribute data</a>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <script define:vars={{ apa, bibtex, doi: site.doi, iiif: site.iiifManifest }}>
+    // Citation tabs
+    const tabs = document.querySelectorAll('.citation__tabs button');
+    const output = document.getElementById('cite-output');
+    const formats = { apa, bibtex, doi: doi ? `https://doi.org/${doi}` : '' };
+    tabs.forEach((tab) => {
+      tab.addEventListener('click', () => {
+        tabs.forEach((t) => t.setAttribute('aria-selected', 'false'));
+        tab.setAttribute('aria-selected', 'true');
+        const fmt = tab.getAttribute('data-cite');
+        if (output) output.textContent = formats[fmt] || '';
+      });
+    });
+    const copyBtn = document.getElementById('cite-copy');
+    copyBtn?.addEventListener('click', () => {
+      navigator.clipboard.writeText(output?.textContent || '').then(() => {
+        const orig = copyBtn.textContent;
+        copyBtn.textContent = 'Copied ✓';
+        setTimeout(() => (copyBtn.textContent = orig), 1800);
+      });
+    });
+
+    // IIIF (OpenSeadragon) — lazy load only if manifest provided
+    if (iiif) {
+      const s = document.createElement('script');
+      s.src = 'https://cdnjs.cloudflare.com/ajax/libs/openseadragon/4.1.0/openseadragon.min.js';
+      s.onload = () => {
+        // @ts-nocheck
+        window.OpenSeadragon({
+          id: 'iiif-viewer',
+          prefixUrl: 'https://cdnjs.cloudflare.com/ajax/libs/openseadragon/4.1.0/images/',
+          tileSources: iiif,
+          showNavigator: true,
+          gestureSettingsMouse: { clickToZoom: false },
+        });
+      };
+      document.head.appendChild(s);
+    }
+  </script>
+</Layout>

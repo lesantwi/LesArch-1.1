@@ -1,0 +1,222 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { SITES, ERAS } from '../data/sites';
+import { t } from '../i18n/ui';
+
+const locale = 'en';
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+
+// Pre-compute era year extremes for timeline slider
+const minYear = Math.min(...SITES.map((s) => s.yearStart));
+const maxYear = Math.max(...SITES.map((s) => s.yearEnd));
+---
+
+<Layout
+  title="The Atlas — LesArch"
+  description="An interactive map of archaeological wonders. Filter by era, status, and timeline."
+  locale={locale}
+  pathWithoutBase="/map"
+>
+  <Fragment slot="head">
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+      crossorigin=""
+    />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css"
+    />
+    <style>
+      .leaflet-popup-content-wrapper {
+        background: var(--c-bone);
+        color: var(--ink);
+        border-radius: var(--radius-lg);
+        box-shadow: var(--shadow-strong);
+        padding: 0;
+      }
+      .leaflet-popup-content { margin: 0; width: 280px !important; }
+      .leaflet-popup-tip { background: var(--c-bone); }
+      .marker-cluster div { background-color: rgba(184,90,58,0.9) !important; color: #fff !important; font-family: var(--font-mono); font-weight: 600; }
+      .marker-cluster { background-color: rgba(184,90,58,0.3) !important; }
+      .lesarch-popup img { width: 100%; aspect-ratio: 4/3; object-fit: cover; border-radius: var(--radius-lg) var(--radius-lg) 0 0; }
+      .lesarch-popup__body { padding: 1rem 1.25rem 1.25rem; }
+      .lesarch-popup__meta { font-family: var(--font-mono); font-size: .68rem; letter-spacing: .12em; text-transform: uppercase; color: var(--c-clay); margin-bottom: .35rem; }
+      .lesarch-popup h4 { font-size: 1.15rem; margin: 0 0 .4rem; }
+      .lesarch-popup p { font-size: .85rem; color: var(--ink-soft); margin: 0 0 .85rem; }
+      .lesarch-popup .btn { padding: .55rem 1rem; font-size: .8rem; }
+      .era-marker {
+        background: var(--c-clay);
+        color: #fff;
+        border-radius: 50%;
+        width: 32px; height: 32px;
+        display: flex; align-items: center; justify-content: center;
+        font-family: var(--font-display);
+        font-weight: 600;
+        font-size: 14px;
+        box-shadow: 0 4px 14px rgba(0,0,0,0.3), 0 0 0 3px rgba(255,255,255,0.4);
+        border: 1.5px solid #fff;
+      }
+      .era-marker.roman { background: var(--c-lapis); }
+      .era-marker.ancient-egypt { background: var(--c-ochre); }
+      .era-marker.medieval { background: var(--c-clay-deep); }
+      .era-marker.classical-antiquity { background: #6B5B95; }
+      .era-marker.early-modern { background: #4A6B5A; }
+      .era-marker.prehistoric { background: #594A3C; }
+    </style>
+  </Fragment>
+
+  <section class="section section--tight">
+    <div class="container">
+      <span class="eyebrow">The atlas</span>
+      <h1 style="font-size:var(--step-3)">{t(locale, 'map.title')}</h1>
+      <p class="lede">{t(locale, 'map.subtitle')}</p>
+
+      <div class="map-controls" style="margin-top:2rem">
+        <input
+          type="search"
+          id="map-search"
+          placeholder={t(locale, 'map.search')}
+          data-testid="map-search"
+        />
+        <select id="map-era-filter" data-testid="map-era-filter">
+          <option value="all">{t(locale, 'map.filter.era')} — {t(locale, 'map.filter.all')}</option>
+          {ERAS.map((era) => (
+            <option value={era.value}>{era.label}</option>
+          ))}
+        </select>
+        <select id="map-status-filter" data-testid="map-status-filter">
+          <option value="all">{t(locale, 'map.filter.status')} — {t(locale, 'map.filter.all')}</option>
+          <option value="completed">{t(locale, 'status.completed')}</option>
+          <option value="in-progress">{t(locale, 'status.in-progress')}</option>
+          <option value="planned">{t(locale, 'status.planned')}</option>
+        </select>
+      </div>
+
+      <div class="timeline-control">
+        <label for="map-timeline">
+          {t(locale, 'map.timeline')}: showing sites up to
+          <output id="map-timeline-output">{maxYear} AD</output>
+        </label>
+        <input
+          type="range"
+          id="map-timeline"
+          min={minYear}
+          max={maxYear}
+          value={maxYear}
+          step="50"
+          data-testid="map-timeline"
+        />
+        <div style="display:flex; justify-content:space-between; margin-top:.4rem; font-family:var(--font-mono); font-size:.7rem; color:var(--ink-soft); letter-spacing:.08em;">
+          <span>{Math.abs(minYear)} {minYear < 0 ? 'BCE' : 'AD'}</span>
+          <span>{maxYear} AD</span>
+        </div>
+      </div>
+
+      <div id="map" data-testid="map-canvas" style="margin-top:1.5rem"></div>
+    </div>
+  </section>
+
+  <script
+    is:inline
+    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+    crossorigin=""
+  ></script>
+  <script
+    is:inline
+    src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"
+  ></script>
+
+  <script define:vars={{ sites: SITES, base }}>
+    // @ts-nocheck
+    const map = L.map('map', { worldCopyJump: true }).setView([20, 10], 2);
+
+    L.tileLayer(
+      'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
+      {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; <a href="https://carto.com/">CARTO</a>',
+        subdomains: 'abcd',
+        maxZoom: 19,
+      }
+    ).addTo(map);
+
+    const eraInitial = {
+      roman: 'R',
+      'ancient-egypt': 'E',
+      medieval: 'M',
+      'classical-antiquity': 'C',
+      'early-modern': 'F',
+      prehistoric: 'P',
+    };
+
+    function makeIcon(era) {
+      return L.divIcon({
+        className: '',
+        iconSize: [32, 32],
+        iconAnchor: [16, 16],
+        html: `<div class="era-marker ${era}">${eraInitial[era] || '•'}</div>`,
+      });
+    }
+
+    function popupHtml(site) {
+      const img = `${base}/${site.thumbnail.replace(/^\//, '')}`;
+      const href = `${base}/sites/${site.slug}`;
+      return `<div class="lesarch-popup">
+        <img src="${img}" alt="${site.name}" loading="lazy" />
+        <div class="lesarch-popup__body">
+          <div class="lesarch-popup__meta">${site.country} · ${site.eraLabel}</div>
+          <h4>${site.name}</h4>
+          <p>${site.shortDescription}</p>
+          <a class="btn btn--primary" href="${href}">View details →</a>
+        </div>
+      </div>`;
+    }
+
+    const cluster = L.markerClusterGroup({
+      spiderfyOnMaxZoom: true,
+      showCoverageOnHover: false,
+      maxClusterRadius: 50,
+    });
+
+    let allMarkers = sites.map((site) => {
+      const m = L.marker(site.coords, { icon: makeIcon(site.era) });
+      m.bindPopup(popupHtml(site), { closeButton: true, maxWidth: 320 });
+      m.siteData = site;
+      return m;
+    });
+
+    function applyFilters() {
+      const q = document.getElementById('map-search').value.trim().toLowerCase();
+      const era = document.getElementById('map-era-filter').value;
+      const status = document.getElementById('map-status-filter').value;
+      const yearMax = parseInt(document.getElementById('map-timeline').value, 10);
+      document.getElementById('map-timeline-output').textContent =
+        yearMax < 0 ? `${Math.abs(yearMax)} BCE` : `${yearMax} AD`;
+
+      cluster.clearLayers();
+      const filtered = allMarkers.filter((m) => {
+        const s = m.siteData;
+        if (q && !(s.name.toLowerCase().includes(q) || s.country.toLowerCase().includes(q) || s.eraLabel.toLowerCase().includes(q))) return false;
+        if (era !== 'all' && s.era !== era) return false;
+        if (status !== 'all' && s.status !== status) return false;
+        if (s.yearStart > yearMax) return false;
+        return true;
+      });
+      filtered.forEach((m) => cluster.addLayer(m));
+      map.addLayer(cluster);
+    }
+
+    document.getElementById('map-search').addEventListener('input', applyFilters);
+    document.getElementById('map-era-filter').addEventListener('change', applyFilters);
+    document.getElementById('map-status-filter').addEventListener('change', applyFilters);
+    document.getElementById('map-timeline').addEventListener('input', applyFilters);
+
+    applyFilters();
+  </script>
+</Layout>

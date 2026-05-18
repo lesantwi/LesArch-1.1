@@ -1,0 +1,153 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { t } from '../i18n/ui';
+
+const locale = 'en';
+const GITHUB_REPO = 'lesantwi/LesArch-1.1';
+---
+
+<Layout
+  title="Contact & Submit — LesArch"
+  description="Get in touch with LesArch, or submit a 3D archaeological model to our open catalogue."
+  locale={locale}
+  pathWithoutBase="/contact"
+>
+  <section class="section">
+    <div class="container container--narrow">
+      <span class="eyebrow">Get in touch</span>
+      <h1>{t(locale, 'contact.title')}</h1>
+      <p class="lede" style="margin-top:1.5rem">
+        {t(locale, 'contact.subtitle')}
+      </p>
+
+      <p style="margin-top:1rem; padding:1rem 1.25rem; background:rgba(31,74,107,.08); border-left:3px solid var(--c-lapis); border-radius:var(--radius); font-size:.9rem;">
+        <strong>How this works:</strong> the form opens a pre-filled GitHub Issue
+        in our public repository so anyone can see, discuss, and track your
+        submission transparently. You'll need a free GitHub account.
+      </p>
+    </div>
+  </section>
+
+  <section class="section section--tight">
+    <div class="container container--narrow">
+      <h2 style="font-size:var(--step-3)">Contact us</h2>
+      <form id="contact-form" data-testid="contact-form" style="margin-top:1.5rem">
+        <div class="form-group">
+          <label for="c-name">{t(locale, 'contact.form.name')}</label>
+          <input id="c-name" name="name" required data-testid="contact-name" />
+        </div>
+        <div class="form-group">
+          <label for="c-email">{t(locale, 'contact.form.email')}</label>
+          <input id="c-email" type="email" name="email" required data-testid="contact-email" />
+        </div>
+        <div class="form-group">
+          <label for="c-message">{t(locale, 'contact.form.message')}</label>
+          <textarea id="c-message" name="message" rows="5" required data-testid="contact-message"></textarea>
+        </div>
+        <button type="submit" class="btn btn--primary" data-testid="contact-submit">
+          {t(locale, 'contact.form.send')}
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+        </button>
+      </form>
+    </div>
+  </section>
+
+  <section class="section" style="background:var(--bg-deep)">
+    <div class="container container--narrow">
+      <span class="eyebrow">Contribute</span>
+      <h2 style="font-size:var(--step-3)">{t(locale, 'submit.title')}</h2>
+      <p>
+        Have an archaeological 3D model you'd like to share? We welcome
+        submissions. For research-grade models, we recommend depositing your
+        underlying data in <a href="https://repo.dainst.org/" target="_blank" rel="noopener">iDAI.repo</a>
+        or <a href="https://zenodo.org/" target="_blank" rel="noopener">Zenodo</a>
+        first, and providing the link below for long-term preservation and
+        citability.
+      </p>
+
+      <form id="model-form" data-testid="model-form" style="margin-top:1.5rem">
+        <div class="form-group">
+          <label for="m-name">{t(locale, 'submit.modelName')}</label>
+          <input id="m-name" name="modelName" required data-testid="model-name" />
+        </div>
+        <div class="form-group">
+          <label for="m-author">Your name</label>
+          <input id="m-author" name="author" required data-testid="model-author" />
+        </div>
+        <div class="form-group">
+          <label for="m-email">Your email</label>
+          <input id="m-email" type="email" name="email" required data-testid="model-email" />
+        </div>
+        <div class="form-group">
+          <label for="m-link">{t(locale, 'submit.modelLink')}</label>
+          <input id="m-link" type="url" name="link" placeholder="https://doi.org/..." data-testid="model-link" />
+        </div>
+        <div class="form-group">
+          <label for="m-notes">{t(locale, 'submit.notes')}</label>
+          <textarea id="m-notes" name="notes" rows="5" data-testid="model-notes"></textarea>
+        </div>
+        <button type="submit" class="btn btn--lapis" data-testid="model-submit">
+          {t(locale, 'submit.send')}
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 18c-4.51 2-5-2-7-2m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+        </button>
+      </form>
+    </div>
+  </section>
+
+  <script define:vars={{ GITHUB_REPO }}>
+    function buildIssueUrl(repo, title, body, labels) {
+      const params = new URLSearchParams({
+        title,
+        body,
+        labels: labels.join(','),
+      });
+      return `https://github.com/${repo}/issues/new?${params.toString()}`;
+    }
+
+    const contact = document.getElementById('contact-form');
+    contact?.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const fd = new FormData(contact);
+      const name = (fd.get('name') || '').toString().trim();
+      const email = (fd.get('email') || '').toString().trim();
+      const message = (fd.get('message') || '').toString().trim();
+      const body = `**From:** ${name} (${email})\n\n---\n\n${message}`;
+      const url = buildIssueUrl(
+        GITHUB_REPO,
+        `[Contact] ${name}`,
+        body,
+        ['contact', 'inbox']
+      );
+      window.open(url, '_blank', 'noopener');
+    });
+
+    const model = document.getElementById('model-form');
+    model?.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const fd = new FormData(model);
+      const modelName = (fd.get('modelName') || '').toString().trim();
+      const author = (fd.get('author') || '').toString().trim();
+      const email = (fd.get('email') || '').toString().trim();
+      const link = (fd.get('link') || '').toString().trim();
+      const notes = (fd.get('notes') || '').toString().trim();
+      const body = [
+        `### Model submission`,
+        `**Model name:** ${modelName}`,
+        `**Author:** ${author} (${email})`,
+        link ? `**Repository link:** ${link}` : '',
+        '',
+        '---',
+        '',
+        '**Notes &amp; licensing:**',
+        notes,
+      ].filter(Boolean).join('\n');
+      const url = buildIssueUrl(
+        GITHUB_REPO,
+        `[Model Submission] ${modelName}`,
+        body,
+        ['submission', '3d-model']
+      );
+      window.open(url, '_blank', 'noopener');
+    });
+  </script>
+</Layout>

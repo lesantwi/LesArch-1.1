@@ -1,0 +1,105 @@
+---
+import Layout from '../layouts/Layout.astro';
+import SiteCard from '../components/SiteCard.astro';
+import { SITES, DID_YOU_KNOW } from '../data/sites';
+import { t } from '../i18n/ui';
+
+const locale = 'en';
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const featured = SITES.slice(0, 3);
+const fact = DID_YOU_KNOW[0];
+const completedCount = SITES.filter((s) => s.status === 'completed').length;
+const inProgressCount = SITES.filter((s) => s.status === 'in-progress').length;
+const plannedCount = SITES.filter((s) => s.status === 'planned').length;
+---
+
+<Layout
+  title="LesArch — Mapping Archaeological Wonders"
+  locale={locale}
+  pathWithoutBase="/"
+>
+  <section class="hero">
+    <div class="hero__media">
+      <video autoplay muted loop playsinline preload="metadata" poster={`${base}/assets/site_hero_pont_du_gard.jpeg`}>
+        <source src={`${base}/assets/homepage_video.mp4`} type="video/mp4" />
+      </video>
+    </div>
+    <div class="container hero__inner">
+      <div>
+        <span class="eyebrow" style="color:var(--c-ochre)">An open heritage atlas</span>
+        <h1>Discover ancient worlds <em>in three dimensions.</em></h1>
+        <div class="hero__meta">
+          <span><strong>{SITES.length}</strong>Sites catalogued</span>
+          <span><strong>{completedCount}</strong>3D reconstructions</span>
+          <span><strong>{inProgressCount + plannedCount}</strong>In the pipeline</span>
+        </div>
+      </div>
+      <div>
+        <p class="hero__lede">{t(locale, 'hero.subtitle')}</p>
+        <a href={`${base}/map`} class="btn btn--primary" data-testid="hero-cta">
+          {t(locale, 'hero.cta')}
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <div class="strata"></div>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-header">
+        <div>
+          <span class="eyebrow">001 — Mission</span>
+          <h2>{t(locale, 'home.welcome.title')}</h2>
+        </div>
+        <p class="lede">
+          LesArch is an open-research platform for exploring archaeological
+          sites through interactive maps, citable 3D reconstructions, and
+          rigorous scholarship — built for students, researchers, and the
+          endlessly curious.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="background:var(--bg-deep)">
+    <div class="container">
+      <div class="section-header">
+        <div>
+          <span class="eyebrow">002 — Projects</span>
+          <h2>{t(locale, 'home.projects.title')}</h2>
+        </div>
+        <p class="lede">
+          Each site we publish is paired with open metadata and, where possible, a citable DOI. View the full catalogue, or jump straight to a reconstruction.
+        </p>
+      </div>
+
+      <div class="card-grid">
+        {featured.map((site) => (
+          <SiteCard site={site} locale={locale} detailHrefBase="/sites" />
+        ))}
+      </div>
+
+      <div style="margin-top:3rem; display:flex; gap:1rem; flex-wrap:wrap;">
+        <a href={`${base}/projects`} class="btn btn--primary" data-testid="home-view-all-projects">
+          {t(locale, 'home.projects.cta')}
+        </a>
+        <a href={`${base}/map`} class="btn btn--ghost" data-testid="home-view-map">View on the atlas</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="did-you-know">
+    <div class="container did-you-know__inner">
+      <div>
+        <span class="eyebrow" style="color:var(--c-ochre)">003 — Did you know?</span>
+        <h2 style="margin:0">A fact from the field.</h2>
+      </div>
+      <div>
+        <p data-testid="did-you-know-fact">{fact}</p>
+        <p class="did-you-know__attr">— Pont du Gard, 1st century AD</p>
+      </div>
+    </div>
+  </section>
+</Layout>

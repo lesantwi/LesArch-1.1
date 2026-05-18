@@ -1,0 +1,24 @@
+{
+  "summary": "Frontend-only testing of Astro-migrated LesArch site at /LesArch-1.1/. All major user-facing features verified: homepage, projects (all 7 sites), about, map (Leaflet + clustering + timeline + search + era filter), contact + model-submission forms (open correct github.com/lesantwi/LesArch-1.1/issues/new URLs with pre-filled title+body), site detail pages (Pont du Gard renders <model-viewer>, Asuka-dera correctly shows in-progress placeholder), citation block (APA/BibTeX/DOI tabs + Copy button), theme toggle (persists to localStorage as 'theme=night'/'day'), mobile nav toggle at 480px (opens with class 'nav is-open' & aria-expanded=true). Production build succeeds with 12 static pages + sitemap-index.xml. SEO/OG/JSON-LD/canonical/hreflang all present in <head>.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "test_report_links": [],
+  "action_items": [],
+  "critical_code_review_comments": [
+    "Minor: console shows 'Astro audit Failed to fetch' error in dev mode — harmless dev-only audit tool fetch error, does not affect users or production build.",
+    "Minor: only 5 visible markers initially on map due to clustering (2 clusters of 2 + 3 singles = 7 sites total, all rendered correctly). Behavior is correct.",
+    "Suggestion: consider lazy-loading the 50MB GLB asset only after user gesture (currently model-viewer auto-loads on page open) for slower networks."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "N/A (no backend)", "frontend": "100%"},
+  "test_credentials": "N/A — fully static site, no auth.",
+  "seed_data_creation": "None.",
+  "retest_needed": false,
+  "main_agent_can_self_test": true,
+  "context_for_next_testing_agent": "Astro static site at base /LesArch-1.1/, runs on port 3000 via supervisor. Forms POST nothing — they preventDefault and call window.open(github_issues_url). To test form submissions, override window.open before clicking submit. Use data-testids: contact-name/email/message/submit, model-name/author/email/submit, theme-toggle, nav-toggle, model-viewer. Map clusters use leaflet.markercluster — to count all 7 markers expand clusters or use the underlying layer.",
+  "rca of the issue": "N/A — no bugs found."
+}

@@ -1,0 +1,126 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const locale = 'en';
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+---
+
+<Layout
+  title="About — LesArch"
+  description="LesArch is dedicated to opening archaeological heritage through 3D reconstruction, citable data, and rigorous scholarship."
+  locale={locale}
+  pathWithoutBase="/about"
+>
+  <section class="section">
+    <div class="container container--narrow">
+      <span class="eyebrow">About</span>
+      <h1 style="max-width:14ch">Preserving and sharing history — through technology.</h1>
+      <p class="lede" style="margin-top:1.5rem">
+        LesArch began with a simple yet profound idea: to make the rich
+        tapestry of human history more accessible, more rigorous, and more
+        engaging than ever before.
+      </p>
+    </div>
+  </section>
+
+  <section class="section section--tight" style="background:var(--bg-deep)">
+    <div class="container container--narrow">
+      <span class="eyebrow">Our story</span>
+      <h2 style="font-size:var(--step-3)">Bridging research and curiosity.</h2>
+      <p>
+        Born from a passion for archaeology and a belief in the power of
+        digital innovation, LesArch bridges academic research and public
+        curiosity. We work with archaeologists, historians, and digital
+        specialists to make sure every site we publish is not only visually
+        compelling, but historically sound.
+      </p>
+      <p>
+        Our reconstructions are designed to be citable, peer-reviewable, and —
+        whenever possible — paired with their underlying research data on
+        established open repositories.
+      </p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <span class="eyebrow">Vision</span>
+      <h2 style="max-width:18ch; margin-bottom:3rem">Three pillars, one mission.</h2>
+      <div class="card-grid" style="grid-template-columns:repeat(auto-fit,minmax(260px,1fr));">
+        <div class="reveal" style="padding:2rem; border:1px solid var(--line); border-radius:var(--radius-lg); background:var(--c-bone)">
+          <div style="font-family:var(--font-mono); font-size:.7rem; letter-spacing:.2em; text-transform:uppercase; color:var(--c-clay); margin-bottom:1rem">I.</div>
+          <h3>Global Accessibility</h3>
+          <p style="color:var(--ink-soft); margin:0">
+            Breaking down geographical barriers so anyone, anywhere, can explore
+            archaeological sites and their contexts.
+          </p>
+        </div>
+        <div class="reveal" style="padding:2rem; border:1px solid var(--line); border-radius:var(--radius-lg); background:var(--c-bone)">
+          <div style="font-family:var(--font-mono); font-size:.7rem; letter-spacing:.2em; text-transform:uppercase; color:var(--c-clay); margin-bottom:1rem">II.</div>
+          <h3>Immersive Learning</h3>
+          <p style="color:var(--ink-soft); margin:0">
+            Interactive 3D models and rich narratives provide an educational
+            experience that goes beyond traditional methods.
+          </p>
+        </div>
+        <div class="reveal" style="padding:2rem; border:1px solid var(--line); border-radius:var(--radius-lg); background:var(--c-bone)">
+          <div style="font-family:var(--font-mono); font-size:.7rem; letter-spacing:.2em; text-transform:uppercase; color:var(--c-clay); margin-bottom:1rem">III.</div>
+          <h3>Preservation</h3>
+          <p style="color:var(--ink-soft); margin:0">
+            Raising awareness of threatened sites and contributing to their
+            preservation through digital documentation and public engagement.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="background:var(--bg-deep)">
+    <div class="container container--narrow">
+      <span class="eyebrow">FAIR data</span>
+      <h2 style="font-size:var(--step-3)">Open data &amp; research</h2>
+      <p>
+        LesArch is dedicated to fostering open science. We believe that digital
+        archaeological data — especially 3D models — should be
+        <strong>findable, accessible, interoperable, and reusable</strong> (the FAIR principles).
+      </p>
+      <p>
+        While LesArch is the visualization platform, we strongly encourage
+        contributors to also deposit their underlying research data in
+        established long-term archaeological repositories such as:
+      </p>
+      <ul>
+        <li><a href="https://repo.dainst.org/" target="_blank" rel="noopener"><strong>iDAI.repo</strong></a> — German Archaeological Institute. Ideal for archaeological research data.</li>
+        <li><a href="https://zenodo.org/" target="_blank" rel="noopener"><strong>Zenodo</strong></a> — General-purpose open-access repository with DOIs for citable research outputs.</li>
+        <li><a href="https://portal.ariadne-infrastructure.eu/" target="_blank" rel="noopener"><strong>ARIADNE Infrastructure</strong></a> — Central portal for archaeological data in Europe.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container container--narrow">
+      <span class="eyebrow">Team</span>
+      <h2 style="font-size:var(--step-3)">Behind LesArch</h2>
+      <div style="display:flex; gap:2rem; align-items:center; flex-wrap:wrap; margin-top:2rem; padding:2rem; border:1px solid var(--line); border-radius:var(--radius-lg); background:var(--c-bone)">
+        <img
+          src={`${base}/assets/founder.jpg`}
+          alt="Leslie Antwi"
+          loading="lazy"
+          style="width:140px; height:140px; border-radius:50%; object-fit:cover; box-shadow:var(--shadow-soft);"
+        />
+        <div>
+          <h3 style="margin-bottom:.25rem">Leslie Antwi</h3>
+          <p style="margin:0; color:var(--c-clay); font-family:var(--font-mono); font-size:.8rem; letter-spacing:.1em; text-transform:uppercase;">Founder &amp; Lead Developer</p>
+          <p style="margin:.5rem 0 0; color:var(--ink-soft); font-size:.95rem;">
+            Digital &amp; Computational Archaeology (M.A.)<br />
+            University of Cologne
+          </p>
+          <p style="margin:1rem 0 0">
+            <a href="mailto:leslieantwi2@gmail.com">leslieantwi2@gmail.com</a> ·{' '}
+            <a href="https://www.instagram.com/lesarch1.1" target="_blank" rel="noopener">Instagram</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+</Layout>

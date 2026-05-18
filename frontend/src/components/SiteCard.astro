@@ -1,0 +1,36 @@
+---
+import type { ArchSite } from '../data/sites';
+import { type Locale, t } from '../i18n/ui';
+
+interface Props {
+  site: ArchSite;
+  locale: Locale;
+  detailHrefBase: string; // e.g. "/sites" or "/fr/sites"
+}
+
+const { site, locale, detailHrefBase } = Astro.props;
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const href = `${base}${detailHrefBase}/${site.slug}`;
+const img = `${base}/${site.thumbnail.replace(/^\//, '')}`;
+
+const statusLabel = t(locale, `status.${site.status}` as any);
+---
+
+<a class="site-card reveal" href={href} data-testid={`site-card-${site.slug}`}>
+  <div class="site-card__media">
+    <img src={img} alt={site.name} loading="lazy" />
+    <span class={`site-card__status ${site.status}`}>{statusLabel}</span>
+  </div>
+  <div class="site-card__body">
+    <div class="site-card__meta">
+      <span>{site.country}</span>
+      <span>{site.eraLabel}</span>
+    </div>
+    <h3>{site.name}</h3>
+    <p>{site.shortDescription}</p>
+    <div class="site-card__footer">
+      <span>{site.type}</span>
+      <span>→</span>
+    </div>
+  </div>
+</a>

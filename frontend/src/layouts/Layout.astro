@@ -1,0 +1,312 @@
+---
+import '../styles/global.css';
+import { ui, t, LOCALES, LOCALE_LABELS, LOCALE_DIR, type Locale } from '../i18n/ui';
+
+export interface Props {
+  title: string;
+  description?: string;
+  image?: string;
+  locale?: Locale;
+  noindex?: boolean;
+  schema?: Record<string, unknown>;
+  /** path *without* base or locale prefix, e.g. "/map" */
+  pathWithoutBase?: string;
+}
+
+const {
+  title,
+  description = 'LesArch — Mapping Archaeological Wonders. Interactive map, citable 3D reconstructions, and open research data for global heritage.',
+  image = 'assets/lesarch_logo.png',
+  locale = 'en',
+  noindex = false,
+  schema,
+  pathWithoutBase = '/',
+} = Astro.props;
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const dir = LOCALE_DIR[locale];
+
+// Helper to build base-aware URLs
+function url(path: string) {
+  const clean = path.startsWith('/') ? path : '/' + path;
+  return `${base}${clean}`;
+}
+function localeUrl(loc: Locale, path: string) {
+  const clean = path.startsWith('/') ? path : '/' + path;
+  if (loc === 'en') return `${base}${clean}`;
+  return `${base}/${loc}${clean}`;
+}
+
+const currentPath = Astro.url.pathname;
+const fullUrl = new URL(currentPath, Astro.site).toString();
+
+// Build siteUrl & ogImage
+const ogImage = new URL(`${base}/${image.replace(/^\//, '')}`, Astro.site).toString();
+
+const baseSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: 'LesArch',
+  url: new URL(base + '/', Astro.site).toString(),
+  description,
+  inLanguage: locale,
+  publisher: {
+    '@type': 'Organization',
+    name: 'LesArch',
+    founder: { '@type': 'Person', name: 'Leslie Antwi' },
+    email: 'leslieantwi2@gmail.com',
+  },
+};
+
+const finalSchema = schema ?? baseSchema;
+
+const navItems: { key: string; path: string }[] = [
+  { key: 'nav.home', path: '/' },
+  { key: 'nav.map', path: '/map' },
+  { key: 'nav.projects', path: '/projects' },
+  { key: 'nav.about', path: '/about' },
+  { key: 'nav.contact', path: '/contact' },
+];
+---
+
+<!doctype html>
+<html lang={locale} dir={dir}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="generator" content={Astro.generator} />
+
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    {noindex && <meta name="robots" content="noindex,nofollow" />}
+    <link rel="canonical" href={fullUrl} />
+
+    {/* Hreflang */}
+    {LOCALES.map((loc) => (
+      <link
+        rel="alternate"
+        hreflang={loc}
+        href={new URL(localeUrl(loc, pathWithoutBase), Astro.site).toString()}
+      />
+    ))}
+    <link
+      rel="alternate"
+      hreflang="x-default"
+      href={new URL(localeUrl('en', pathWithoutBase), Astro.site).toString()}
+    />
+
+    {/* Open Graph */}
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:url" content={fullUrl} />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="LesArch" />
+    <meta property="og:locale" content={locale} />
+
+    {/* Twitter */}
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+
+    {/* Icons */}
+    <link rel="icon" href={url('/assets/lesarch_logo.png')} type="image/png" />
+    <link rel="apple-touch-icon" href={url('/assets/lesarch_logo.png')} />
+
+    {/* Theme color */}
+    <meta name="theme-color" content="#B85A3A" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#15110D" media="(prefers-color-scheme: dark)" />
+
+    {/* Fonts — Fraunces (display, variable) + Public Sans (body) + JetBrains Mono */}
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,300..700,0..100&family=Public+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+
+    {/* Leaflet (only loaded where needed via slot=head) */}
+    <slot name="head" />
+
+    {/* JSON-LD structured data */}
+    <script type="application/ld+json" set:html={JSON.stringify(finalSchema)} />
+
+    {/* Plausible analytics — UNCOMMENT after setting up your domain at plausible.io
+    <script defer data-domain="lesantwi.github.io/LesArch-1.1" src="https://plausible.io/js/script.js"></script>
+    */}
+
+    {/* Restore theme before paint to avoid flash */}
+    <script is:inline>
+      (function () {
+        try {
+          const saved = localStorage.getItem('lesarch-theme');
+          if (saved === 'night') document.documentElement.setAttribute('data-theme', 'night');
+        } catch (_) {}
+      })();
+    </script>
+  </head>
+  <body>
+    <a href="#main" class="skip-link">Skip to content</a>
+
+    <header class="site-header">
+      <div class="container site-header__inner">
+        <a href={url('/')} class="brand" data-testid="brand-link">
+          <img src={url('/assets/lesarch_logo.png')} alt="" />
+          <span>
+            LesArch
+            <small>Heritage in 3D</small>
+          </span>
+        </a>
+
+        <nav class="nav" id="primary-nav" aria-label="Primary">
+          {navItems.map((item) => {
+            const href = localeUrl(locale, item.path);
+            const isActive =
+              item.path === '/'
+                ? currentPath === url('/') || currentPath === url('') || currentPath === `${base}/${locale}` || currentPath === `${base}/${locale}/`
+                : currentPath.replace(/\/$/, '').endsWith(item.path);
+            return (
+              <a
+                href={href}
+                aria-current={isActive ? 'page' : undefined}
+                data-testid={`nav-${item.path.replace('/', '') || 'home'}`}
+              >
+                {t(locale, item.key)}
+              </a>
+            );
+          })}
+
+          <div class="lang-switcher" aria-label="Language" title="More languages coming — community translations welcome">
+            <a href={localeUrl('en', pathWithoutBase)} aria-current="page" lang="en" data-testid="lang-en">EN</a>
+            <span style="color:var(--ink-soft); opacity:.5; font-size:.65rem;" title="FR / AR / JA — translations in progress">+3</span>
+          </div>
+
+          <button
+            type="button"
+            class="theme-toggle"
+            aria-label="Toggle theme"
+            data-testid="theme-toggle"
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+            </svg>
+          </button>
+        </nav>
+
+        <button
+          type="button"
+          class="nav-toggle"
+          aria-label="Open menu"
+          aria-controls="primary-nav"
+          aria-expanded="false"
+          data-testid="nav-toggle"
+        >
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </header>
+
+    <main id="main">
+      <slot />
+    </main>
+
+    <footer class="site-footer">
+      <div class="container">
+        <div class="site-footer__grid">
+          <div>
+            <h3>LesArch</h3>
+            <p style="margin-top:.75rem">{t(locale, 'footer.tagline')}</p>
+          </div>
+          <div>
+            <h3>Explore</h3>
+            <ul>
+              <li><a href={localeUrl(locale, '/map')}>{t(locale, 'nav.map')}</a></li>
+              <li><a href={localeUrl(locale, '/projects')}>{t(locale, 'nav.projects')}</a></li>
+              <li><a href={localeUrl(locale, '/about')}>{t(locale, 'nav.about')}</a></li>
+              <li><a href={localeUrl(locale, '/contact')}>{t(locale, 'nav.contact')}</a></li>
+            </ul>
+          </div>
+          <div>
+            <h3>Open Data</h3>
+            <ul>
+              <li><a href="https://zenodo.org/" target="_blank" rel="noopener">Zenodo</a></li>
+              <li><a href="https://repo.dainst.org/" target="_blank" rel="noopener">iDAI.repo</a></li>
+              <li><a href="https://portal.ariadne-infrastructure.eu/" target="_blank" rel="noopener">ARIADNE</a></li>
+              <li><a href="https://whc.unesco.org/" target="_blank" rel="noopener">UNESCO WHC</a></li>
+            </ul>
+          </div>
+          <div>
+            <h3>Connect</h3>
+            <ul>
+              <li><a href="https://www.instagram.com/lesarch1.1" target="_blank" rel="noopener">Instagram</a></li>
+              <li><a href="mailto:leslieantwi2@gmail.com">leslieantwi2@gmail.com</a></li>
+              <li><a href="https://github.com/lesantwi/LesArch-1.1" target="_blank" rel="noopener">GitHub</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="site-footer__bottom">
+          <small>© {new Date().getFullYear()} LesArch — Leslie Antwi. {t(locale, 'footer.rights')}</small>
+          <small>v2.0 · Built with Astro · Hosted on GitHub Pages</small>
+        </div>
+      </div>
+    </footer>
+
+    <div class="lesarch-cursor" id="lesarch-cursor" aria-hidden="true"></div>
+
+    <script>
+      // Theme toggle
+      const root = document.documentElement;
+      const toggle = document.querySelector('.theme-toggle');
+      toggle?.addEventListener('click', () => {
+        const next = root.getAttribute('data-theme') === 'night' ? null : 'night';
+        if (next) root.setAttribute('data-theme', next);
+        else root.removeAttribute('data-theme');
+        try {
+          if (next) localStorage.setItem('lesarch-theme', 'night');
+          else localStorage.removeItem('lesarch-theme');
+        } catch (_) {}
+      });
+
+      // Mobile nav
+      const navToggle = document.querySelector('.nav-toggle');
+      const nav = document.getElementById('primary-nav');
+      navToggle?.addEventListener('click', () => {
+        const open = nav?.classList.toggle('is-open');
+        navToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+      });
+
+      // Reveal on scroll
+      const io = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((e) => {
+            if (e.isIntersecting) {
+              e.target.classList.add('is-visible');
+              io.unobserve(e.target);
+            }
+          });
+        },
+        { threshold: 0.12 }
+      );
+      document.querySelectorAll('.reveal').forEach((el) => io.observe(el));
+
+      // Custom cursor
+      const cursor = document.getElementById('lesarch-cursor');
+      if (cursor && window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+        let x = 0, y = 0, tx = 0, ty = 0;
+        document.addEventListener('mousemove', (e) => { tx = e.clientX; ty = e.clientY; });
+        const tick = () => {
+          x += (tx - x) * 0.22;
+          y += (ty - y) * 0.22;
+          cursor.style.transform = `translate(${x}px, ${y}px) translate(-50%, -50%)`;
+          requestAnimationFrame(tick);
+        };
+        tick();
+        document.querySelectorAll('a, button, [role="button"], input, textarea').forEach((el) => {
+          el.addEventListener('mouseenter', () => cursor.classList.add('is-hover'));
+          el.addEventListener('mouseleave', () => cursor.classList.remove('is-hover'));
+        });
+      }
+    </script>
+  </body>
+</html>

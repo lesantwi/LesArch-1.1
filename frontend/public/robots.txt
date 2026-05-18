@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://lesantwi.github.io/LesArch-1.1/sitemap-index.xml
