@@ -10,7 +10,7 @@ There are **four** main ways to help.
 
 We welcome research-grade 3D reconstructions of archaeological sites.
 
-**Easiest path:** Go to the [Contact & Submit page](https://lesantwi.github.io/LesArch-1.1/contact) and use the "Submit a 3D Model" form. It opens a pre-filled GitHub Issue you can review and post.
+**Easiest path:** Go to the [Contact & Submit page](https://lesantwi.github.io/LesArch-1.1/contact) and use the "Submit a 3D Model" form. Your submission is sent securely via Formspree and arrives in our inbox — no GitHub account required.
 
 **Recommended workflow for research-grade submissions:**
 

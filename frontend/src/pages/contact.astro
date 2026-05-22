@@ -3,7 +3,9 @@ import Layout from '../layouts/Layout.astro';
 import { t } from '../i18n/ui';
 
 const locale = 'en';
-const GITHUB_REPO = 'lesantwi/LesArch-1.1';
+// Your Formspree form endpoint ID — same form used for both Contact and Model Submission.
+// We distinguish them in the Formspree inbox via the hidden _subject field on each form.
+const FORMSPREE_ID = 'xwpbdage';
 ---
 
 <Layout
@@ -21,9 +23,10 @@ const GITHUB_REPO = 'lesantwi/LesArch-1.1';
       </p>
 
       <p style="margin-top:1rem; padding:1rem 1.25rem; background:rgba(31,74,107,.08); border-left:3px solid var(--c-lapis); border-radius:var(--radius); font-size:.9rem;">
-        <strong>How this works:</strong> the form opens a pre-filled GitHub Issue
-        in our public repository so anyone can see, discuss, and track your
-        submission transparently. You'll need a free GitHub account.
+        <strong>How this works:</strong> messages are sent securely via
+        <a href="https://formspree.io" target="_blank" rel="noopener">Formspree</a>
+        and arrive in our inbox. We aim to reply within a week. No GitHub
+        account required.
       </p>
     </div>
   </section>
@@ -31,23 +34,38 @@ const GITHUB_REPO = 'lesantwi/LesArch-1.1';
   <section class="section section--tight">
     <div class="container container--narrow">
       <h2 style="font-size:var(--step-3)">Contact us</h2>
+
       <form id="contact-form" data-testid="contact-form" style="margin-top:1.5rem">
+        {/* Formspree special fields */}
+        <input type="hidden" name="_subject" value="LesArch — Contact form" />
+
         <div class="form-group">
           <label for="c-name">{t(locale, 'contact.form.name')}</label>
-          <input id="c-name" name="name" required data-testid="contact-name" />
+          <input id="c-name" name="name" required data-fs-field data-testid="contact-name" />
+          <span class="form-field-error" data-fs-error="name"></span>
         </div>
+
         <div class="form-group">
           <label for="c-email">{t(locale, 'contact.form.email')}</label>
-          <input id="c-email" type="email" name="email" required data-testid="contact-email" />
+          <input id="c-email" type="email" name="email" required data-fs-field data-testid="contact-email" />
+          <span class="form-field-error" data-fs-error="email"></span>
         </div>
+
         <div class="form-group">
           <label for="c-message">{t(locale, 'contact.form.message')}</label>
-          <textarea id="c-message" name="message" rows="5" required data-testid="contact-message"></textarea>
+          <textarea id="c-message" name="message" rows="5" required data-fs-field data-testid="contact-message"></textarea>
+          <span class="form-field-error" data-fs-error="message"></span>
         </div>
-        <button type="submit" class="btn btn--primary" data-testid="contact-submit">
+
+        <button type="submit" class="btn btn--primary" data-fs-submit-btn data-testid="contact-submit">
           {t(locale, 'contact.form.send')}
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
         </button>
+
+        <div class="form-success" data-fs-success data-testid="contact-success">
+          ✓ Thanks — your message is on its way. We'll be in touch soon.
+        </div>
+        <div class="form-error" data-fs-error data-testid="contact-error"></div>
       </form>
     </div>
   </section>
@@ -66,88 +84,99 @@ const GITHUB_REPO = 'lesantwi/LesArch-1.1';
       </p>
 
       <form id="model-form" data-testid="model-form" style="margin-top:1.5rem">
+        <input type="hidden" name="_subject" value="LesArch — 3D Model Submission" />
+
         <div class="form-group">
           <label for="m-name">{t(locale, 'submit.modelName')}</label>
-          <input id="m-name" name="modelName" required data-testid="model-name" />
+          <input id="m-name" name="modelName" required data-fs-field data-testid="model-name" />
+          <span class="form-field-error" data-fs-error="modelName"></span>
         </div>
+
         <div class="form-group">
           <label for="m-author">Your name</label>
-          <input id="m-author" name="author" required data-testid="model-author" />
+          <input id="m-author" name="author" required data-fs-field data-testid="model-author" />
+          <span class="form-field-error" data-fs-error="author"></span>
         </div>
+
         <div class="form-group">
           <label for="m-email">Your email</label>
-          <input id="m-email" type="email" name="email" required data-testid="model-email" />
+          <input id="m-email" type="email" name="email" required data-fs-field data-testid="model-email" />
+          <span class="form-field-error" data-fs-error="email"></span>
         </div>
+
         <div class="form-group">
           <label for="m-link">{t(locale, 'submit.modelLink')}</label>
-          <input id="m-link" type="url" name="link" placeholder="https://doi.org/..." data-testid="model-link" />
+          <input id="m-link" type="url" name="link" placeholder="https://doi.org/..." data-fs-field data-testid="model-link" />
+          <span class="form-field-error" data-fs-error="link"></span>
         </div>
+
         <div class="form-group">
           <label for="m-notes">{t(locale, 'submit.notes')}</label>
-          <textarea id="m-notes" name="notes" rows="5" data-testid="model-notes"></textarea>
+          <textarea id="m-notes" name="notes" rows="5" data-fs-field data-testid="model-notes"></textarea>
+          <span class="form-field-error" data-fs-error="notes"></span>
         </div>
-        <button type="submit" class="btn btn--lapis" data-testid="model-submit">
+
+        <button type="submit" class="btn btn--lapis" data-fs-submit-btn data-testid="model-submit">
           {t(locale, 'submit.send')}
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 18c-4.51 2-5-2-7-2m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
         </button>
+
+        <div class="form-success" data-fs-success data-testid="model-success">
+          ✓ Submission received — thank you for contributing. We'll review and reply.
+        </div>
+        <div class="form-error" data-fs-error data-testid="model-error"></div>
       </form>
     </div>
   </section>
 
-  <script define:vars={{ GITHUB_REPO }}>
-    function buildIssueUrl(repo, title, body, labels) {
-      const params = new URLSearchParams({
-        title,
-        body,
-        labels: labels.join(','),
-      });
-      return `https://github.com/${repo}/issues/new?${params.toString()}`;
+  <style>
+    /* Formspree state helpers — hidden by default, library toggles them */
+    .form-success,
+    .form-error {
+      display: none;
+      margin-top: 1.5rem;
+      padding: 1rem 1.25rem;
+      border-radius: var(--radius);
+      font-family: var(--font-mono);
+      font-size: .85rem;
+      letter-spacing: .04em;
     }
+    .form-success {
+      background: rgba(38, 78, 112, 0.1);
+      border-left: 3px solid var(--c-lapis);
+      color: var(--c-lapis-deep);
+    }
+    .form-error {
+      background: rgba(184, 90, 58, 0.1);
+      border-left: 3px solid var(--c-clay);
+      color: var(--c-clay-deep);
+    }
+    /* The library sets display via inline styles — keep them visible when populated */
+    [data-fs-success]:not(:empty),
+    [data-fs-error]:not(:empty) { display: block; }
 
-    const contact = document.getElementById('contact-form');
-    contact?.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const fd = new FormData(contact);
-      const name = (fd.get('name') || '').toString().trim();
-      const email = (fd.get('email') || '').toString().trim();
-      const message = (fd.get('message') || '').toString().trim();
-      const body = `**From:** ${name} (${email})\n\n---\n\n${message}`;
-      const url = buildIssueUrl(
-        GITHUB_REPO,
-        `[Contact] ${name}`,
-        body,
-        ['contact', 'inbox']
-      );
-      window.open(url, '_blank', 'noopener');
-    });
+    /* Field-level errors */
+    .form-field-error {
+      display: block;
+      min-height: 1.2em;
+      margin-top: .35rem;
+      font-family: var(--font-mono);
+      font-size: .72rem;
+      letter-spacing: .05em;
+      color: var(--c-clay);
+    }
+    /* Highlight invalid fields */
+    [aria-invalid="true"] {
+      border-color: var(--c-clay) !important;
+      box-shadow: 0 0 0 3px rgba(184, 90, 58, 0.12) !important;
+    }
+  </style>
 
-    const model = document.getElementById('model-form');
-    model?.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const fd = new FormData(model);
-      const modelName = (fd.get('modelName') || '').toString().trim();
-      const author = (fd.get('author') || '').toString().trim();
-      const email = (fd.get('email') || '').toString().trim();
-      const link = (fd.get('link') || '').toString().trim();
-      const notes = (fd.get('notes') || '').toString().trim();
-      const body = [
-        `### Model submission`,
-        `**Model name:** ${modelName}`,
-        `**Author:** ${author} (${email})`,
-        link ? `**Repository link:** ${link}` : '',
-        '',
-        '---',
-        '',
-        '**Notes &amp; licensing:**',
-        notes,
-      ].filter(Boolean).join('\n');
-      const url = buildIssueUrl(
-        GITHUB_REPO,
-        `[Model Submission] ${modelName}`,
-        body,
-        ['submission', '3d-model']
-      );
-      window.open(url, '_blank', 'noopener');
-    });
+  <script>
+    import { initForm } from '@formspree/ajax';
+    const FORMSPREE_ID = 'xwpbdage';
+
+    initForm({ formElement: '#contact-form', formId: FORMSPREE_ID });
+    initForm({ formElement: '#model-form', formId: FORMSPREE_ID });
   </script>
 </Layout>
