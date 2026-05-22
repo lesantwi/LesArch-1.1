@@ -32,7 +32,7 @@ const maxYear = Math.max(...SITES.map((s) => s.yearEnd));
       rel="stylesheet"
       href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css"
     />
-    <style>
+    <style is:global>
       .leaflet-popup-content-wrapper {
         background: var(--c-bone);
         color: var(--ink);
@@ -50,24 +50,70 @@ const maxYear = Math.max(...SITES.map((s) => s.yearEnd));
       .lesarch-popup h4 { font-size: 1.15rem; margin: 0 0 .4rem; }
       .lesarch-popup p { font-size: .85rem; color: var(--ink-soft); margin: 0 0 .85rem; }
       .lesarch-popup .btn { padding: .55rem 1rem; font-size: .8rem; }
-      .era-marker {
-        background: var(--c-clay);
-        color: #fff;
-        border-radius: 50%;
-        width: 32px; height: 32px;
-        display: flex; align-items: center; justify-content: center;
-        font-family: var(--font-display);
-        font-weight: 600;
-        font-size: 14px;
-        box-shadow: 0 4px 14px rgba(0,0,0,0.3), 0 0 0 3px rgba(255,255,255,0.4);
-        border: 1.5px solid #fff;
+
+      /* Map pin — teardrop shape with site-type icon inside */
+      .map-pin {
+        position: relative;
+        width: 38px;
+        height: 48px;
+        cursor: pointer;
+        transform-origin: 50% 100%;
+        transition: transform .25s var(--ease), filter .25s var(--ease);
+        filter: drop-shadow(0 4px 6px rgba(0,0,0,0.25)) drop-shadow(0 1px 2px rgba(0,0,0,0.15));
       }
-      .era-marker.roman { background: var(--c-lapis); }
-      .era-marker.ancient-egypt { background: var(--c-ochre); }
-      .era-marker.medieval { background: var(--c-clay-deep); }
-      .era-marker.classical-antiquity { background: #6B5B95; }
-      .era-marker.early-modern { background: #4A6B5A; }
-      .era-marker.prehistoric { background: #594A3C; }
+      .map-pin:hover {
+        transform: scale(1.15) translateY(-2px);
+        filter: drop-shadow(0 8px 12px rgba(0,0,0,0.35)) drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+        z-index: 1000;
+      }
+      .map-pin__body {
+        position: absolute;
+        inset: 0;
+        color: var(--c-clay);     /* pin fill color, overridden by era class */
+      }
+      .map-pin__body svg { width: 100%; height: 100%; display: block; }
+      .map-pin__icon {
+        position: absolute;
+        top: 7px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 22px;
+        height: 22px;
+        color: #fff;
+        display: flex; align-items: center; justify-content: center;
+      }
+      .map-pin__icon svg { width: 18px; height: 18px; }
+
+      /* Era colors override the pin body fill */
+      .map-pin.roman .map-pin__body              { color: #1F4A6B; }
+      .map-pin.ancient-egypt .map-pin__body      { color: #C8923B; }
+      .map-pin.medieval .map-pin__body           { color: #8C3F26; }
+      .map-pin.classical-antiquity .map-pin__body { color: #6B5B95; }
+      .map-pin.early-modern .map-pin__body       { color: #4A6B5A; }
+      .map-pin.prehistoric .map-pin__body        { color: #594A3C; }
+
+      /* "In-progress" pulse — gently calls attention to live projects */
+      .map-pin.status-in-progress::before {
+        content: '';
+        position: absolute;
+        left: 50%; top: 50%;
+        transform: translate(-50%, -50%);
+        width: 38px; height: 38px;
+        border-radius: 50%;
+        background: currentColor;
+        opacity: 0;
+        animation: lesarch-pulse 2.4s var(--ease) infinite;
+        color: var(--c-ochre);
+        z-index: -1;
+      }
+      @keyframes lesarch-pulse {
+        0%   { opacity: 0.55; transform: translate(-50%, -50%) scale(0.4); }
+        100% { opacity: 0;    transform: translate(-50%, -50%) scale(2.1); }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .map-pin.status-in-progress::before { animation: none; }
+        .map-pin { transition: none; }
+      }
     </style>
   </Fragment>
 
@@ -155,12 +201,39 @@ const maxYear = Math.max(...SITES.map((s) => s.yearEnd));
       prehistoric: 'P',
     };
 
-    function makeIcon(era) {
+    // The teardrop pin background — single shape, color set via CSS `currentColor`
+    const PIN_BODY = `
+      <svg viewBox="0 0 38 48" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path
+          d="M19 0C8.5 0 0 8.5 0 19c0 13.7 17.1 27.6 18.1 28.4a1.5 1.5 0 0 0 1.8 0C20.9 46.6 38 32.7 38 19 38 8.5 29.5 0 19 0Z"
+          fill="currentColor" stroke="#fff" stroke-width="1.5"/>
+      </svg>`;
+
+    // Site-type → SVG icon dictionary. Each icon is white-on-color inside the pin.
+    // Designed at 24x24, single-color via `currentColor`, stroke 1.8 round caps.
+    const TYPE_ICON = {
+      'Aqueduct Bridge': `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h18"/><path d="M3 19V7m18 12V7"/><path d="M7 19v-5a2 2 0 0 1 4 0v5"/><path d="M13 19v-5a2 2 0 0 1 4 0v5"/><path d="M3 19h18"/></svg>`,
+      'Buddhist Temple': `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 6 6h12L12 2Z"/><path d="M7 10h10l-1 3H8l-1-3Z"/><path d="M8 16h8l-1 3H9l-1-3Z"/><path d="M11 22h2"/></svg>`,
+      'Mosque': `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V11"/><path d="M20 20V11"/><path d="M4 20h16"/><path d="M8 20v-5a4 4 0 0 1 8 0v5"/><path d="M12 6V2"/><path d="M10 4h4"/></svg>`,
+      'Rock-Cut Monument': `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 20V8l7-4 7 4v12"/><path d="M9 20v-6h6v6"/><path d="M3 20h18"/></svg>`,
+      'Pyramid': `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 3 20h18L12 3Z"/><path d="M12 3v17"/></svg>`,
+      'Amphitheatre': `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="13" rx="9" ry="6"/><path d="M3 13h18M7 8v10M12 7v12M17 8v10"/></svg>`,
+      'Citadel': `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 20 8 9l4 6 3-4 6 9Z"/><path d="M3 20h18"/></svg>`,
+    };
+    const DEFAULT_ICON = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="10" r="3"/><path d="M12 22s-7-7-7-12a7 7 0 0 1 14 0c0 5-7 12-7 12Z"/></svg>`;
+
+    function makeIcon(site) {
+      const icon = TYPE_ICON[site.type] || DEFAULT_ICON;
       return L.divIcon({
         className: '',
-        iconSize: [32, 32],
-        iconAnchor: [16, 16],
-        html: `<div class="era-marker ${era}">${eraInitial[era] || '•'}</div>`,
+        iconSize: [38, 48],
+        iconAnchor: [19, 47],    // tip of the teardrop = exact site coord
+        popupAnchor: [0, -42],   // popup appears above the pin
+        html: `
+          <div class="map-pin ${site.era} status-${site.status}" title="${site.name} — ${site.eraLabel}">
+            <div class="map-pin__body">${PIN_BODY}</div>
+            <div class="map-pin__icon">${icon}</div>
+          </div>`,
       });
     }
 
@@ -185,7 +258,7 @@ const maxYear = Math.max(...SITES.map((s) => s.yearEnd));
     });
 
     let allMarkers = sites.map((site) => {
-      const m = L.marker(site.coords, { icon: makeIcon(site.era) });
+      const m = L.marker(site.coords, { icon: makeIcon(site) });
       m.bindPopup(popupHtml(site), { closeButton: true, maxWidth: 320 });
       m.siteData = site;
       return m;
