@@ -2,13 +2,13 @@
 import Layout from '../layouts/Layout.astro';
 import SiteCard from '../components/SiteCard.astro';
 import TrustStrip from '../components/TrustStrip.astro';
-import { SITES, DID_YOU_KNOW } from '../data/sites';
+import DidYouKnow from '../components/DidYouKnow.astro';
+import { SITES } from '../data/sites';
 import { t } from '../i18n/ui';
 
 const locale = 'en';
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 const featured = SITES.slice(0, 3);
-const fact = DID_YOU_KNOW[0];
 const completedCount = SITES.filter((s) => s.status === 'completed').length;
 const inProgressCount = SITES.filter((s) => s.status === 'in-progress').length;
 const plannedCount = SITES.filter((s) => s.status === 'planned').length;
@@ -29,10 +29,10 @@ const plannedCount = SITES.filter((s) => s.status === 'planned').length;
       <div>
         <span class="eyebrow" style="color:var(--c-ochre)">An open heritage atlas</span>
         <h1>Discover ancient worlds <em>in three dimensions.</em></h1>
-        <div class="hero__meta">
-          <span><strong>{SITES.length}</strong>Sites catalogued</span>
-          <span><strong>{completedCount}</strong>3D reconstructions</span>
-          <span><strong>{inProgressCount + plannedCount}</strong>In the pipeline</span>
+        <div class="hero__meta" data-testid="hero-stats">
+          <span><strong class="count-up" data-target={SITES.length}>0</strong>Sites catalogued</span>
+          <span><strong class="count-up" data-target={completedCount}>0</strong>3D reconstructions</span>
+          <span><strong class="count-up" data-target={inProgressCount + plannedCount}>0</strong>In the pipeline</span>
         </div>
       </div>
       <div>
@@ -93,16 +93,33 @@ const plannedCount = SITES.filter((s) => s.status === 'planned').length;
 
   <TrustStrip />
 
-  <section class="did-you-know">
-    <div class="container did-you-know__inner">
-      <div>
-        <span class="eyebrow" style="color:var(--c-ochre)">003 — Did you know?</span>
-        <h2 style="margin:0">A fact from the field.</h2>
-      </div>
-      <div>
-        <p data-testid="did-you-know-fact">{fact}</p>
-        <p class="did-you-know__attr">— Pont du Gard, 1st century AD</p>
-      </div>
-    </div>
-  </section>
+  <DidYouKnow />
+
+  <script>
+    // Count-up animation for hero stats. Fires when the block scrolls into view.
+    const stats = document.querySelectorAll<HTMLElement>('.count-up');
+    if (stats.length) {
+      const animate = (el: HTMLElement) => {
+        const target = parseInt(el.dataset.target || '0', 10);
+        const duration = 1400;
+        const start = performance.now();
+        const step = (now: number) => {
+          const p = Math.min(1, (now - start) / duration);
+          const eased = 1 - Math.pow(1 - p, 3); // ease-out cubic
+          el.textContent = String(Math.round(target * eased));
+          if (p < 1) requestAnimationFrame(step);
+        };
+        requestAnimationFrame(step);
+      };
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) {
+            animate(e.target as HTMLElement);
+            io.unobserve(e.target);
+          }
+        });
+      }, { threshold: 0.5 });
+      stats.forEach((s) => io.observe(s));
+    }
+  </script>
 </Layout>

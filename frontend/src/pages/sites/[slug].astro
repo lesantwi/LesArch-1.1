@@ -1,5 +1,7 @@
 ---
 import Layout from '../../layouts/Layout.astro';
+import Gallery from '../../components/Gallery.astro';
+import RelatedSites from '../../components/RelatedSites.astro';
 import { SITES } from '../../data/sites';
 import { t } from '../../i18n/ui';
 
@@ -207,7 +209,7 @@ const bibtex = `@misc{antwi_${site.slug.replace(/-/g, '_')}_${year},
   </Fragment>
 
   <section class="site-hero">
-    <img class="bg" src={heroImg} alt="" />
+    <img class="bg parallax-hero" id="site-hero-bg" src={heroImg} alt="" />
     <div class="container site-hero__inner">
       <div class="site-hero__meta">
         <span>{site.country}</span>
@@ -223,6 +225,10 @@ const bibtex = `@misc{antwi_${site.slug.replace(/-/g, '_')}_${year},
 
   <section class="section">
     <div class="container">
+      {site.gallery && site.gallery.length > 1 && (
+        <Gallery images={site.gallery} alt={site.name} />
+      )}
+
       {modelUrl ? (
         <div class="model-viewer-wrap" data-testid="model-viewer-wrap" data-model-src={modelUrl}>
           <img
@@ -261,7 +267,9 @@ const bibtex = `@misc{antwi_${site.slug.replace(/-/g, '_')}_${year},
         <div>
           <span class="eyebrow">About this site</span>
           <h2 style="font-size:var(--step-3)">{site.name}</h2>
-          <p>{site.longDescription}</p>
+          <div class="drop-cap">
+            <p>{site.longDescription}</p>
+          </div>
 
           <h3 style="margin-top:2.5rem">Research relevance</h3>
           <p>{site.researchRelevance}</p>
@@ -337,12 +345,22 @@ const bibtex = `@misc{antwi_${site.slug.replace(/-/g, '_')}_${year},
     const wrap = document.querySelector('.model-viewer-wrap');
     loadBtn?.addEventListener('click', () => {
       if (!wrap || !modelUrl) return;
+      // Track achievement
+      window.lesarchAchieve?.('modeler');
+
       // Inject the model-viewer web component script
       const script = document.createElement('script');
       script.type = 'module';
       script.src = 'https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js';
       document.head.appendChild(script);
-      // Swap the poster for the model-viewer element
+
+      // Add a floating info hotspot when the model is Pont du Gard
+      // (positions are approximate — tweak data-position after inspecting the model)
+      const isPontDuGard = modelUrl.includes('pont_du_gard') || modelUrl.includes('pont-du-gard');
+      const hotspots = isPontDuGard
+        ? `<button slot="hotspot-mortar" data-position="0 3 0" data-normal="0 1 0" class="hotspot" data-tip="Built without a single drop of mortar — the arches lock via friction and gravity alone."></button>`
+        : '';
+
       wrap.innerHTML = `
         <model-viewer
           src="${modelUrl}"
@@ -358,11 +376,19 @@ const bibtex = `@misc{antwi_${site.slug.replace(/-/g, '_')}_${year},
           auto-rotate-delay="2500"
           data-testid="model-viewer"
         >
-          <button slot="ar-button" class="btn btn--primary" style="position:absolute; bottom:1.5rem; right:1.5rem;">
+          ${hotspots}
+          <button slot="ar-button" class="btn btn--primary" data-testid="ar-btn" style="position:absolute; bottom:1.5rem; right:1.5rem;">
             View in your space (AR)
           </button>
         </model-viewer>
       `;
+
+      // Track AR view when the AR button is clicked
+      setTimeout(() => {
+        wrap.querySelector('[data-testid="ar-btn"]')?.addEventListener('click', () => {
+          window.lesarchAchieve?.('ar-explorer');
+        });
+      }, 200);
     });
 
     // Citation tabs
@@ -402,5 +428,25 @@ const bibtex = `@misc{antwi_${site.slug.replace(/-/g, '_')}_${year},
       };
       document.head.appendChild(s);
     }
+
+    // ---- Scroll parallax on hero image ----
+    const heroBg = document.getElementById('site-hero-bg');
+    if (heroBg && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      const onScroll = () => {
+        const y = window.scrollY;
+        // Only apply while the hero is roughly in view (~first viewport)
+        if (y < window.innerHeight) {
+          heroBg.style.transform = `translate3d(0, ${y * 0.25}px, 0) scale(1.05)`;
+        }
+      };
+      window.addEventListener('scroll', onScroll, { passive: true });
+      onScroll();
+    }
+
+    // ---- Achievements: track unique site visits ----
+    window.lesarchAchieve?.('site-curator', { item: window.location.pathname });
+    window.lesarchAchieve?.('archivist',   { item: window.location.pathname });
   </script>
+
+  <RelatedSites currentSlug={site.slug} locale={locale} />
 </Layout>

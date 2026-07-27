@@ -1,6 +1,11 @@
 ---
 import '../styles/global.css';
 import { ui, t, LOCALES, LOCALE_LABELS, LOCALE_DIR, type Locale } from '../i18n/ui';
+import BackToTop from '../components/BackToTop.astro';
+import AchievementSystem from '../components/AchievementSystem.astro';
+import FooterQuote from '../components/FooterQuote.astro';
+import ReadingProgress from '../components/ReadingProgress.astro';
+import Konami from '../components/Konami.astro';
 
 export interface Props {
   title: string;
@@ -147,6 +152,7 @@ const navItems: { key: string; path: string }[] = [
     </script>
   </head>
   <body>
+    <ReadingProgress />
     <a href="#main" class="skip-link">Skip to content</a>
 
     <header class="site-header">
@@ -213,6 +219,8 @@ const navItems: { key: string; path: string }[] = [
 
     <footer class="site-footer">
       <div class="container">
+        <FooterQuote />
+
         <div class="site-footer__grid">
           <div>
             <h3>LesArch</h3>
@@ -253,6 +261,10 @@ const navItems: { key: string; path: string }[] = [
     </footer>
 
     <div class="lesarch-cursor" id="lesarch-cursor" aria-hidden="true"></div>
+
+    <BackToTop />
+    <AchievementSystem />
+    <Konami />
 
     <script>
       // Theme toggle

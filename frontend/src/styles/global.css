@@ -33,12 +33,12 @@
   --font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', monospace;
 
   /* Scale */
-  --step-0: clamp(0.95rem, 0.92rem + 0.15vw, 1.05rem);
-  --step-1: clamp(1.15rem, 1.08rem + 0.35vw, 1.35rem);
-  --step-2: clamp(1.45rem, 1.3rem + 0.75vw, 1.85rem);
-  --step-3: clamp(1.85rem, 1.55rem + 1.5vw, 2.8rem);
-  --step-4: clamp(2.5rem, 1.9rem + 3vw, 4.5rem);
-  --step-5: clamp(3rem, 2.2rem + 5vw, 6.5rem);
+  --step-0: clamp(1rem, 0.95rem + 0.2vw, 1.1rem);
+  --step-1: clamp(1.25rem, 1.15rem + 0.45vw, 1.5rem);
+  --step-2: clamp(1.65rem, 1.4rem + 1vw, 2.1rem);
+  --step-3: clamp(2.1rem, 1.7rem + 1.9vw, 3.2rem);
+  --step-4: clamp(2.9rem, 2.1rem + 3.5vw, 5.2rem);
+  --step-5: clamp(3.5rem, 2.5rem + 5.8vw, 7.5rem);
 
   /* Layout */
   --container: 1240px;
@@ -744,4 +744,132 @@ p { margin: 0 0 1em; max-width: 68ch; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
   .reveal { opacity: 1; transform: none; }
+}
+
+/* ================================================================
+   Extra polish — drop caps, animated underlines, count-up, pickaxe
+   ================================================================ */
+
+/* Drop cap for the FIRST paragraph of long-form content */
+.drop-cap p:first-of-type::first-letter {
+  font-family: var(--font-display);
+  font-size: 4.6em;
+  line-height: 0.85;
+  float: left;
+  margin: .1em .18em 0 -.05em;
+  color: var(--c-clay);
+  font-variation-settings: "opsz" 144, "SOFT" 0, "wght" 600;
+  padding: 0 .05em;
+}
+[dir="rtl"] .drop-cap p:first-of-type::first-letter { float: right; margin: .1em -.05em 0 .18em; }
+
+/* Animated underline on hover for prominent headings */
+.uline {
+  background-image: linear-gradient(var(--c-clay), var(--c-clay));
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  background-size: 0% 3px;
+  transition: background-size .55s var(--ease);
+  padding-bottom: 4px;
+}
+.uline:hover, .uline:focus-visible { background-size: 100% 3px; }
+
+/* Animated count-up */
+.count-up {
+  display: inline-block;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Pickaxe cursor over the interactive map */
+#map,
+#map .leaflet-container {
+  cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 24 24' fill='none' stroke='%23B85A3A' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M14 3L21 10'/><path d='M17 6L6 17'/><path d='M6 17L3 21'/><path d='M14 3a4 4 0 0 1 4 4'/></svg>") 4 24, crosshair;
+}
+#map .map-pin { cursor: pointer !important; }
+
+/* Timeline "play" button (time-lapse) */
+.timeline-play {
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+  margin-left: 1rem;
+  padding: .35rem .85rem;
+  background: var(--c-clay);
+  color: #fff;
+  border: 0;
+  border-radius: 999px;
+  font-family: var(--font-mono);
+  font-size: .7rem;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background .25s var(--ease), transform .25s var(--ease);
+}
+.timeline-play:hover { background: var(--c-clay-deep); transform: translateY(-1px); }
+.timeline-play.is-playing { background: var(--c-lapis); }
+.timeline-play svg { width: 12px; height: 12px; }
+
+/* Scroll-driven parallax hero (offset applied via inline JS) */
+.parallax-hero { will-change: transform; }
+
+/* CSS-only page transition — subtle fade + slide-up on every page load.
+   Cheaper and more reliable than Astro's ClientRouter for our use case. */
+main {
+  animation: page-enter .55s cubic-bezier(.2, .7, .2, 1) both;
+}
+@keyframes page-enter {
+  0%   { opacity: 0; transform: translateY(12px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  main { animation: none; }
+}
+
+/* Model annotation hotspot for model-viewer */
+.hotspot {
+  --hotspot-size: 26px;
+  width: var(--hotspot-size);
+  height: var(--hotspot-size);
+  border-radius: 50%;
+  border: 2px solid var(--c-bone);
+  background: var(--c-clay);
+  color: #fff;
+  font-family: var(--font-mono);
+  font-size: .7rem;
+  font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  position: relative;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.3);
+  animation: hotspot-pulse 2s ease-in-out infinite;
+}
+.hotspot::after {
+  content: attr(data-tip);
+  position: absolute;
+  bottom: calc(100% + 10px);
+  left: 50%;
+  transform: translateX(-50%) translateY(4px);
+  background: var(--c-stone);
+  color: var(--c-bone);
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: .78rem;
+  letter-spacing: 0;
+  text-transform: none;
+  padding: .55rem .85rem;
+  border-radius: var(--radius);
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .25s var(--ease), transform .25s var(--ease);
+  box-shadow: var(--shadow-strong);
+}
+.hotspot:hover::after,
+.hotspot:focus::after { opacity: 1; transform: translateX(-50%) translateY(0); }
+@keyframes hotspot-pulse {
+  0%, 100% { box-shadow: 0 4px 14px rgba(0,0,0,0.3), 0 0 0 0 rgba(184,90,58,0.5); }
+  50%      { box-shadow: 0 4px 14px rgba(0,0,0,0.3), 0 0 0 12px rgba(184,90,58,0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hotspot { animation: none; }
 }

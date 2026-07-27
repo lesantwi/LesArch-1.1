@@ -1,0 +1,114 @@
+---
+/**
+ * DidYouKnow — a rotating, clickable archaeological fact.
+ * Randomly picks one on mount; auto-rotates every 8s (respecting reduced-motion);
+ * user can advance manually with the "next" button; each fact deep-links to its
+ * related site page when one is tagged.
+ */
+import { DID_YOU_KNOW } from '../data/sites';
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+---
+
+<section class="did-you-know" data-testid="did-you-know">
+  <div class="container did-you-know__inner">
+    <div>
+      <span class="eyebrow" style="color:var(--c-ochre)">003 — Did you know?</span>
+      <h2 style="margin:0">A fact from the field.</h2>
+      <div class="dyk-controls">
+        <button class="dyk-btn" id="dyk-next" data-testid="dyk-next" aria-label="Next fact">
+          Next fact
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+        </button>
+        <span class="dyk-index" id="dyk-index" data-testid="dyk-index">1 / {DID_YOU_KNOW.length}</span>
+      </div>
+    </div>
+    <div class="dyk-body">
+      <p class="dyk-fact" id="dyk-fact" data-testid="dyk-fact">Loading a fact from history…</p>
+      <a class="dyk-link" id="dyk-link" style="display:none" data-testid="dyk-link">Read more →</a>
+    </div>
+  </div>
+
+  <script define:vars={{ facts: DID_YOU_KNOW, base }}>
+    const factEl = document.getElementById('dyk-fact');
+    const linkEl = document.getElementById('dyk-link');
+    const idxEl = document.getElementById('dyk-index');
+    const nextBtn = document.getElementById('dyk-next');
+    if (factEl && facts.length) {
+      let current = Math.floor(Math.random() * facts.length);
+      const render = () => {
+        const f = facts[current];
+        factEl.style.opacity = '0';
+        setTimeout(() => {
+          factEl.textContent = f.fact;
+          idxEl.textContent = `${current + 1} / ${facts.length}`;
+          if (f.siteSlug) {
+            linkEl.href = `${base}/sites/${f.siteSlug}`;
+            linkEl.style.display = 'inline-block';
+          } else {
+            linkEl.style.display = 'none';
+          }
+          factEl.style.opacity = '1';
+        }, 260);
+      };
+      render();
+      const advance = (dir = 1) => { current = (current + dir + facts.length) % facts.length; render(); };
+      nextBtn?.addEventListener('click', () => advance(1));
+      // Auto-advance every 8s, but pause on hover
+      const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (!prefersReduced) {
+        let interval = setInterval(() => advance(1), 8000);
+        const dyk = document.querySelector('.did-you-know');
+        dyk?.addEventListener('mouseenter', () => clearInterval(interval));
+        dyk?.addEventListener('mouseleave', () => { interval = setInterval(() => advance(1), 8000); });
+      }
+    }
+  </script>
+</section>
+
+<style is:global>
+  .dyk-controls {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    margin-top: 2rem;
+  }
+  .dyk-btn {
+    background: transparent;
+    border: 1px solid rgba(250,245,233,0.3);
+    color: var(--c-bone);
+    font-family: var(--font-mono);
+    font-size: .72rem;
+    letter-spacing: .15em;
+    text-transform: uppercase;
+    padding: .55rem 1rem;
+    border-radius: 999px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: .5rem;
+    transition: background .25s var(--ease), transform .25s var(--ease);
+  }
+  .dyk-btn:hover { background: rgba(250,245,233,0.1); transform: translateY(-1px); }
+  .dyk-index {
+    font-family: var(--font-mono);
+    font-size: .7rem;
+    letter-spacing: .15em;
+    color: rgba(250,245,233,0.5);
+  }
+  .dyk-fact {
+    transition: opacity .35s var(--ease);
+  }
+  .dyk-link {
+    display: inline-block;
+    margin-top: 1.5rem;
+    color: var(--c-ochre) !important;
+    font-family: var(--font-mono);
+    font-size: .72rem;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    text-decoration: none;
+    border-bottom: 1px solid var(--c-ochre);
+    padding-bottom: 2px;
+  }
+  .dyk-link:hover { color: #fff !important; border-color: #fff; }
+</style>

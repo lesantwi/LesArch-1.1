@@ -1,0 +1,233 @@
+---
+/**
+ * Gallery — image carousel + lightbox for site detail pages.
+ * Accepts an array of image paths (relative to /public).
+ */
+interface Props {
+  images: string[];
+  alt: string;
+}
+const { images, alt } = Astro.props;
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const galleryId = `gal-${Math.random().toString(36).slice(2, 8)}`;
+---
+
+{images.length > 0 && (
+  <div class="gallery" id={galleryId} data-testid="gallery">
+    <div class="gallery__stage">
+      {images.map((src, i) => (
+        <img
+          src={`${base}/${src.replace(/^\//, '')}`}
+          alt={`${alt} — image ${i + 1}`}
+          class="gallery__img"
+          data-index={i}
+          data-testid={`gallery-img-${i}`}
+          loading={i === 0 ? 'eager' : 'lazy'}
+          style={i === 0 ? '' : 'opacity:0; pointer-events:none;'}
+        />
+      ))}
+      {images.length > 1 && (
+        <>
+          <button class="gallery__arrow gallery__arrow--prev" data-dir="-1" aria-label="Previous image" data-testid="gallery-prev">‹</button>
+          <button class="gallery__arrow gallery__arrow--next" data-dir="1" aria-label="Next image" data-testid="gallery-next">›</button>
+          <div class="gallery__counter" data-testid="gallery-counter">1 / {images.length}</div>
+        </>
+      )}
+      <button class="gallery__expand" aria-label="Open full-screen" data-testid="gallery-expand">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+      </button>
+    </div>
+
+    {images.length > 1 && (
+      <div class="gallery__thumbs">
+        {images.map((src, i) => (
+          <button
+            class="gallery__thumb"
+            data-index={i}
+            aria-label={`Show image ${i + 1}`}
+            data-testid={`gallery-thumb-${i}`}
+          >
+            <img src={`${base}/${src.replace(/^\//, '')}`} alt="" loading="lazy" />
+          </button>
+        ))}
+      </div>
+    )}
+
+    <div class="gallery__lightbox" data-testid="gallery-lightbox" role="dialog" aria-modal="true" aria-label="Image viewer">
+      <button class="gallery__lightbox-close" aria-label="Close">×</button>
+      <img class="gallery__lightbox-img" src="" alt="" />
+    </div>
+  </div>
+)}
+
+<script define:vars={{ galleryId, total: images.length }}>
+  const root = document.getElementById(galleryId);
+  if (root && total > 1) {
+    const imgs = root.querySelectorAll('.gallery__img');
+    const thumbs = root.querySelectorAll('.gallery__thumb');
+    const counter = root.querySelector('.gallery__counter');
+    let cur = 0;
+    const show = (i) => {
+      cur = ((i % total) + total) % total;
+      imgs.forEach((im, k) => {
+        im.style.opacity = k === cur ? '1' : '0';
+        im.style.pointerEvents = k === cur ? 'auto' : 'none';
+      });
+      thumbs.forEach((t, k) => t.setAttribute('aria-current', k === cur ? 'true' : 'false'));
+      if (counter) counter.textContent = `${cur + 1} / ${total}`;
+    };
+    show(0);
+    root.querySelectorAll('.gallery__arrow').forEach((btn) => {
+      btn.addEventListener('click', () => show(cur + parseInt(btn.dataset.dir || '1', 10)));
+    });
+    thumbs.forEach((t) => t.addEventListener('click', () => show(parseInt(t.dataset.index || '0', 10))));
+    // Keyboard nav when hovered
+    let focused = false;
+    root.addEventListener('mouseenter', () => (focused = true));
+    root.addEventListener('mouseleave', () => (focused = false));
+    document.addEventListener('keydown', (e) => {
+      if (!focused) return;
+      if (e.key === 'ArrowLeft') show(cur - 1);
+      if (e.key === 'ArrowRight') show(cur + 1);
+    });
+  }
+  // Lightbox
+  if (root) {
+    const box = root.querySelector('.gallery__lightbox');
+    const boxImg = root.querySelector('.gallery__lightbox-img');
+    root.querySelector('.gallery__expand')?.addEventListener('click', () => {
+      const activeImg = Array.from(root.querySelectorAll('.gallery__img')).find(
+        (im) => im.style.opacity === '1' || im.style.opacity === ''
+      );
+      if (activeImg && boxImg) {
+        boxImg.src = activeImg.src;
+        boxImg.alt = activeImg.alt;
+        box.classList.add('is-open');
+      }
+    });
+    root.querySelector('.gallery__lightbox-close')?.addEventListener('click', () => box.classList.remove('is-open'));
+    box.addEventListener('click', (e) => {
+      if (e.target === box) box.classList.remove('is-open');
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') box.classList.remove('is-open');
+    });
+  }
+</script>
+
+<style is:global>
+  .gallery { margin: 2rem 0 3rem; }
+  .gallery__stage {
+    position: relative;
+    aspect-ratio: 16/10;
+    background: var(--c-stone);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-soft);
+  }
+  .gallery__img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: opacity .5s var(--ease);
+  }
+  .gallery__arrow {
+    position: absolute;
+    top: 50%; transform: translateY(-50%);
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    background: rgba(250,245,233,0.9);
+    border: 0;
+    font-size: 1.6rem;
+    color: var(--c-stone);
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    z-index: 2;
+    transition: background .25s var(--ease), transform .25s var(--ease);
+    box-shadow: var(--shadow-soft);
+  }
+  .gallery__arrow:hover { background: #fff; transform: translateY(-50%) scale(1.08); }
+  .gallery__arrow--prev { left: 1rem; }
+  .gallery__arrow--next { right: 1rem; }
+  .gallery__counter {
+    position: absolute;
+    bottom: 1rem; left: 1rem;
+    background: rgba(21,17,13,0.75);
+    color: var(--c-bone);
+    font-family: var(--font-mono);
+    font-size: .72rem;
+    letter-spacing: .15em;
+    padding: .35rem .75rem;
+    border-radius: 999px;
+    z-index: 2;
+  }
+  .gallery__expand {
+    position: absolute;
+    bottom: 1rem; right: 1rem;
+    width: 36px; height: 36px;
+    background: rgba(21,17,13,0.75);
+    border: 0; color: var(--c-bone);
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    z-index: 2;
+    transition: background .25s var(--ease);
+  }
+  .gallery__expand:hover { background: var(--c-clay); }
+
+  .gallery__thumbs {
+    display: flex;
+    gap: .75rem;
+    margin-top: 1rem;
+    overflow-x: auto;
+    padding-bottom: .5rem;
+  }
+  .gallery__thumb {
+    flex: 0 0 90px;
+    height: 66px;
+    border: 2px solid transparent;
+    border-radius: 6px;
+    overflow: hidden;
+    padding: 0;
+    background: transparent;
+    cursor: pointer;
+    transition: border-color .25s var(--ease), transform .25s var(--ease);
+  }
+  .gallery__thumb img { width: 100%; height: 100%; object-fit: cover; }
+  .gallery__thumb:hover { transform: translateY(-2px); }
+  .gallery__thumb[aria-current="true"] { border-color: var(--c-clay); }
+
+  /* Lightbox */
+  .gallery__lightbox {
+    position: fixed;
+    inset: 0;
+    background: rgba(21,17,13,0.94);
+    backdrop-filter: blur(10px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 3rem;
+  }
+  .gallery__lightbox.is-open { display: flex; animation: fadein .3s var(--ease); }
+  @keyframes fadein { from { opacity: 0; } to { opacity: 1; } }
+  .gallery__lightbox-img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    box-shadow: 0 20px 60px rgba(0,0,0,.5);
+  }
+  .gallery__lightbox-close {
+    position: absolute;
+    top: 1.5rem; right: 1.5rem;
+    width: 48px; height: 48px;
+    background: rgba(250,245,233,0.15);
+    color: var(--c-bone);
+    border: 1px solid rgba(250,245,233,0.3);
+    border-radius: 50%;
+    font-size: 1.75rem;
+    cursor: pointer;
+  }
+</style>

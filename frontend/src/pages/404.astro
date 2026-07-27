@@ -1,0 +1,111 @@
+---
+import Layout from '../layouts/Layout.astro';
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+---
+
+<Layout title="Lost Site — LesArch" description="This page has crumbled to dust — but the atlas is still open." noindex={true} pathWithoutBase="/404">
+  <section class="section" style="min-height:calc(100vh - 200px); display:flex; align-items:center;">
+    <div class="container" style="text-align:center; max-width:640px; margin:0 auto;">
+      <span class="eyebrow" style="color:var(--c-clay); margin-bottom:2rem;">◆ 404 — LOST SITE</span>
+
+      <div class="ruin-column" aria-hidden="true">
+        <div class="ruin-column__base"></div>
+        <div class="ruin-column__shaft"></div>
+        <div class="ruin-column__capital"></div>
+        <div class="ruin-column__crumble">
+          <span></span><span></span><span></span><span></span><span></span>
+        </div>
+      </div>
+
+      <h1 style="font-size:var(--step-4); margin:2rem 0 1rem; max-width:none;">
+        You've stumbled onto <em style="color:var(--c-ochre)">a lost site.</em>
+      </h1>
+      <p class="lede" style="margin:0 auto 2.5rem;">
+        The URL you followed points nowhere in our atlas. Perhaps the ruin has weathered further, or the coordinates were mistranscribed.
+      </p>
+
+      <div style="display:flex; gap:1rem; justify-content:center; flex-wrap:wrap;">
+        <a href={`${base}/`} class="btn btn--primary" data-testid="404-home">
+          Back to the atlas
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+        </a>
+        <a href={`${base}/projects`} class="btn btn--ghost" data-testid="404-projects">Browse all sites</a>
+      </div>
+
+      <p style="margin-top:3rem; font-family:var(--font-mono); font-size:.72rem; letter-spacing:.15em; color:var(--ink-soft); text-transform:uppercase;">
+        Every explorer takes a wrong turn — the map is still yours.
+      </p>
+    </div>
+  </section>
+
+  <style>
+    .ruin-column {
+      position: relative;
+      width: 90px;
+      height: 220px;
+      margin: 0 auto;
+    }
+    .ruin-column__capital {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 76px; height: 22px;
+      background: var(--c-sand);
+      border-radius: 3px 3px 0 0;
+      box-shadow: inset 0 -4px 0 rgba(0,0,0,0.05);
+    }
+    .ruin-column__shaft {
+      position: absolute;
+      top: 22px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 44px; height: 150px;
+      background: linear-gradient(90deg, var(--c-sand) 0%, var(--c-parchment-deep) 50%, var(--c-sand) 100%);
+      /* Fluted look via repeating gradient */
+      background-image:
+        linear-gradient(90deg, transparent 45%, rgba(0,0,0,0.06) 47%, transparent 49%),
+        linear-gradient(90deg, transparent 55%, rgba(0,0,0,0.06) 57%, transparent 59%),
+        linear-gradient(90deg, var(--c-sand), var(--c-parchment-deep) 50%, var(--c-sand));
+      /* Crumbled top-right corner */
+      clip-path: polygon(0 0, 100% 0, 100% 60%, 92% 65%, 100% 68%, 100% 100%, 0 100%);
+    }
+    .ruin-column__base {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 84px; height: 20px;
+      background: var(--c-sand);
+      border-radius: 3px 3px 0 0;
+    }
+    /* Falling dust particles animation */
+    .ruin-column__crumble {
+      position: absolute;
+      top: 40px;
+      right: -20px;
+      width: 30px; height: 100px;
+    }
+    .ruin-column__crumble span {
+      display: block;
+      width: 4px; height: 4px;
+      background: var(--c-ochre);
+      border-radius: 50%;
+      opacity: 0;
+      animation: dustfall 3.5s ease-in infinite;
+    }
+    .ruin-column__crumble span:nth-child(1) { animation-delay: 0s;   left: 4px;  }
+    .ruin-column__crumble span:nth-child(2) { animation-delay: 0.6s; left: 12px; }
+    .ruin-column__crumble span:nth-child(3) { animation-delay: 1.2s; left: 20px; }
+    .ruin-column__crumble span:nth-child(4) { animation-delay: 1.8s; left: 8px;  }
+    .ruin-column__crumble span:nth-child(5) { animation-delay: 2.4s; left: 16px; }
+    @keyframes dustfall {
+      0% { opacity: 0; transform: translateY(-10px); }
+      15% { opacity: 0.9; }
+      100% { opacity: 0; transform: translateY(100px); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .ruin-column__crumble span { animation: none; opacity: 0; }
+    }
+  </style>
+</Layout>

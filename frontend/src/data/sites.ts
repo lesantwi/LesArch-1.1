@@ -31,6 +31,7 @@ export interface ArchSite {
   coords: [number, number]; // [lat, lng]
   thumbnail: string;        // card image (relative to /public)
   hero: string;             // hero image
+  gallery?: string[];       // additional images for the detail-page carousel
   shortDescription: string;
   longDescription: string;
   researchRelevance: string;
@@ -56,6 +57,10 @@ export const SITES: ArchSite[] = [
     coords: [43.9478, 4.5357],
     thumbnail: 'assets/project_thumb_point_du_gard.webp',
     hero: 'assets/site_hero_pont_du_gard.webp',
+    gallery: [
+      'assets/site_hero_pont_du_gard.webp',
+      'assets/project_thumb_point_du_gard.webp',
+    ],
     shortDescription:
       'A monumental Roman aqueduct bridge, part of a 50 km system that supplied water to ancient Nemausus (Nîmes).',
     longDescription:
@@ -106,6 +111,10 @@ export const SITES: ArchSite[] = [
     coords: [9.2189, -1.8531],
     thumbnail: 'assets/larabanga.jpg',
     hero: 'assets/larabanga-aerial.webp',
+    gallery: [
+      'assets/larabanga-aerial.webp',
+      'assets/larabanga.jpg',
+    ],
     shortDescription:
       "One of Ghana's oldest mosques and a striking example of the Sudano-Sahelian architectural tradition in West Africa.",
     longDescription:
@@ -213,12 +222,23 @@ export const ERAS: { value: Era; label: string }[] = [
   { value: 'early-modern', label: 'Early Modern' },
 ];
 
-export const DID_YOU_KNOW: string[] = [
-  'The Pont du Gard carried an estimated 40,000 m³ of fresh water daily — without a single drop of mortar in its 49 m height.',
-  'Asuka-dera (588 AD) was modelled on Korean Baekje temple architecture and brought continental Buddhist building traditions to Japan.',
-  'The Great Pyramid of Giza held the record as the tallest human-made structure for over 3,800 years.',
-  'Petra was carved into living rock — its hydraulics could trap and store rare desert rainfall for an entire year.',
-  "Larabanga Mosque's wooden 'toron' beams aren't just decorative — they're permanent scaffolding for re-plastering after the rains.",
-  "Machu Picchu's stones fit together so precisely that a knife blade cannot slip between them.",
-  'Roman concrete (opus caementicium) used volcanic ash — modern scientists are still studying how it self-heals over centuries.',
+export const DID_YOU_KNOW: { fact: string; siteSlug?: string }[] = [
+  { fact: 'The Pont du Gard carried an estimated 40,000 m³ of fresh water daily — without a single drop of mortar in its 49 m height.', siteSlug: 'pont-du-gard' },
+  { fact: 'Asuka-dera (588 AD) was modelled on Korean Baekje temple architecture and brought continental Buddhist building traditions to Japan.', siteSlug: 'asuka-dera' },
+  { fact: 'The Great Pyramid of Giza held the record as the tallest human-made structure for over 3,800 years.', siteSlug: 'great-pyramid-giza' },
+  { fact: 'Petra was carved into living rock — its hydraulics could trap and store rare desert rainfall for an entire year.', siteSlug: 'petra-treasury' },
+  { fact: "Larabanga Mosque's wooden 'toron' beams aren't just decorative — they're permanent scaffolding for re-plastering after the rains.", siteSlug: 'larabanga-mosque' },
+  { fact: "Machu Picchu's stones fit together so precisely that a knife blade cannot slip between them.", siteSlug: 'machu-picchu' },
+  { fact: 'Roman concrete (opus caementicium) used volcanic ash — modern scientists are still studying how it self-heals over centuries.' },
+  { fact: 'The Rosetta Stone, carved in 196 BCE, took 23 years to fully decipher and unlocked the entire field of Egyptology.' },
+  { fact: 'A typical Roman aqueduct dropped only about 34 cm per kilometre — engineers used clay-pipe inverted siphons to cross valleys.' },
+  { fact: "The world's oldest known structure built by humans is Göbekli Tepe in Turkey — 11,500 years old, predating agriculture itself." },
+  { fact: 'The Colosseum had 80 entrances and could seat 50,000 spectators — and was emptied in under 15 minutes via "vomitorium" passageways.', siteSlug: 'colosseum' },
+  { fact: "Roman lead-water-pipe joints in Pompeii still bear the maker's name stamps — branding existed two millennia ago." },
+  { fact: 'Inca builders worked without iron tools, the wheel, or written language — yet built 40,000 km of paved roads.' },
+  { fact: "The earliest known pyramid is Egypt's Step Pyramid of Djoser (c. 2670 BCE) — pre-dating Giza by a full century." },
+  { fact: 'The Mosque of Djenné in Mali, like Larabanga, has its plaster ceremonially re-applied each year by the entire community.' },
+  { fact: 'Most ancient Greek and Roman statues were originally painted in vivid colours — the "pure white marble" aesthetic is a 19th-century invention.' },
+  { fact: 'Tutankhamun was a minor pharaoh — but his unlooted tomb made him the most famous, simply by accident of preservation.' },
+  { fact: "Stonehenge's bluestones were quarried 240 km away in Wales and transported to Salisbury Plain ~5,000 years ago." },
 ];

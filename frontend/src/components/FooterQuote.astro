@@ -1,0 +1,59 @@
+---
+/**
+ * FooterQuote — a random ancient/archaeological quote in the footer.
+ * Server-picks one at build; the client script re-picks a fresh random one on load.
+ */
+import { QUOTES, randomQuote } from '../data/quotes';
+const initial = randomQuote();
+---
+
+<div class="footer-quote" data-testid="footer-quote">
+  <span class="footer-quote__mark">“</span>
+  <p class="footer-quote__text" id="footer-quote-text">{initial.quote}</p>
+  <cite class="footer-quote__cite" id="footer-quote-cite">— {initial.author}</cite>
+</div>
+
+<script define:vars={{ QUOTES }}>
+  // Reshuffle on each page load (build-time picked one might be stale on CDN)
+  const q = QUOTES[Math.floor(Math.random() * QUOTES.length)];
+  const t = document.getElementById('footer-quote-text');
+  const c = document.getElementById('footer-quote-cite');
+  if (t && c) { t.textContent = q.quote; c.textContent = '— ' + q.author; }
+</script>
+
+<style is:global>
+  .footer-quote {
+    max-width: 62ch;
+    margin: 0 auto 3rem;
+    text-align: center;
+    padding: 0 1rem;
+    position: relative;
+  }
+  .footer-quote__mark {
+    display: block;
+    font-family: var(--font-display);
+    font-size: 4rem;
+    line-height: 0.4;
+    color: var(--c-ochre);
+    opacity: 0.5;
+    margin-bottom: -.5rem;
+  }
+  .footer-quote__text {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-variation-settings: "opsz" 72, "SOFT" 80, "wght" 350;
+    font-size: 1.15rem;
+    line-height: 1.5;
+    color: rgba(217,207,184,0.9);
+    margin: 0 0 .75rem;
+    max-width: none;
+  }
+  .footer-quote__cite {
+    font-style: normal;
+    font-family: var(--font-mono);
+    font-size: .72rem;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: var(--c-ochre);
+  }
+</style>

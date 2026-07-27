@@ -1,0 +1,45 @@
+---
+/**
+ * ReadingProgress — thin clay-colored bar at the top of the page,
+ * fills as you scroll. Renders only when `variant="detail"` (i.e. on site pages).
+ */
+interface Props { variant?: 'detail' | 'all'; }
+const { variant = 'all' } = Astro.props;
+---
+
+<div class="reading-progress" data-variant={variant} data-testid="reading-progress">
+  <div class="reading-progress__bar" id="reading-progress-bar"></div>
+</div>
+
+<script>
+  const bar = document.getElementById('reading-progress-bar');
+  if (bar) {
+    const update = () => {
+      const h = document.documentElement;
+      const scrolled = h.scrollTop || document.body.scrollTop;
+      const max = (h.scrollHeight - h.clientHeight) || 1;
+      const pct = Math.min(100, Math.max(0, (scrolled / max) * 100));
+      bar.style.width = pct + '%';
+    };
+    window.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', update);
+    update();
+  }
+</script>
+
+<style is:global>
+  .reading-progress {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    z-index: 100;
+    pointer-events: none;
+    background: transparent;
+  }
+  .reading-progress__bar {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, var(--c-clay), var(--c-ochre));
+    transition: width .1s linear;
+  }
+</style>

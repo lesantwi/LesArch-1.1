@@ -1,0 +1,128 @@
+---
+/**
+ * RelatedSites — shows up to 3 related sites (same era first, then same region).
+ * Sits at the bottom of a site detail page to drive discovery.
+ */
+import { SITES, type ArchSite } from '../data/sites';
+import { t, type Locale } from '../i18n/ui';
+
+interface Props {
+  currentSlug: string;
+  locale?: Locale;
+}
+const { currentSlug, locale = 'en' } = Astro.props;
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const current = SITES.find((s) => s.slug === currentSlug);
+
+let related: ArchSite[] = [];
+if (current) {
+  // Rank: same era > same region > everyone else. Take 3.
+  const others = SITES.filter((s) => s.slug !== currentSlug);
+  const sameEra = others.filter((s) => s.era === current.era);
+  const sameRegion = others.filter((s) => s.region === current.region && s.era !== current.era);
+  const rest = others.filter((s) => s.era !== current.era && s.region !== current.region);
+  related = [...sameEra, ...sameRegion, ...rest].slice(0, 3);
+}
+---
+
+{related.length > 0 && (
+  <section class="related" data-testid="related-sites">
+    <div class="container">
+      <div class="related__head">
+        <span class="eyebrow">Continue exploring</span>
+        <h2>Related sites.</h2>
+      </div>
+      <div class="related__grid">
+        {related.map((s) => (
+          <a href={`${base}/sites/${s.slug}`} class="related-card" data-testid={`related-${s.slug}`}>
+            <div class="related-card__media">
+              <img src={`${base}/${s.thumbnail.replace(/^\//, '')}`} alt={s.name} loading="lazy" />
+              <span class={`related-card__status ${s.status}`}>{t(locale, `status.${s.status}`)}</span>
+            </div>
+            <div class="related-card__body">
+              <div class="related-card__meta">
+                <span>{s.country}</span>
+                <span>{s.era.replace(/-/g, ' ')}</span>
+              </div>
+              <h3>{s.name}</h3>
+              <p>{s.shortDescription}</p>
+              <span class="related-card__cta">View site →</span>
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+)}
+
+<style>
+  .related {
+    padding: clamp(4rem, 6vw, 6rem) 0;
+    background: var(--bg-deep);
+    border-top: 1px solid var(--line);
+  }
+  .related__head { margin-bottom: 3rem; }
+  .related__head h2 { font-size: var(--step-3); margin: 0; }
+  .related__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+  }
+  .related-card {
+    display: flex;
+    flex-direction: column;
+    background: var(--c-bone);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    text-decoration: none;
+    color: var(--ink);
+    transition: transform .35s var(--ease), box-shadow .35s var(--ease);
+    box-shadow: var(--shadow-soft);
+  }
+  .related-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-strong); }
+  .related-card__media {
+    aspect-ratio: 16/10;
+    overflow: hidden;
+    position: relative;
+  }
+  .related-card__media img {
+    width: 100%; height: 100%; object-fit: cover;
+    transition: transform .8s var(--ease);
+  }
+  .related-card:hover .related-card__media img { transform: scale(1.06); }
+  .related-card__status {
+    position: absolute; top: .75rem; left: .75rem;
+    font-family: var(--font-mono);
+    font-size: .62rem;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    padding: .3rem .7rem;
+    background: var(--c-bone);
+    border-radius: 999px;
+  }
+  .related-card__status.completed { background: var(--c-lapis); color: #fff; }
+  .related-card__status.in-progress { background: var(--c-ochre); color: #fff; }
+  .related-card__status.planned { background: var(--c-ash); color: var(--c-bone); }
+  .related-card__body { padding: 1.25rem 1.25rem 1.5rem; flex: 1; }
+  .related-card__meta {
+    display: flex; justify-content: space-between;
+    font-family: var(--font-mono);
+    font-size: .68rem;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--c-ash);
+    margin-bottom: .5rem;
+  }
+  .related-card h3 { font-size: 1.2rem; margin: 0 0 .4rem; }
+  .related-card p { font-size: .85rem; color: var(--ink-soft); margin: 0; }
+  .related-card__cta {
+    display: inline-block;
+    margin-top: 1rem;
+    font-family: var(--font-mono);
+    font-size: .68rem;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--c-clay);
+  }
+</style>

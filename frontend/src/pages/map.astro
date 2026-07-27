@@ -148,6 +148,10 @@ const maxYear = Math.max(...SITES.map((s) => s.yearEnd));
         <label for="map-timeline">
           {t(locale, 'map.timeline')}: showing sites up to
           <output id="map-timeline-output">{maxYear} AD</output>
+          <button type="button" class="timeline-play" id="map-timeline-play" data-testid="map-timeline-play" aria-label="Play time-lapse">
+            <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            Play time-lapse
+          </button>
         </label>
         <input
           type="range"
@@ -291,5 +295,59 @@ const maxYear = Math.max(...SITES.map((s) => s.yearEnd));
     document.getElementById('map-timeline').addEventListener('input', applyFilters);
 
     applyFilters();
+
+    // Track achievement — user has visited the map
+    window.lesarchAchieve?.('cartographer');
+
+    // ---- Time-lapse mode ----
+    const playBtn = document.getElementById('map-timeline-play');
+    const timelineInput = document.getElementById('map-timeline');
+    const timelineMin = parseInt(timelineInput.min, 10);
+    const timelineMax = parseInt(timelineInput.max, 10);
+    let playing = false;
+    let rafId = null;
+    let startTs = 0;
+    const DURATION = 22000; // 22s to scrub full range
+
+    function stopPlayback() {
+      playing = false;
+      if (rafId) cancelAnimationFrame(rafId);
+      rafId = null;
+      playBtn.classList.remove('is-playing');
+      playBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>Play time-lapse';
+    }
+
+    function tick(ts) {
+      if (!startTs) startTs = ts;
+      const elapsed = ts - startTs;
+      const progress = Math.min(1, elapsed / DURATION);
+      const eased = 1 - Math.pow(1 - progress, 2); // ease-out
+      const year = Math.round(timelineMin + (timelineMax - timelineMin) * eased);
+      timelineInput.value = year;
+      applyFilters();
+      if (progress < 1 && playing) rafId = requestAnimationFrame(tick);
+      else stopPlayback();
+    }
+
+    playBtn.addEventListener('click', () => {
+      if (playing) { stopPlayback(); return; }
+      // Rewind to start
+      timelineInput.value = timelineMin;
+      applyFilters();
+      playing = true;
+      startTs = 0;
+      playBtn.classList.add('is-playing');
+      playBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>Stop';
+      rafId = requestAnimationFrame(tick);
+      window.lesarchAchieve?.('chronomancer');
+    });
+
+    // Track region visit (approximate — mark region when a site's popup opens)
+    map.on('popupopen', (e) => {
+      const marker = allMarkers.find((m) => m.getPopup() === e.popup);
+      if (marker?.siteData?.region) {
+        window.lesarchAchieve?.('world-traveller', { item: marker.siteData.region });
+      }
+    });
   </script>
 </Layout>
