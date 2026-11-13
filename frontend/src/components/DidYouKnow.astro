@@ -29,6 +29,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
   </div>
 
   <script define:vars={{ facts: DID_YOU_KNOW, base }}>
+    /* eslint-disable no-undef -- vars injected by define:vars */
     const factEl = document.getElementById('dyk-fact');
     const linkEl = document.getElementById('dyk-link');
     const idxEl = document.getElementById('dyk-index');

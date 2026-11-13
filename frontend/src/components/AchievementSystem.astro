@@ -47,6 +47,7 @@ import { ACHIEVEMENTS } from '../data/achievements';
 <div class="ach-toast-stack" id="ach-toast-stack" aria-live="polite"></div>
 
 <script define:vars={{ ACHIEVEMENTS }}>
+  /* eslint-disable no-undef -- vars injected by define:vars */
   const STORAGE_KEY = 'lesarch-achievements';
   const load = () => { try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'); } catch (_) { return {}; } };
   const save = (state) => { try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (_) {} };

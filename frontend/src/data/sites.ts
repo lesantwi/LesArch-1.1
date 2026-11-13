@@ -124,6 +124,31 @@ export const SITES: ArchSite[] = [
     modelAvailable: false,
   },
   {
+    slug: 'ussher-fort',
+    name: 'Ussher Fort',
+    country: 'Ghana',
+    region: 'Africa',
+    era: 'early-modern',
+    eraLabel: 'Early Modern — Dutch (1649), British (1868)',
+    yearStart: 1649,
+    yearEnd: 1868,
+    type: 'Colonial Fort',
+    status: 'in-progress',
+    coords: [5.5328, -0.208],
+    thumbnail: 'assets/world_map_placeholder.webp',
+    hero: 'assets/world_map_placeholder.webp',
+    shortDescription:
+      "A 17th-century Dutch-built fort on the Accra coastline, later held by the British — a key monument to the Gold Coast's colonial and trans-Atlantic history.",
+    longDescription:
+      "Ussher Fort stands on the seafront of Accra, Ghana. It was built by the Dutch West India Company in 1649 as Fort Crèvecœur, one of three European forts that shaped early Accra alongside the English James Fort and Danish Christiansborg. Damaged in conflict and by the 1862 earthquake, the fort passed to the British in 1868 under the Anglo-Dutch exchange of Gold Coast possessions and was renamed after colonial administrator Herbert Taylor Ussher. It later served as a prison and today houses a museum on the history of the trans-Atlantic slave trade. It forms part of the UNESCO World Heritage listing of Ghana's coastal forts and castles (1979). Our 3D reconstruction documents the fort's surviving fabric and phases of construction.",
+    researchRelevance:
+      "Supports research on European fortification on the Gold Coast, the material history of the trans-Atlantic slave trade, and colonial urban development in Accra; provides a digital record of a coastal monument exposed to erosion and urban pressure.",
+    modelAvailable: false,
+    references: [
+      { label: 'UNESCO World Heritage', url: 'https://whc.unesco.org/en/list/34/' },
+    ],
+  },
+  {
     slug: 'petra-treasury',
     name: 'Petra: Al-Khazneh (The Treasury)',
     country: 'Jordan',
@@ -241,4 +266,6 @@ export const DID_YOU_KNOW: { fact: string; siteSlug?: string }[] = [
   { fact: 'Most ancient Greek and Roman statues were originally painted in vivid colours — the "pure white marble" aesthetic is a 19th-century invention.' },
   { fact: 'Tutankhamun was a minor pharaoh — but his unlooted tomb made him the most famous, simply by accident of preservation.' },
   { fact: "Stonehenge's bluestones were quarried 240 km away in Wales and transported to Salisbury Plain ~5,000 years ago." },
+  { fact: "Ussher Fort in Accra was originally built as Fort Crèvecœur by the Dutch in 1649 — its 'Gate of No Return' faces the sea, the last threshold for thousands sent into enslavement.", siteSlug: 'ussher-fort' },
+  { fact: "The 27 forts and castles of Ghana's coastline — Ussher Fort among them — were inscribed together by UNESCO in 1979 as a single monument to the European-African encounter.", siteSlug: 'ussher-fort' },
 ];

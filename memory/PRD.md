@@ -106,3 +106,12 @@ User asked to analyze the GitHub repo [`lesantwi/LesArch-1.1`](https://github.co
 - **22 MB hero video** (`homepage_video.mp4`) is the largest asset and dominates initial load on bandwidth-poor connections. Currently set to `preload="metadata"` and `autoplay muted` — acceptable but could be replaced with a still hero or smaller video later.
 - **50 MB Pont du Gard `.glb`** is lazy-loaded behind a click — no impact on page load now.
 - **Non-EN locale pages don't exist as routes yet** — language switcher shows "EN" with "+3" badge indicating community translations are welcome. Full locale routing is a P2 item.
+
+## Update (Jun 2026)
+- Added Ussher Fort (Accra, Ghana) to src/data/sites.ts: early-modern, 1649-1868, status in-progress, "3D Model - In progress" notice. Appears on map, projects, home and /sites/ussher-fort/.
+- Hero/thumbnail use assets/world_map_placeholder.webp until user uploads photos (convert to WebP with cwebp into public/assets/, then set thumbnail/hero/gallery).
+- Code export: user chose to upgrade and use Save to GitHub.
+
+## Next
+- P0: Swap in user Ussher Fort photos (thumbnail, hero, gallery)
+- P1: Add Ussher Fort .glb when the model is finished (modelUrl + modelAvailable: true + DOI)
