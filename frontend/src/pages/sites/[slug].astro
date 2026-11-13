@@ -3,6 +3,7 @@ import Layout from '../../layouts/Layout.astro';
 import Gallery from '../../components/Gallery.astro';
 import RelatedSites from '../../components/RelatedSites.astro';
 import SiteTimeline from '../../components/SiteTimeline.astro';
+import CompareSlider from '../../components/CompareSlider.astro';
 import { SITES } from '../../data/sites';
 import { t } from '../../i18n/ui';
 
@@ -341,6 +342,10 @@ const bibtex = `@misc{antwi_${site.slug.replace(/-/g, '_')}_${year},
           {site.timeline && site.timeline.length > 0 && (
             <SiteTimeline events={site.timeline} name={site.name} />
           )}
+
+          {site.comparisons?.map((item, i) => (
+            <CompareSlider item={item} index={i} />
+          ))}
 
           {modelUrl && (
             <div class="citation" data-testid="citation-block">

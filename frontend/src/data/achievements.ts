@@ -3,6 +3,8 @@
  * Tracked in localStorage; no server, no accounts.
  */
 
+import { SITES } from './sites';
+
 export interface AchievementDef {
   id: string;
   name: string;
@@ -21,13 +23,15 @@ const ICON_CLOCK = '<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12
 const ICON_BOX_3D = '<path d="m21 16-9 5-9-5V8l9-5 9 5z"/><path d="M3.27 6.96 12 12.01l8.73-5.05"/><line x1="12" y1="22.08" x2="12" y2="12"/>';
 const ICON_KEY = '<circle cx="7.5" cy="15.5" r="5.5"/><path d="m21 2-9.6 9.6"/><path d="m15.5 7.5 3 3L22 7l-3-3"/>';
 const ICON_AR = '<path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/><rect x="7" y="7" width="10" height="10" rx="1"/>';
+const ICON_ROUTE = '<circle cx="6" cy="19" r="3"/><path d="M9 19h8.5a3.5 3.5 0 0 0 0-7h-11a3.5 3.5 0 0 1 0-7H15"/><circle cx="18" cy="5" r="3"/>';
 
 export const ACHIEVEMENTS: AchievementDef[] = [
   { id: 'first-visit',     name: 'Explorer',         description: 'Visited LesArch for the first time.',    icon: ICON_COMPASS },
   { id: 'site-curator',    name: 'Curator',          description: 'Visited 3 archaeological site pages.',   icon: ICON_BOOK, threshold: 3 },
-  { id: 'archivist',       name: 'Archivist',        description: 'Visited every catalogued site.',          icon: ICON_BOX_3D, threshold: 7 },
+  { id: 'archivist',       name: 'Archivist',        description: 'Visited every catalogued site.',          icon: ICON_BOX_3D, threshold: SITES.length },
   { id: 'cartographer',    name: 'Cartographer',     description: 'Explored the interactive atlas.',         icon: ICON_MAP },
   { id: 'chronomancer',    name: 'Chronomancer',     description: 'Ran the time-lapse on the atlas.',        icon: ICON_CLOCK },
+  { id: 'trailblazer',     name: 'Trailblazer',      description: 'Followed a heritage trail to the end.',   icon: ICON_ROUTE },
   { id: 'world-traveller', name: 'World Traveller',  description: 'Visited sites from 3 different regions.', icon: ICON_GLOBE, threshold: 3 },
   { id: 'modeler',         name: '3D Modeler',       description: 'Loaded a 3D reconstruction.',             icon: ICON_PYRAMID },
   { id: 'ar-explorer',     name: 'AR Explorer',      description: 'Viewed a model in augmented reality.',    icon: ICON_AR },

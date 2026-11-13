@@ -570,7 +570,11 @@ const trails = TRAILS.map((tr) => ({
     });
     $('trail-next').addEventListener('click', () => {
       if (!tour) return;
-      if (tour.i >= tour.trail.stops.length - 1) { endTour(); return; }
+      if (tour.i >= tour.trail.stops.length - 1) {
+        window.lesarchAchieve?.('trailblazer');
+        endTour();
+        return;
+      }
       tour.i += 1;
       renderTour();
     });

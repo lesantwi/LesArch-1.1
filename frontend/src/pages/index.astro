@@ -8,7 +8,9 @@ import { t } from '../i18n/ui';
 
 const locale = 'en';
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
-const featured = SITES.slice(0, 3);
+// Active projects first (completed, then in progress, then planned); list order breaks ties
+const STATUS_RANK = { completed: 0, 'in-progress': 1, planned: 2 };
+const featured = [...SITES].sort((a, b) => STATUS_RANK[a.status] - STATUS_RANK[b.status]).slice(0, 3);
 const completedCount = SITES.filter((s) => s.status === 'completed').length;
 const inProgressCount = SITES.filter((s) => s.status === 'in-progress').length;
 const plannedCount = SITES.filter((s) => s.status === 'planned').length;

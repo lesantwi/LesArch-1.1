@@ -1,0 +1,145 @@
+---
+/* eslint-disable no-undef -- Astro is a framework global */
+import type { Comparison } from '../data/sites';
+
+interface Props {
+  item: Comparison;
+  index: number;
+}
+const { item, index } = Astro.props;
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const src = (p: string) => `${base}/${p.replace(/^\//, '')}`;
+---
+
+<figure class="compare-block" data-testid={`compare-${index}`}>
+  <span class="eyebrow">Then &amp; now</span>
+  <h3 class="compare-block__title">{item.title}</h3>
+  <div class="compare" style="--pos:50%" data-testid={`compare-stage-${index}`}>
+    <img class="compare__img" src={src(item.after.src)} alt={`${item.title} — ${item.after.label}`} loading="lazy" data-testid={`compare-after-${index}`} />
+    <img class="compare__img compare__img--before" src={src(item.before.src)} alt={`${item.title} — ${item.before.label}`} loading="lazy" data-testid={`compare-before-${index}`} />
+    <span class="compare__label compare__label--before">{item.before.label}</span>
+    <span class="compare__label compare__label--after">{item.after.label}</span>
+    <span class="compare__handle" aria-hidden="true">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 3 12 9 18"/><polyline points="15 6 21 12 15 18"/></svg>
+    </span>
+    <input
+      class="compare__range"
+      type="range"
+      min="0"
+      max="100"
+      value="50"
+      step="0.5"
+      aria-label={`Drag to compare ${item.before.label} with ${item.after.label}`}
+      data-testid={`compare-range-${index}`}
+    />
+  </div>
+  {(item.caption || item.credit) && (
+    <figcaption class="compare-block__caption">
+      {item.caption && <p>{item.caption}</p>}
+      {item.credit && (
+        <small data-testid={`compare-credit-${index}`}>
+          <a href={item.credit.url} target="_blank" rel="noopener">{item.credit.text}</a> ·
+          <a href={item.credit.licenseUrl} target="_blank" rel="noopener">{item.credit.license}</a>, via Wikimedia Commons
+        </small>
+      )}
+    </figcaption>
+  )}
+</figure>
+
+<script>
+  document.querySelectorAll<HTMLElement>('.compare').forEach((stage) => {
+    const range = stage.querySelector<HTMLInputElement>('.compare__range');
+    range?.addEventListener('input', () => stage.style.setProperty('--pos', `${range.value}%`));
+  });
+</script>
+
+<style>
+  .compare-block { margin: 3rem 0 0; }
+  .compare-block__title { margin: .5rem 0 1.25rem; }
+  .compare {
+    position: relative;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    border-radius: var(--radius-lg);
+    background: var(--c-stone);
+    box-shadow: var(--shadow-soft);
+    user-select: none;
+  }
+  .compare__img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    pointer-events: none;
+  }
+  .compare__img--before {
+    clip-path: inset(0 calc(100% - var(--pos)) 0 0);
+    filter: sepia(.25) contrast(1.05);
+  }
+  .compare::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: var(--pos);
+    width: 2px;
+    transform: translateX(-1px);
+    background: var(--c-bone);
+    box-shadow: 0 0 12px rgba(0,0,0,0.4);
+    pointer-events: none;
+  }
+  .compare__handle {
+    position: absolute;
+    top: 50%;
+    left: var(--pos);
+    z-index: 2;
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: var(--c-clay);
+    color: #fff;
+    border: 2px solid #FAF5E9;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.35);
+    transform: translate(-50%, -50%);
+    transition: transform .25s var(--ease), background-color .25s var(--ease);
+    pointer-events: none;
+  }
+  .compare:hover .compare__handle { transform: translate(-50%, -50%) scale(1.1); }
+  .compare__range:focus-visible ~ .compare__handle,
+  .compare:has(.compare__range:focus-visible) .compare__handle {
+    background-color: var(--c-lapis);
+  }
+  .compare__label {
+    position: absolute;
+    top: 1rem;
+    z-index: 1;
+    padding: .35rem .7rem;
+    border-radius: 999px;
+    background: rgba(21,17,13,0.72);
+    color: #FAF5E9;
+    font-family: var(--font-mono);
+    font-size: .7rem;
+    letter-spacing: .15em;
+    text-transform: uppercase;
+    pointer-events: none;
+  }
+  .compare__label--before { left: 1rem; }
+  .compare__label--after { right: 1rem; }
+  .compare__range {
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    opacity: 0;
+    cursor: ew-resize;
+  }
+  .compare-block__caption { margin-top: .9rem; }
+  .compare-block__caption p { margin: 0 0 .35rem; color: var(--ink-soft); font-size: .95rem; }
+  .compare-block__caption small { font-family: var(--font-mono); font-size: .7rem; letter-spacing: .04em; color: var(--ink-soft); }
+  .compare-block__caption a { color: inherit; }
+</style>

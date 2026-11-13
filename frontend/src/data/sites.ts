@@ -17,6 +17,14 @@ export type Era =
   | 'medieval'
   | 'early-modern';
 
+export interface Comparison {
+  title: string;
+  caption?: string;
+  before: { src: string; label: string };
+  after: { src: string; label: string };
+  credit?: { text: string; url: string; license: string; licenseUrl: string };
+}
+
 export interface ArchSite {
   slug: string;
   name: string;
@@ -39,6 +47,7 @@ export interface ArchSite {
   modelAvailable: boolean;
   modelPreview?: string;    // work-in-progress screenshot shown while the model is unfinished
   timeline?: { year: string; event: string }[];
+  comparisons?: Comparison[]; // "then and now" image pairs, pre-aligned to the same framing
   doi?: string;             // Zenodo / iDAI.repo DOI
   iiifManifest?: string;    // optional IIIF manifest URL for deep-zoom imagery
   references?: { label: string; url: string }[];
@@ -156,6 +165,21 @@ export const SITES: ArchSite[] = [
       { year: '20th c.', event: 'Used as a prison — the concrete two-storey cell blocks documented in the 3D model belong to this long custodial phase.' },
       { year: '1979', event: "Inscribed by UNESCO with Ghana's other coastal forts and castles as a single World Heritage Site." },
       { year: 'Today', event: "Home to a museum on the trans-Atlantic slave trade, and the subject of LesArch's digital documentation." },
+    ],
+    comparisons: [
+      {
+        title: 'The gateway, 1966 and today',
+        caption:
+          "The 1924 rebuild inscription and the 'Ussher Fort' sign survive almost unchanged — while the once-open arch has since been fitted with doors.",
+        before: { src: 'assets/ussher-fort-gateway-1966.webp', label: '1966' },
+        after: { src: 'assets/ussher-fort-gateway-today.webp', label: 'Today' },
+        credit: {
+          text: '1966 photo: C. L. Temminck Groll / Rijksdienst voor het Cultureel Erfgoed, cropped',
+          url: 'https://commons.wikimedia.org/wiki/File:Ussher_Fort,_voormalige_toegang_-_20651659_-_RCE.jpg',
+          license: 'CC BY-SA 4.0',
+          licenseUrl: 'https://creativecommons.org/licenses/by-sa/4.0/',
+        },
+      },
     ],
     shortDescription:
       "A 17th-century Dutch-built fort on the Accra coastline, later held by the British — a key monument to the Gold Coast's colonial and trans-Atlantic history.",
