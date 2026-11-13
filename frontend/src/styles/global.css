@@ -815,7 +815,9 @@ p { margin: 0 0 1em; max-width: 68ch; }
 /* CSS-only page transition — subtle fade + slide-up on every page load.
    Cheaper and more reliable than Astro's ClientRouter for our use case. */
 main {
-  animation: page-enter .55s cubic-bezier(.2, .7, .2, 1) both;
+  /* `backwards` (not `both`): a retained transform would turn <main> into the
+     containing block for position:fixed children (e.g. the gallery lightbox). */
+  animation: page-enter .55s cubic-bezier(.2, .7, .2, 1) backwards;
 }
 @keyframes page-enter {
   0%   { opacity: 0; transform: translateY(12px); }

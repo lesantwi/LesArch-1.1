@@ -115,3 +115,17 @@ User asked to analyze the GitHub repo [`lesantwi/LesArch-1.1`](https://github.co
 ## Next
 - P0: Swap in user Ussher Fort photos (thumbnail, hero, gallery)
 - P1: Add Ussher Fort .glb when the model is finished (modelUrl + modelAvailable: true + DOI)
+
+## Update 2 (Jun 2026)
+- Ussher Fort photos: rotated + WebP in public/assets/ussher-fort-*.webp (hero=cellblock, card=gateway crop, gallery x4). Blender WIP screenshot shown as "sneak peek" in model box (ArchSite.modelPreview).
+- New ArchSite.timeline field + components/SiteTimeline.astro (9 Ussher Fort dates incl. gateway inscriptions 1839/1924).
+- Heritage trails: TRAILS in sites.ts (Ghana; sites auto-join by country, date order). map.astro draws dotted route + guided tour panel (Prev/Next/Finish, Esc, mobile offset).
+- Map basemap: CARTO now needs an API key; user has no account -> switched to keyless Esri Light Gray Canvas (base + labels), sepia-warmed via CSS. Unused secret PUBLIC_CARTO_KEY (holds a note, not a key) can be ignored.
+- Fixes: timeline slider step=1 (max year reachable); main page-enter animation fill-mode backwards (lightbox was off-screen).
+- Gallery: portrait photos get object-fit contain.
+- Home featured cards = SITES.slice(0,3) (Ussher not featured on home).
+- Tested: /app/test_reports/iteration_2.json
+
+## Next
+- P1: Ussher Fort .glb when finished (modelUrl, modelAvailable, DOI)
+- P2: Optionally feature Ussher Fort on home page

@@ -198,7 +198,7 @@ const trails = TRAILS.map((tr) => ({
       .trail-panel__actions .btn { padding: .5rem .85rem; font-size: .78rem; }
       .trail-panel__actions .btn:disabled { opacity: .4; pointer-events: none; }
       @media (max-width: 600px) {
-        .trail-panel { left: .5rem; right: .5rem; bottom: .5rem; width: auto; }
+        .trail-panel { left: .5rem; right: .5rem; bottom: 1.6rem; width: auto; }
       }
     </style>
   </Fragment>
@@ -245,7 +245,7 @@ const trails = TRAILS.map((tr) => ({
           min={minYear}
           max={maxYear}
           value={maxYear}
-          step="50"
+          step="1"
           data-testid="map-timeline"
         />
         <div style="display:flex; justify-content:space-between; margin-top:.4rem; font-family:var(--font-mono); font-size:.7rem; color:var(--ink-soft); letter-spacing:.08em;">
@@ -528,9 +528,9 @@ const trails = TRAILS.map((tr) => ({
       // On phones the panel covers the lower map, so aim the pin into the upper half
       let target = L.latLng(stop.coords);
       if (window.innerWidth <= 600) {
-        target = map.unproject(map.project(target, 13).add([0, panel.offsetHeight / 2]), 13);
+        target = map.unproject(map.project(target, 11).add([0, panel.offsetHeight / 2]), 11);
       }
-      map.flyTo(target, 13, { duration: 2.2 });
+      map.flyTo(target, 11, { duration: 2.2 });
       map.once('moveend', () => setTimeout(() => focusPin(stop.slug), 350));
     }
 
