@@ -1,0 +1,72 @@
+---
+/* eslint-disable no-undef -- Astro is a framework global */
+interface Props {
+  events: { year: string; event: string }[];
+  name: string;
+}
+const { events, name } = Astro.props;
+---
+
+<section class="chrono" data-testid="site-timeline" aria-label={`${name} history timeline`}>
+  <span class="eyebrow">Through the centuries</span>
+  <h3 class="chrono__title">A history in {events.length} moments</h3>
+  <ol class="chrono__list">
+    {events.map((e, i) => (
+      <li class="chrono__item reveal" style={`transition-delay:${Math.min(i, 6) * 70}ms`} data-testid={`timeline-item-${i}`}>
+        <span class="chrono__year" data-testid={`timeline-year-${i}`}>{e.year}</span>
+        <p class="chrono__event">{e.event}</p>
+      </li>
+    ))}
+  </ol>
+</section>
+
+<style>
+  .chrono { margin-top: 3rem; }
+  .chrono__title { margin: .5rem 0 1.75rem; }
+  .chrono__list {
+    list-style: none;
+    margin: 0;
+    padding: 0 0 0 1.75rem;
+    position: relative;
+  }
+  .chrono__list::before {
+    content: '';
+    position: absolute;
+    left: calc(.475rem - 1px);
+    top: .7rem;
+    bottom: 1.6rem;
+    width: 2px;
+    background: repeating-linear-gradient(to bottom, var(--c-ochre) 0 6px, transparent 6px 12px);
+  }
+  .chrono__item {
+    position: relative;
+    display: grid;
+    grid-template-columns: 6.5rem 1fr;
+    gap: 1rem;
+    align-items: baseline;
+    padding: 0 0 1.6rem 1rem;
+  }
+  .chrono__item::before {
+    content: '';
+    position: absolute;
+    left: -1.75rem;
+    top: .45rem;
+    width: .95rem;
+    height: .95rem;
+    border-radius: 50%;
+    background-color: var(--bg);
+    border: 2px solid var(--c-clay);
+    transition: background-color .3s var(--ease), transform .3s var(--ease);
+  }
+  .chrono__item:hover::before { background-color: var(--c-clay); transform: scale(1.25); }
+  .chrono__year {
+    font-family: var(--font-display);
+    font-size: var(--step-1);
+    line-height: 1.2;
+    color: var(--c-clay);
+  }
+  .chrono__event { margin: 0; color: var(--ink-soft); }
+  @media (max-width: 600px) {
+    .chrono__item { grid-template-columns: 1fr; gap: .2rem; }
+  }
+</style>

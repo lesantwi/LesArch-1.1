@@ -37,6 +37,8 @@ export interface ArchSite {
   researchRelevance: string;
   modelUrl?: string;        // .glb path (relative to /public)
   modelAvailable: boolean;
+  modelPreview?: string;    // work-in-progress screenshot shown while the model is unfinished
+  timeline?: { year: string; event: string }[];
   doi?: string;             // Zenodo / iDAI.repo DOI
   iiifManifest?: string;    // optional IIIF manifest URL for deep-zoom imagery
   references?: { label: string; url: string }[];
@@ -135,8 +137,26 @@ export const SITES: ArchSite[] = [
     type: 'Colonial Fort',
     status: 'in-progress',
     coords: [5.5328, -0.208],
-    thumbnail: 'assets/world_map_placeholder.webp',
-    hero: 'assets/world_map_placeholder.webp',
+    thumbnail: 'assets/ussher-fort-gateway-card.webp',
+    hero: 'assets/ussher-fort-cellblock.webp',
+    gallery: [
+      'assets/ussher-fort-cellblock.webp',
+      'assets/ussher-fort-gateway.webp',
+      'assets/ussher-fort-corridor.webp',
+      'assets/ussher-fort-exterior.webp',
+    ],
+    modelPreview: 'assets/ussher-fort-model-wip.webp',
+    timeline: [
+      { year: '1649', event: 'The Dutch West India Company builds Fort Crèvecœur on the Accra shoreline, alongside the English and Danish posts that would shape the town.' },
+      { year: '1782', event: 'British forces bombard and capture the fort during the Fourth Anglo-Dutch War; it returns to the Dutch after the peace and is rebuilt.' },
+      { year: '1839', event: 'The year inscribed above the main gateway ("Aº 1839"), recording Dutch building works at the entrance.' },
+      { year: '1862', event: "A major earthquake strikes Accra and damages the fort's walls." },
+      { year: '1868', event: 'Handed to Britain in the Anglo-Dutch exchange of Gold Coast forts and renamed Ussher Fort after administrator Herbert Taylor Ussher.' },
+      { year: '1924', event: 'The gateway is rebuilt, as recorded in the second inscription on the entrance ("Gateway rebuilt 1924").' },
+      { year: '20th c.', event: 'Used as a prison — the concrete two-storey cell blocks documented in the 3D model belong to this long custodial phase.' },
+      { year: '1979', event: "Inscribed by UNESCO with Ghana's other coastal forts and castles as a single World Heritage Site." },
+      { year: 'Today', event: "Home to a museum on the trans-Atlantic slave trade, and the subject of LesArch's digital documentation." },
+    ],
     shortDescription:
       "A 17th-century Dutch-built fort on the Accra coastline, later held by the British — a key monument to the Gold Coast's colonial and trans-Atlantic history.",
     longDescription:
@@ -235,6 +255,24 @@ export const SITES: ArchSite[] = [
     researchRelevance:
       'Supports research on Inca engineering, astronomy, and the Andean cultural landscape; serves digital preservation in a high-tourism context.',
     modelAvailable: false,
+  },
+];
+
+// Heritage trails — every site in `country` joins the trail automatically, ordered by date.
+export interface Trail {
+  id: string;
+  name: string;
+  country: string;
+  intro: string;
+}
+
+export const TRAILS: Trail[] = [
+  {
+    id: 'ghana-heritage',
+    name: 'Ghana Heritage Trail',
+    country: 'Ghana',
+    intro:
+      "Follow Ghana's layered past — from the Sudano-Sahelian mosques of the northern savannah to the European forts of the Atlantic coast.",
   },
 ];
 

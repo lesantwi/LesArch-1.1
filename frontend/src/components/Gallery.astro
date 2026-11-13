@@ -64,6 +64,12 @@ const galleryId = `gal-${Math.random().toString(36).slice(2, 8)}`;
 <script define:vars={{ galleryId, total: images.length }}>
   /* eslint-disable no-undef -- vars injected by define:vars */
   const root = document.getElementById(galleryId);
+  // Portrait photos are shown whole instead of being cropped to the 16:10 stage
+  root?.querySelectorAll('.gallery__img').forEach((im) => {
+    const mark = () => im.classList.toggle('is-portrait', im.naturalHeight > im.naturalWidth);
+    if (im.complete) mark();
+    else im.addEventListener('load', mark);
+  });
   if (root && total > 1) {
     const imgs = root.querySelectorAll('.gallery__img');
     const thumbs = root.querySelectorAll('.gallery__thumb');
@@ -135,6 +141,7 @@ const galleryId = `gal-${Math.random().toString(36).slice(2, 8)}`;
     object-fit: cover;
     transition: opacity .5s var(--ease);
   }
+  .gallery__img.is-portrait { object-fit: contain; }
   .gallery__arrow {
     position: absolute;
     top: 50%; transform: translateY(-50%);
