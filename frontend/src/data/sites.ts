@@ -300,6 +300,33 @@ export const TRAILS: Trail[] = [
   },
 ];
 
+// Hand-aligned historic map overlays for the atlas (bounds = [[south, west], [north, east]])
+export interface HistoricMap {
+  id: string;
+  title: string;
+  year: number;
+  image: string;
+  bounds: [[number, number], [number, number]];
+  note: string;
+  credit: { text: string; url: string; license: string };
+}
+
+export const HISTORIC_MAPS: HistoricMap[] = [
+  {
+    id: 'accra-1859',
+    title: 'Dutch map of Accra & Berkoe, 1859',
+    year: 1859,
+    image: 'assets/historic-accra-1859.webp',
+    bounds: [[5.15304, -0.84816], [6.08097, 0.21705]],
+    note: "Governor Carel van Hien's sketch of the Dutch district, lined up by hand on today's coastline — inland positions are approximate.",
+    credit: {
+      text: 'C. van Hien, 1859 · Nationaal Archief',
+      url: 'https://commons.wikimedia.org/wiki/File:Figuratieve_kaart_der_afdeeling_Accra_en_Berkoe_(1859).jpg',
+      license: 'Public domain',
+    },
+  },
+];
+
 export const ERAS: { value: Era; label: string }[] = [
   { value: 'prehistoric', label: 'Prehistoric' },
   { value: 'ancient-egypt', label: 'Ancient Egypt' },

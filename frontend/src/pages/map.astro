@@ -1,6 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import { SITES, ERAS, TRAILS } from '../data/sites';
+import { SITES, ERAS, TRAILS, HISTORIC_MAPS } from '../data/sites';
 import { t } from '../i18n/ui';
 
 const locale = 'en';
@@ -14,8 +14,22 @@ const trails = TRAILS.map((tr) => ({
   ...tr,
   stops: SITES.filter((s) => s.country === tr.country)
     .sort((a, b) => a.yearStart - b.yearStart)
-    .map((s) => ({ slug: s.slug, name: s.name, coords: s.coords, eraLabel: s.eraLabel, note: s.shortDescription })),
+    .map((s) => ({
+      slug: s.slug,
+      name: s.name,
+      coords: s.coords,
+      eraLabel: s.eraLabel,
+      note: s.shortDescription,
+      year: s.yearStart,
+      thumbnail: `${base}/${s.thumbnail.replace(/^\//, '')}`,
+    })),
 })).filter((tr) => tr.stops.length > 1);
+
+const historicMaps = HISTORIC_MAPS.map((hm) => ({
+  ...hm,
+  image: `${base}/${hm.image.replace(/^\//, '')}`,
+  attribution: `Historic map: <a href="${hm.credit.url}" target="_blank" rel="noopener">${hm.credit.text}</a> (${hm.credit.license})`,
+}));
 ---
 
 <Layout
@@ -197,6 +211,41 @@ const trails = TRAILS.map((tr) => ({
       .trail-panel__actions { display: flex; flex-wrap: wrap; gap: .5rem; }
       .trail-panel__actions .btn { padding: .5rem .85rem; font-size: .78rem; }
       .trail-panel__actions .btn:disabled { opacity: .4; pointer-events: none; }
+      .trail-panel__card img {
+        display: block;
+        width: 100%;
+        aspect-ratio: 1200 / 630;
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        background: var(--bg-deep);
+      }
+      .trail-panel__share { display: flex; gap: .5rem; margin: .6rem 0 .9rem; }
+      .trail-panel__share .btn { padding: .5rem .85rem; font-size: .78rem; }
+      .history-control {
+        margin-top: 1rem;
+        padding: 1.25rem;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem 2rem;
+        background: var(--c-bone);
+        border: 1px solid var(--line);
+        border-radius: var(--radius-lg);
+      }
+      .history-control__text { flex: 1 1 380px; max-width: 70ch; }
+      .history-control__credit { font-family: var(--font-mono); font-size: .68rem; color: var(--ink-soft); }
+      .history-control__credit a { color: inherit; }
+      .history-control__actions { display: flex; flex-wrap: wrap; align-items: center; gap: .75rem 1.25rem; }
+      .history-toggle[aria-pressed="true"] { --bg: var(--c-stone); --fg: #FAF5E9; border-color: var(--c-stone); color: #FAF5E9; }
+      .history-fade {
+        display: flex; align-items: center; gap: .6rem;
+        font-family: var(--font-mono); font-size: .7rem; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-soft);
+        transition: opacity .25s var(--ease);
+      }
+      .history-fade:has(input:disabled) { opacity: .45; }
+      .history-fade input { width: 140px; accent-color: var(--c-clay); }
+      .history-fade output { min-width: 3ch; color: var(--c-clay); }
       @media (max-width: 600px) {
         .trail-panel { left: .5rem; right: .5rem; bottom: 1.6rem; width: auto; }
       }
@@ -272,6 +321,29 @@ const trails = TRAILS.map((tr) => ({
         </div>
       )}
 
+      {historicMaps.map((hm) => (
+        <div class="history-control" data-testid="history-control">
+          <div class="history-control__text">
+            <span class="trail-control__label">Historic maps</span>
+            <p class="trail-control__hint"><strong>{hm.title}.</strong> {hm.note}</p>
+            <small class="history-control__credit" data-testid={`history-credit-${hm.id}`}>
+              <a href={hm.credit.url} target="_blank" rel="noopener">{hm.credit.text}</a> · {hm.credit.license}, via Wikimedia Commons
+            </small>
+          </div>
+          <div class="history-control__actions">
+            <button type="button" class="btn btn--ghost history-toggle" data-map={hm.id} aria-pressed="false" data-testid={`history-toggle-${hm.id}`}>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg>
+              <span class="history-toggle__text">Show {hm.year} map</span>
+            </button>
+            <label class="history-fade">
+              <span>Fade</span>
+              <input type="range" min="10" max="100" value="75" class="history-fade__input" data-map={hm.id} disabled data-testid={`history-fade-${hm.id}`} aria-label={`Fade the ${hm.year} map`} />
+              <output data-testid={`history-fade-value-${hm.id}`}>75%</output>
+            </label>
+          </div>
+        </div>
+      ))}
+
       <div class="map-wrap">
         <div id="map" data-testid="map-canvas"></div>
         <aside class="trail-panel" id="trail-panel" data-testid="trail-panel" aria-hidden="true" aria-live="polite">
@@ -283,6 +355,13 @@ const trails = TRAILS.map((tr) => ({
           <h4 id="trail-stop-name" data-testid="trail-stop-name"></h4>
           <div class="trail-panel__era" id="trail-stop-era" data-testid="trail-stop-era"></div>
           <p id="trail-stop-note" data-testid="trail-stop-note"></p>
+          <div class="trail-panel__card" id="trail-card" data-testid="trail-card" hidden>
+            <img id="trail-card-img" data-testid="trail-card-img" alt="Your heritage trail card" />
+            <div class="trail-panel__share">
+              <button type="button" class="btn btn--ghost" id="trail-save" data-testid="trail-save">Save picture</button>
+              <button type="button" class="btn btn--lapis" id="trail-share" data-testid="trail-share">Share</button>
+            </div>
+          </div>
           <div class="trail-panel__bar"><span id="trail-progress"></span></div>
           <div class="trail-panel__actions">
             <button type="button" class="btn btn--ghost" id="trail-prev" data-testid="trail-prev">← Back</button>
@@ -305,7 +384,7 @@ const trails = TRAILS.map((tr) => ({
     src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"
   ></script>
 
-  <script define:vars={{ sites: SITES, base, trails }}>
+  <script define:vars={{ sites: SITES, base, trails, historicMaps }}>
     // @ts-nocheck
     const map = L.map('map', { worldCopyJump: true, maxZoom: 16 }).setView([20, 10], 2);
 
@@ -503,7 +582,24 @@ const trails = TRAILS.map((tr) => ({
       const { trail, i } = tour;
       const total = trail.stops.length;
       $('trail-name').textContent = trail.name;
-      $('trail-progress').style.width = `${((i + 1) / total) * 100}%`;
+      $('trail-progress').style.width = `${Math.min(100, ((i + 1) / total) * 100)}%`;
+      $('trail-card').hidden = i < total;
+      if (i >= total) {
+        $('trail-step').textContent = 'Trail complete ✓';
+        $('trail-stop-name').textContent = `You followed the ${trail.name}`;
+        $('trail-stop-era').textContent = '';
+        $('trail-stop-note').textContent = 'Trailblazer badge unlocked — save your trail card or share it.';
+        $('trail-view').hidden = true;
+        $('trail-prev').disabled = false;
+        $('trail-next').textContent = 'Close';
+        $('trail-share').textContent = navigator.share ? 'Share' : 'Copy link';
+        focusPin(null);
+        map.flyToBounds(trailLines[trail.id].getBounds(), { padding: [90, 90], maxZoom: 7, duration: 1.6 });
+        makeTrailCard(trail).then((card) => {
+          if (tour && tour.i >= total) $('trail-card-img').src = card.url;
+        });
+        return;
+      }
       if (i < 0) {
         $('trail-step').textContent = `${total} stops`;
         $('trail-stop-name').textContent = trail.stops.map((s) => s.name).join(' → ');
@@ -570,13 +666,180 @@ const trails = TRAILS.map((tr) => ({
     });
     $('trail-next').addEventListener('click', () => {
       if (!tour) return;
-      if (tour.i >= tour.trail.stops.length - 1) {
-        window.lesarchAchieve?.('trailblazer');
-        endTour();
-        return;
-      }
+      const total = tour.trail.stops.length;
+      if (tour.i >= total) { endTour(); return; }
+      if (tour.i === total - 1) window.lesarchAchieve?.('trailblazer');
       tour.i += 1;
       renderTour();
+    });
+
+    // ---- Shareable trail card (drawn on a canvas, same-origin images only) ----
+    const cardCache = {};
+    const loadImg = (src) => new Promise((resolve) => {
+      const im = new Image();
+      im.onload = () => resolve(im);
+      im.onerror = () => resolve(null);
+      im.src = src;
+    });
+    const fmtYear = (y) => (y < 0 ? `${-y} BCE` : `${y} AD`);
+
+    function wrapText(g, text, x, y, maxW, lineH) {
+      let line = '';
+      text.split(' ').forEach((word) => {
+        const test = line ? `${line} ${word}` : word;
+        if (g.measureText(test).width > maxW && line) {
+          g.fillText(line, x, y);
+          line = word;
+          y += lineH;
+        } else line = test;
+      });
+      g.fillText(line, x, y);
+      return y;
+    }
+
+    async function makeTrailCard(trail) {
+      if (cardCache[trail.id]) return cardCache[trail.id];
+      await Promise.all(
+        ['600 60px Fraunces', '600 20px "Public Sans"', '500 16px "JetBrains Mono"'].map((f) => document.fonts.load(f).catch(() => null))
+      );
+      const photos = await Promise.all(trail.stops.map((s) => loadImg(s.thumbnail)));
+      const W = 1200, H = 630;
+      const c = document.createElement('canvas');
+      c.width = W; c.height = H;
+      const g = c.getContext('2d');
+      const MONO = '"JetBrains Mono", monospace', SERIF = 'Fraunces, Georgia, serif', SANS = '"Public Sans", sans-serif';
+
+      g.fillStyle = '#F2EADB'; g.fillRect(0, 0, W, H);
+      ['#D9C7A1', '#C8923B', '#B85A3A', '#2A241D'].forEach((col, k) => { g.fillStyle = col; g.fillRect(0, H - 56 + k * 14, W, 14); });
+
+      // Left column: title, stops, badge
+      if ('letterSpacing' in g) g.letterSpacing = '3px';
+      g.fillStyle = '#B85A3A'; g.font = `500 15px ${MONO}`;
+      g.fillText('LESARCH · HERITAGE TRAIL COMPLETED', 72, 92);
+      if ('letterSpacing' in g) g.letterSpacing = '0px';
+      g.fillStyle = '#2A241D'; g.font = `600 58px ${SERIF}`;
+      let y = wrapText(g, trail.name, 72, 160, 560, 64);
+      const first = trail.stops[0].year, last = trail.stops[trail.stops.length - 1].year;
+      g.fillStyle = '#6B6258'; g.font = `500 21px ${SANS}`;
+      g.fillText(`${trail.stops.length} stops · ${fmtYear(first)} → ${fmtYear(last)}`, 72, y + 44);
+      y += 104;
+      trail.stops.slice(0, 4).forEach((s, k) => {
+        g.fillStyle = '#B85A3A'; g.beginPath(); g.arc(90, y - 8, 17, 0, Math.PI * 2); g.fill();
+        g.fillStyle = '#fff'; g.font = `600 17px ${SANS}`; g.textAlign = 'center'; g.fillText(String(k + 1), 90, y - 2); g.textAlign = 'left';
+        g.fillStyle = '#2A241D'; g.font = `600 28px ${SERIF}`; g.fillText(s.name, 124, y);
+        g.fillStyle = '#6B6258'; g.font = `400 14px ${MONO}`; g.fillText(s.eraLabel, 124, y + 24);
+        y += 70;
+      });
+      // Trailblazer badge pill
+      const bx = 72, by = H - 120;
+      g.fillStyle = '#2A241D'; g.beginPath(); g.roundRect(bx, by, 236, 46, 23); g.fill();
+      g.strokeStyle = '#C8923B'; g.lineWidth = 2.4; g.lineCap = 'round';
+      g.beginPath(); g.arc(bx + 24, by + 30, 5, 0, Math.PI * 2); g.stroke();
+      g.beginPath(); g.arc(bx + 44, by + 16, 5, 0, Math.PI * 2); g.stroke();
+      g.beginPath(); g.moveTo(bx + 29, by + 30); g.lineTo(bx + 36, by + 30); g.quadraticCurveTo(bx + 46, by + 26, bx + 36, by + 21); g.lineTo(bx + 30, by + 20); g.stroke();
+      if ('letterSpacing' in g) g.letterSpacing = '3px';
+      g.fillStyle = '#C8923B'; g.font = `600 15px ${MONO}`; g.fillText('TRAILBLAZER', bx + 66, by + 29);
+      if ('letterSpacing' in g) g.letterSpacing = '0px';
+      g.fillStyle = '#6B6258'; g.font = `500 15px ${MONO}`; g.textAlign = 'right';
+      g.fillText(`${location.host}${base}`, W - 60, H - 82); g.textAlign = 'left';
+
+      // Right column: mini route map with stop photos
+      const box = { x: 690, y: 56, w: 450, h: 450 };
+      g.fillStyle = '#E8DCC4'; g.beginPath(); g.roundRect(box.x, box.y, box.w, box.h, 24); g.fill();
+      g.save(); g.beginPath(); g.roundRect(box.x, box.y, box.w, box.h, 24); g.clip();
+      g.strokeStyle = 'rgba(42,36,29,0.08)'; g.lineWidth = 1.5;
+      for (let r = 60; r < 420; r += 38) { g.beginPath(); g.ellipse(box.x + 300, box.y + 260, r * 1.3, r, -0.4, 0, Math.PI * 2); g.stroke(); }
+      g.restore();
+      const lats = trail.stops.map((s) => s.coords[0]), lngs = trail.stops.map((s) => s.coords[1]);
+      const pad = 95, span = Math.max(Math.max(...lats) - Math.min(...lats), Math.max(...lngs) - Math.min(...lngs)) || 1;
+      const k = (Math.min(box.w, box.h) - pad * 2) / span;
+      const midLat = (Math.max(...lats) + Math.min(...lats)) / 2, midLng = (Math.max(...lngs) + Math.min(...lngs)) / 2;
+      const pts = trail.stops.map((s) => [box.x + box.w / 2 + (s.coords[1] - midLng) * k, box.y + box.h / 2 - (s.coords[0] - midLat) * k]);
+      g.strokeStyle = '#C8923B'; g.lineWidth = 6; g.setLineDash([2, 16]);
+      g.beginPath(); pts.forEach(([px, py], n) => (n ? g.lineTo(px, py) : g.moveTo(px, py))); g.stroke(); g.setLineDash([]);
+      pts.forEach(([px, py], n) => {
+        const R = 56;
+        g.save(); g.beginPath(); g.arc(px, py, R, 0, Math.PI * 2); g.clip();
+        const im = photos[n];
+        if (im) {
+          const sc = Math.max((R * 2) / im.width, (R * 2) / im.height);
+          g.drawImage(im, px - (im.width * sc) / 2, py - (im.height * sc) / 2, im.width * sc, im.height * sc);
+        } else { g.fillStyle = '#D9C7A1'; g.fillRect(px - R, py - R, R * 2, R * 2); }
+        g.restore();
+        g.strokeStyle = '#FAF5E9'; g.lineWidth = 6; g.beginPath(); g.arc(px, py, R, 0, Math.PI * 2); g.stroke();
+        g.fillStyle = '#B85A3A'; g.beginPath(); g.arc(px + R * 0.72, py - R * 0.72, 17, 0, Math.PI * 2); g.fill();
+        g.fillStyle = '#fff'; g.font = `600 16px ${SANS}`; g.textAlign = 'center'; g.fillText(String(n + 1), px + R * 0.72, py - R * 0.72 + 6);
+        g.fillStyle = '#2A241D'; g.font = `600 18px ${SANS}`; g.fillText(trail.stops[n].name, px, py + R + 28); g.textAlign = 'left';
+      });
+
+      const blob = await new Promise((resolve) => c.toBlob(resolve, 'image/png'));
+      cardCache[trail.id] = { blob, url: URL.createObjectURL(blob), filename: `lesarch-${trail.id}-trail.png` };
+      return cardCache[trail.id];
+    }
+
+    $('trail-save').addEventListener('click', async () => {
+      if (!tour) return;
+      const card = await makeTrailCard(tour.trail);
+      const a = document.createElement('a');
+      a.href = card.url;
+      a.download = card.filename;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+    });
+    $('trail-share').addEventListener('click', async () => {
+      if (!tour) return;
+      const btn = $('trail-share');
+      const card = await makeTrailCard(tour.trail);
+      const url = `${location.origin}${base}/map`;
+      const text = `I followed the ${tour.trail.name} on LesArch`;
+      const file = new File([card.blob], card.filename, { type: 'image/png' });
+      try {
+        if (navigator.canShare?.({ files: [file] })) await navigator.share({ files: [file], title: tour.trail.name, text, url });
+        else if (navigator.share) await navigator.share({ title: tour.trail.name, text, url });
+        else {
+          await navigator.clipboard.writeText(`${text} — ${url}`);
+          btn.textContent = 'Link copied ✓';
+          setTimeout(() => (btn.textContent = 'Copy link'), 1800);
+        }
+      } catch (err) {
+        // Share sheet dismissed by the visitor — nothing to do
+      }
+    });
+
+    // ---- Historic map overlays (blended into the basemap, fade adjustable) ----
+    map.createPane('historic');
+    const histPane = map.getPane('historic');
+    histPane.style.zIndex = 350;
+    histPane.style.mixBlendMode = 'multiply';
+    const histLayers = {};
+    document.querySelectorAll('.history-toggle').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const hm = historicMaps.find((h) => h.id === btn.dataset.map);
+        const fade = document.querySelector(`.history-fade__input[data-map="${hm.id}"]`);
+        const on = btn.getAttribute('aria-pressed') !== 'true';
+        btn.setAttribute('aria-pressed', String(on));
+        btn.querySelector('.history-toggle__text').textContent = `${on ? 'Hide' : 'Show'} ${hm.year} map`;
+        fade.disabled = !on;
+        if (!on) { histLayers[hm.id]?.remove(); return; }
+        if (!histLayers[hm.id]) {
+          histLayers[hm.id] = L.imageOverlay(hm.image, hm.bounds, {
+            pane: 'historic',
+            opacity: fade.value / 100,
+            attribution: hm.attribution,
+            className: 'historic-overlay',
+          });
+        }
+        histLayers[hm.id].addTo(map);
+        const b = L.latLngBounds(hm.bounds);
+        map.flyTo(b.getCenter(), map.getBoundsZoom(b) + 1, { duration: 1.6 });
+      });
+    });
+    document.querySelectorAll('.history-fade__input').forEach((input) => {
+      input.addEventListener('input', () => {
+        input.nextElementSibling.textContent = `${input.value}%`;
+        histLayers[input.dataset.map]?.setOpacity(input.value / 100);
+      });
     });
     $('trail-prev').addEventListener('click', () => {
       if (!tour || tour.i < 0) return;
