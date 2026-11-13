@@ -92,7 +92,7 @@ const src = (p: string) => `${base}/${p.replace(/^\//, '')}`;
   .compare__handle {
     position: absolute;
     top: 50%;
-    left: var(--pos);
+    left: clamp(22px, var(--pos), calc(100% - 22px));
     z-index: 2;
     display: grid;
     place-items: center;

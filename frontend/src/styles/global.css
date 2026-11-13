@@ -514,7 +514,9 @@ p { margin: 0 0 1em; max-width: 68ch; }
 }
 .form-group input,
 .form-group textarea,
-.form-group select {
+.form-group select,
+.map-controls input,
+.map-controls select {
   width: 100%;
   padding: .85rem 1rem;
   font-family: var(--font-body);
@@ -526,7 +528,9 @@ p { margin: 0 0 1em; max-width: 68ch; }
   transition: border-color .25s var(--ease), box-shadow .25s var(--ease);
 }
 .form-group input:focus,
-.form-group textarea:focus {
+.form-group textarea:focus,
+.map-controls input:focus,
+.map-controls select:focus {
   outline: none;
   border-color: var(--c-clay);
   box-shadow: 0 0 0 3px rgba(184,90,58,0.12);

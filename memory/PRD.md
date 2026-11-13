@@ -129,3 +129,14 @@ User asked to analyze the GitHub repo [`lesantwi/LesArch-1.1`](https://github.co
 ## Next
 - P1: Ussher Fort .glb when finished (modelUrl, modelAvailable, DOI)
 - P2: Optionally feature Ussher Fort on home page
+
+## Update 3 (Jun 2026)
+- Home featured cards: sorted by status (completed > in-progress > planned), top 3 -> Pont du Gard, Asuka-dera, Ussher Fort.
+- Trailblazer achievement (finish a heritage trail). Archivist threshold = SITES.length.
+- Then & now slider: components/CompareSlider.astro + ArchSite.comparisons[]. Ussher Fort: 1966 gateway photo (C. L. Temminck Groll / RCE, CC BY-SA 4.0, Wikimedia Commons, credited) vs user photo today, pre-aligned crops 1067x800.
+- Fixes: map-wrap isolation (achievements modal above map), map filter inputs styled, compare handle clamped.
+- Tested: /app/test_reports/iteration_3.json (100%)
+
+## Next
+- P1: Model-vs-photo comparison (needs a model render + matching photo from user) -> add to Ussher comparisons[]
+- P1: Ussher Fort .glb when finished
